@@ -4,19 +4,25 @@
     "intents": ["你好", "hello"],
     "yue": "你好啊",
     "jyut": "nei5 hou2 aa3",
+    "emoji": "👋",
+    "emotion": "問候",
     "note": "日常招呼"
   },
   {
     "id": "thanks",
     "intents": ["谢谢", "多谢", "thanks", "thank you"],
     "yue": "多謝晒",
-    "jyut": "do1 ze6 saai3"
+    "jyut": "do1 ze6 saai3",
+    "emoji": "🙏",
+    "emotion": "感謝"
   },
   {
     "id": "miss_you",
     "intents": ["我想你", "i miss you"],
     "yue": "我掛住你",
     "jyut": "ngo5 gwaa3 zyu6 nei5",
+    "emoji": "🥺",
+    "emotion": "想念",
     "note": "表達想念"
   },
   {
@@ -24,6 +30,18 @@
     "intents": ["对不起", "对唔住", "對不起", "sorry"],
     "yue": "唔好意思",
     "jyut": "m4 hou2 ji3 si1",
+    "emoji": "😔",
+    "emotion": "道歉",
     "note": "道歉用語"
+  }
+  ,
+  {
+    "id": "so_weird",
+    "intents": ["這麼奇怪", "这么奇怪", "so weird"],
+    "yue": "咁奇嘅",
+    "jyut": "gam3 kei4 ge3",
+    "emoji": "🤔",
+    "emotion": "疑惑",
+    "note": "表達疑惑或驚訝的語氣"
   }
 ]

@@ -9,6 +9,10 @@ interface LexEntry {
   intents: string[]
   yue: string
   jyut: string
+  /** 表情符號，例如 😊、😢 等 */
+  emoji?: string
+  /** 情感描述，例如「高興」「難過」 */
+  emotion?: string
   note?: string
 }
 
@@ -37,9 +41,12 @@ const todayKey = (): string => {
 // 主組件
 const App: React.FC = () => {
   const [inputText, setInputText] = useState('')
+  // 翻譯結果，包括表情和情感
   const [output, setOutput] = useState<{
     yue: string
     jyut: string
+    emoji?: string
+    emotion?: string
     note?: string
   } | null>(null)
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([])
@@ -50,12 +57,7 @@ const App: React.FC = () => {
       return []
     }
   })
-  const [vipDay, setVipDay] = useState<string | null>(() => {
-    return localStorage.getItem('vipDay')
-  })
   const [tasks, setTasks] = useState<string[]>([])
-
-  const isVIP = vipDay === todayKey()
 
   // 加載每日任務
   useEffect(() => {
@@ -117,12 +119,8 @@ const App: React.FC = () => {
     setOutput(result)
   }
 
-  // 播放發音
+  // 播放發音：不再限制權限，預先錄音優先，否則調用瀏覽器 TTS
   const speak = (text: string) => {
-    if (!isVIP) {
-      alert('發音功能需完成每日任務後解鎖！')
-      return
-    }
     const map: Record<string, string> = devAudioMap as Record<string, string>
     const file = map[text]
     if (file) {
@@ -155,24 +153,16 @@ const App: React.FC = () => {
   // 完成單個任務
   const handleTaskSubmit = (
     index: number,
-    data: { zh: string; yue: string; jyut: string; note?: string }
+    data: { zh: string; yue: string; jyut: string; emoji?: string; emotion?: string; note?: string }
   ) => {
-    // 保存到本地貢獻
+    // 保存到本地貢獻，包含表情與情感
     const list = JSON.parse(localStorage.getItem('contrib') || '[]') as any[]
     list.push({ ...data, date: new Date().toISOString() })
     localStorage.setItem('contrib', JSON.stringify(list))
     // 標記任務完成
     localStorage.setItem(`task_done_${todayKey()}_${index}`, '1')
-    // 判斷是否全部完成
-    let doneCount = 0
-    for (let i = 0; i < tasks.length; i++) {
-      if (localStorage.getItem(`task_done_${todayKey()}_${i}`)) doneCount++
-    }
-    if (doneCount >= tasks.length) {
-      setVipDay(todayKey())
-      localStorage.setItem('vipDay', todayKey())
-      alert('🎉 今日任務已完成，發音功能已解鎖！')
-    }
+    // 顯示感謝提示
+    alert('感謝您為守護粵語付出的貢獻！')
   }
 
   // 導出貢獻 JSON
@@ -193,10 +183,10 @@ const App: React.FC = () => {
     base: string
     onSubmit: (
       index: number,
-      data: { zh: string; yue: string; jyut: string; note?: string }
+      data: { zh: string; yue: string; jyut: string; emoji?: string; emotion?: string; note?: string }
     ) => void
   }> = ({ index, base, onSubmit }) => {
-    const [form, setForm] = useState({ zh: base, yue: '', jyut: '', note: '' })
+    const [form, setForm] = useState({ zh: base, yue: '', jyut: '', emoji: '', emotion: '', note: '' })
     const done = Boolean(localStorage.getItem(`task_done_${todayKey()}_${index}`))
     if (done) {
       return (
@@ -218,7 +208,7 @@ const App: React.FC = () => {
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: '2fr 2fr 2fr 1fr',
+          gridTemplateColumns: '1.5fr 1.5fr 1.5fr 1fr 1fr auto',
           gap: '8px',
           marginBottom: '6px'
         }}
@@ -239,6 +229,18 @@ const App: React.FC = () => {
           value={form.jyut}
           onChange={(e) => setForm({ ...form, jyut: e.target.value })}
           placeholder="粵拼 (Jyutping)"
+          style={inputStyle}
+        />
+        <input
+          value={form.emoji}
+          onChange={(e) => setForm({ ...form, emoji: e.target.value })}
+          placeholder="Emoji"
+          style={inputStyle}
+        />
+        <input
+          value={form.emotion}
+          onChange={(e) => setForm({ ...form, emotion: e.target.value })}
+          placeholder="情感描述"
           style={inputStyle}
         />
         <button
@@ -289,7 +291,7 @@ const App: React.FC = () => {
           講返啲地道嘢 · Cantonese MVP
         </h1>
         <p style={{ opacity: 0.8, marginTop: '4px' }}>
-          中/英 → 粵語正字 + 粵拼，完成每日任務解鎖發音
+          中/英 → 粵語正字 + 粵拼 + 表情符號，眾包完善粵語詞庫
         </p>
         {/* 翻譯區 */}
         <div
@@ -326,10 +328,14 @@ const App: React.FC = () => {
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <div>
                   <div style={{ opacity: 0.7, fontSize: '12px' }}>【粵語】</div>
-                  <div style={{ fontSize: '24px', marginTop: '4px' }}>{
-                    output.yue
-                  }</div>
+                  <div style={{ fontSize: '24px', marginTop: '4px' }}>{output.yue}</div>
                   <div style={{ marginTop: '6px' }}>【粵拼】{output.jyut}</div>
+                  {output.emoji && (
+                    <div style={{ marginTop: '6px', fontSize: '28px' }}>{output.emoji}</div>
+                  )}
+                  {output.emotion && (
+                    <div style={{ marginTop: '4px', fontSize: '12px', opacity: 0.6 }}>【情感】{output.emotion}</div>
+                  )}
                   {output.note && (
                     <div style={{ opacity: 0.6, fontSize: '12px', marginTop: '4px' }}>
                       {output.note}
@@ -337,11 +343,7 @@ const App: React.FC = () => {
                   )}
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <button
-                    onClick={() => output && speak(output.yue)}
-                    disabled={!isVIP}
-                    style={{ ...buttonStyle, opacity: isVIP ? 1 : 0.5 }}
-                  >
+                  <button onClick={() => output && speak(output.yue)} style={buttonStyle}>
                     🔊 播放
                   </button>
                   <button onClick={addToFavorites} style={{ ...buttonStyle, background: 'transparent', color: '#e5e5e5' }}>
@@ -366,7 +368,7 @@ const App: React.FC = () => {
             style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
           >
             <h3 style={{ fontSize: '16px', fontWeight: 600 }}>
-              今日任務 · 完成 {tasks.length} 條 → 解鎖發音
+              今日任務 · 請填寫以下 {tasks.length} 條短語以守護粵語
             </h3>
             <button
               onClick={exportContrib}
@@ -380,11 +382,10 @@ const App: React.FC = () => {
               <TaskRow key={i} index={i} base={t} onSubmit={handleTaskSubmit} />
             ))}
           </div>
-          {!isVIP && (
-            <div style={{ marginTop: '8px', fontSize: '12px', opacity: 0.7 }}>
-              提示：完成所有任務即可獲得今日發音權限。
-            </div>
-          )}
+          {/* 任務說明 */}
+          <div style={{ marginTop: '8px', fontSize: '12px', opacity: 0.7 }}>
+            提示：請填寫粵語正字、粵拼、情感和表情符號，共同完善粵語詞庫。
+          </div>
         </div>
         {/* 收藏區 */}
         <div
