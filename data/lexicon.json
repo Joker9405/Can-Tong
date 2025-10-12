@@ -1,0 +1,29 @@
+[
+  {
+    "id": "hello",
+    "intents": ["你好", "hello"],
+    "yue": "你好啊",
+    "jyut": "nei5 hou2 aa3",
+    "note": "日常招呼"
+  },
+  {
+    "id": "thanks",
+    "intents": ["谢谢", "多谢", "thanks", "thank you"],
+    "yue": "多謝晒",
+    "jyut": "do1 ze6 saai3"
+  },
+  {
+    "id": "miss_you",
+    "intents": ["我想你", "i miss you"],
+    "yue": "我掛住你",
+    "jyut": "ngo5 gwaa3 zyu6 nei5",
+    "note": "表達想念"
+  },
+  {
+    "id": "sorry",
+    "intents": ["对不起", "对唔住", "對不起", "sorry"],
+    "yue": "唔好意思",
+    "jyut": "m4 hou2 ji3 si1",
+    "note": "道歉用語"
+  }
+]
