@@ -4,7 +4,7 @@
 
 ## HKCanCor（香港粤语语料库）
 - 许可：CC-BY 4.0（需署名）
-- 来源链接：<填写>
+- 来源链接：HKCanCor、Common Voice、Words.hk
 - 使用范围：文本/口语转写；遵循署名要求
 
 ## Common Voice（粤语/zh-HK）
