@@ -4,17 +4,17 @@
 
 ## HKCanCor（香港粤语语料库）
 - 许可：CC-BY 4.0（需署名）
-- 来源链接：HKCanCor、Common Voice、Words.hk
+- 来源链接：HKCanCor
 - 使用范围：文本/口语转写；遵循署名要求
 
 ## Common Voice（粤语/zh-HK）
 - 许可：CC0（公有领域/可商用）
-- 来源链接：<填写>
+- 来源链接：Common Voice
 - 使用范围：语音-文本对齐、ASR/TTS
 
 ## Words.hk（公开导出部分）
 - 许可：Public Domain（公开导出部分）/ 其它数据多为 CC-BY-NC（非商用）
-- 来源链接：<填写>
+- 来源链接：Words.hk
 - 使用范围：字表/词表/频次等公共域资料；若需完整CSV请按官方流程申请
 
 ## CC-100（yue）、OSCAR等网页切片
