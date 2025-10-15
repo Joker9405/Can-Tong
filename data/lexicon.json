@@ -11,10 +11,10 @@
       {"text":"咁怪","jyut":"gam3 gwaai3"},
       {"text":"咁怪雞","jyut":"gam3 gwaai3 gai1"}
     ],
-    "emoji":"🤨",
-    "emotion":"惊讶/不解",
-    "note":"“怪鸡”偏口语、略带玩笑；“邪门”语气较重，可按项目风格选择是否展示。",
-    "tags":["程度副词+形容词","评价"]
+    "emoji": "🤨",
+    "emotion": "惊讶/不解",
+    "note": "“怪鸡”偏口语、略带玩笑；“邪门”语气较重，可按项目风格选择是否展示。",
+    "tags": ["程度副词+形容词","评价"]
   },
   {
     "id": "so_cute",
@@ -26,9 +26,9 @@
       {"text":"好得意","jyut":"hou2 dak1 ji3"},
       {"text":"好可爱","jyut":"hou2 ho2 oi3"}
     ],
-    "emoji":"🥰",
-    "emotion":"喜爱",
-    "note":"",
-    "tags":["评价"]
+    "emoji": "🥰",
+    "emotion": "喜爱",
+    "note": "",
+    "tags": ["评价"]
   }
 ]
