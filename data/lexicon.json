@@ -10,7 +10,6 @@
       {"text":"咁古怪","jyut":"gam3 gu2 gwaai3"},
       {"text":"咁怪","jyut":"gam3 gwaai3"},
       {"text":"咁怪雞","jyut":"gam3 gwaai3 gai1"}
-      /* 备注：你给的“咁旖旎”语义上并非“奇怪”，通常指“柔美/绮丽”，不建议列作同义 */
     ],
     "emoji":"🤨",
     "emotion":"惊讶/不解",
@@ -25,7 +24,7 @@
     },
     "yue": [
       {"text":"好得意","jyut":"hou2 dak1 ji3"},
-      {"text":"好可爱","jyut":"hou2 ho2 oi3"}  // 书面直译也可保留
+      {"text":"好可爱","jyut":"hou2 ho2 oi3"}
     ],
     "emoji":"🥰",
     "emotion":"喜爱",
