@@ -2,11 +2,11 @@
 <html lang="zh-HK">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>你系咪真系识 · 粤语词库最小版 v7</title>
-  <link rel="icon" href="data:,">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>你系咪真系识 v8</title>
+  <link rel="icon" href="data:,"><!-- 防止 favicon 404 -->
   <style>
-    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:800px;margin:40px auto;padding:0 16px}
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:880px;margin:40px auto;padding:0 16px}
     input,button,textarea{font-size:16px}
     .row{display:flex;gap:8px;margin:12px 0}
     .card{border:1px solid #eee;border-radius:10px;padding:14px}
@@ -15,23 +15,23 @@
   </style>
 </head>
 <body>
-  <h1>你系咪真系识 v7</h1>
-  <p class="muted">输入中文 / English，然后点「查询」；若没有本地 mp3，将用浏览器 <code>zh-HK</code> TTS 发音。</p>
+  <h1>你系咪真系识 v8</h1>
+  <p class="muted">输入中文 / English，然后点【查询】；若没有本地 mp3，将用浏览器 <code>zh-HK</code> TTS 发音。</p>
 
   <div class="row">
-    <input id="q" placeholder="谢谢 / thanks / 你好 / hello" style="flex:1" />
+    <input id="q" placeholder="奇怪 / 古怪 / 这么奇怪 / hello" style="flex:1" />
     <button id="search">查询</button>
     <button id="speak">发音</button>
   </div>
 
-  <div class="card">
+  <div class="card" id="panel">
     <div><b>粤语：</b><span id="yue">—</span></div>
     <div><b>粤拼：</b><span id="jyut">—</span></div>
     <div><b>情绪：</b><span id="emotion">—</span> <span id="emoji"></span></div>
-    <div><b>同义：</b><ul id="alts" class="hits"></ul></div>
-    <div class="muted" id="note"></div>
+    <div><b>同义：</b><ul id="alts" class="hits">—</ul></div>
+    <div class="muted"><b>备注：</b><span id="note">—</span></div>
   </div>
 
-  <script src="./script.js?v=7"></script>
+  <script src="./script.js?v=12"></script>
 </body>
 </html>
