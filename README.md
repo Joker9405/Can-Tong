@@ -7,3 +7,7 @@
 
 > 注意：此包**不包含第三方数据**，请按许可自行下载并在 LICENSES.md 填写来源。
 # LICENSES & ATTRIBUTIONS (语料来源与授权)
+更多详情请见：
+- [README_DATASETS.md](./README_DATASETS.md)
+- [README_TOOLS.md](./README_TOOLS.md)
+- [LICENSES.md](./LICENSES.md)
