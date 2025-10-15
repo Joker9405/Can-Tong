@@ -17,15 +17,18 @@ function normalizeToGroups(raw){
   // 新格式：数组里有 src / yue
   if (Array.isArray(raw) && raw.length && (raw[0]?.src || raw[0]?.yue)) return raw;
 
-  // 字典格式 { "谢谢": {...} }
-  if (!Array.isArray(raw) && typeof raw === 'object' && raw){
-    return Object.entries(raw).map(([k,v],i)=>({
-      id: v?.id || `legacy_${i}`,
-      src: { zh: [k] },
-      yue: v?.yue ? [{text: v.yue, jyut: v.jyut||""}] : [],
-      emoji: v?.emoji||"", emotion: v?.emotion||"", note: v?.note||"", tags:[]
-    }));
-  }
+// 字典 { "谢谢": {...} } -> 语义组
+if (!Array.isArray(raw) && typeof raw === 'object' && raw){
+  return Object.entries(raw).map(([k, v], i) => ({
+    id: v?.id || `legacy_${i}`,
+    src: { zh: [k] },
+    yue: v?.yue ? [{ text: v.yue, jyut: v.jyut || "" }] : [],
+    emoji: v?.emoji || "",
+    emotion: v?.emotion || "",
+    note: v?.note || "",
+    tags: []
+  }));
+}
 
   // 旧数组格式 [{id,intents,yue,jyut,...}]
   if (Array.isArray(raw)){
