@@ -1,20 +1,35 @@
 [
   {
-    "id": "so_strange",                     // 该语义组的唯一ID
-    "src": {                                // 源语言同义词（触发词）
+    "id": "so_strange",
+    "src": {
       "zh": ["这么奇怪","这么古怪","这么邪门","这么怪异","这么奇葩"],
       "en": ["so strange","so weird","so odd","so bizarre"]
     },
-    "yue": [                                 // 对应的粤语同义词（可多条）
+    "yue": [
       {"text":"咁奇怪","jyut":"gam3 kei4 gwaai3"},
       {"text":"咁古怪","jyut":"gam3 gu2 gwaai3"},
       {"text":"咁怪","jyut":"gam3 gwaai3"},
-      {"text":"咁怪雞","jyut":"gam3 gwaai3 gai1"},
-      {"text":"咁旖旎","jyut":"gam3 ji2 nei5"}    // 你给的“旖旎”会有语义偏差，见下“备注”
+      {"text":"咁怪雞","jyut":"gam3 gwaai3 gai1"}
+      /* 备注：你给的“咁旖旎”语义上并非“奇怪”，通常指“柔美/绮丽”，不建议列作同义 */
     ],
-    "emoji": "🤨",
-    "emotion": "惊讶/不解",
-    "note": "“怪鸡”偏口语、带点打趣；“旖旎”本义柔美/绮丽，非“奇怪”，谨慎使用。",
-    "tags": ["程度副词+形容词","评价"]
+    "emoji":"🤨",
+    "emotion":"惊讶/不解",
+    "note":"“怪鸡”偏口语、略带玩笑；“邪门”语气较重，可按项目风格选择是否展示。",
+    "tags":["程度副词+形容词","评价"]
+  },
+  {
+    "id": "so_cute",
+    "src": {
+      "zh": ["好可爱","太可爱了"],
+      "en": ["so cute","adorable"]
+    },
+    "yue": [
+      {"text":"好得意","jyut":"hou2 dak1 ji3"},
+      {"text":"好可爱","jyut":"hou2 ho2 oi3"}  // 书面直译也可保留
+    ],
+    "emoji":"🥰",
+    "emotion":"喜爱",
+    "note":"",
+    "tags":["评价"]
   }
 ]
