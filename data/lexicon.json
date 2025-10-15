@@ -6,10 +6,10 @@
       "en": ["so strange","so weird","so odd","so bizarre"]
     },
     "yue": [
-      {"text":"咁奇怪","jyut":"gam3 kei4 gwaai3"},
-      {"text":"咁旖旎","jyut":"gam3 ji2 nei5"},
-      {"text":"咁怪","jyut":"gam3 gwaai3"},
-      {"text":"咁怪雞","jyut":"gam3 gwaai3 gai1"}
+  { "text": "咁奇怪", "jyut": "gam3 kei4 gwaai3" },
+  { "text": "咁旖旎", "jyut": "gam3 ji2 nei5" },
+  { "text": "咁怪",   "jyut": "gam3 gwaai3" },
+  { "text": "咁怪雞", "jyut": "gam3 gwaai3 gai1" }
     ],
     "emoji": "🤨",
     "emotion": "惊讶/不解",
