@@ -1,11 +1,7 @@
 {
-  "你好啊": "./audio/nei5-hou2-aa3.mp3",
-  "多谢晒": "./audio/doi1-ze6-saai3.mp3",
-  "我挂住你": "./audio/ngo5-gwaa3-zyu6-nei5.mp3",
-  "唔好意思": "./audio/m4-hou2-ji3-si1.mp3",
-
-  "咁奇怪": "./audio/gam_keigwai.mp3",
-  "咁古怪": "./audio/gam_guguai.mp3",
-  "咁怪":   "./audio/gam_guai.mp3",
-  "咁怪雞": "./audio/gam_guaigai.mp3"
+  "咁奇怪": "audio/gam_keigwai.mp3",
+  "咁旖旎": "audio/gam_yinei.mp3",
+  "咁古怪": "audio/gam_guguai.mp3",
+  "咁怪": "audio/gam_guai.mp3",
+  "咁怪雞": "audio/gam_guaigai.mp3"
 }
