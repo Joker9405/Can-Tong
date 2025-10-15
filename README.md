@@ -6,3 +6,4 @@
 - 一键导出：运行 `scripts/10_normalize_text.py` 与 `scripts/40_export_sft_format.py` 生成最小训练格式
 
 > 注意：此包**不包含第三方数据**，请按许可自行下载并在 LICENSES.md 填写来源。
+# LICENSES & ATTRIBUTIONS (语料来源与授权)
