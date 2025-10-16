@@ -2,36 +2,47 @@
 <html lang="zh-HK">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>你系咪真系识 v8</title>
-  <link rel="icon" href="data:,"><!-- 防止 favicon 404 -->
+  <meta name="description" content="中英 → 地道粤语正字；同义词聚合；本地MP3优先、内置 zh-HK TTS 回退（界面不提示）。" />
   <style>
-    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:880px;margin:40px auto;padding:0 16px}
-    input,button,textarea{font-size:16px}
-    .row{display:flex;gap:8px;margin:12px 0}
-    .card{border:1px solid #eee;border-radius:10px;padding:14px}
-    .muted{color:#666}
-    .hits li{margin:4px 0}
+    body{font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,"Noto Sans","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif; margin:16px;}
+    .container{max-width:960px;}
+    .title{font-size:28px;font-weight:800;margin-bottom:8px}
+    .bar{display:flex;gap:8px;align-items:center;margin:12px 0}
+    input[type="text"]{flex:1;padding:8px 10px;border:1px solid #ddd;border-radius:6px}
+    button{padding:8px 12px;border:1px solid #ddd;background:#fff;border-radius:6px;cursor:pointer}
+    button:hover{background:#f6f6f6}
+    .card{border:1px solid #eee;border-radius:10px;padding:14px 16px;margin-top:10px}
+    .row{margin:6px 0}
+    .label{color:#666;margin-right:6px}
+    .bullet{margin-left:18px}
+    .pill{display:inline-block;background:#f2f4f7;border:1px solid #e6e9ef;color:#344054;border-radius:999px;padding:2px 8px;font-size:12px;margin-left:6px}
+    .small{font-size:12px;color:#888}
+    .audio-btn{margin-right:8px}
+    .muted{color:#999}
+    /* 不再显示 TTS 提示行（保留占位用 class，样式强制隐藏） */
+    .tts-hint{display:none !important}
   </style>
 </head>
 <body>
-  <h1>你系咪真系识 v8</h1>
-  <p class="muted">输入中文 / English，然后点【查询】；若没有本地 mp3，将用浏览器 <code>zh-HK</code> TTS 发音。</p>
+  <div class="container">
+    <div class="title">你系咪真系识 v8</div>
 
-  <div class="row">
-    <input id="q" placeholder="奇怪 / 古怪 / 这么奇怪 / hello" style="flex:1" />
-    <button id="search">查询</button>
-    <button id="speak">发音</button>
+    <div class="small muted">输入 中文 / English，然后点【查询】；支持同义词和词根聚合。</div>
+
+    <div class="bar">
+      <input id="q" type="text" placeholder="例如：这么奇怪 / so strange" />
+      <button id="searchBtn">查询</button>
+      <button id="shareBtn">发音</button>
+    </div>
+
+    <!-- 旧版会放“若没有本地 mp3，将用浏览器 zh-HK TTS 发音。”的提示，这里直接隐藏 -->
+    <div class="small tts-hint">（已按需隐藏）</div>
+
+    <div id="result"></div>
   </div>
 
-  <div class="card" id="panel">
-    <div><b>粤语：</b><span id="yue">—</span></div>
-    <div><b>粤拼：</b><span id="jyut">—</span></div>
-    <div><b>情绪：</b><span id="emotion">—</span> <span id="emoji"></span></div>
-    <div><b>同义：</b><ul id="alts" class="hits">—</ul></div>
-    <div class="muted"><b>备注：</b><span id="note">—</span></div>
-  </div>
-
-  <script src="./script.js?v=12"></script>
+  <script src="script.js?v=20251015"></script>
 </body>
 </html>
