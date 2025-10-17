@@ -3,63 +3,110 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Can‑Tong 粤语助手 · 演示/云端双模</title>
+  <title>Can‑Tong · 粵語助手（演示模式 / 可連雲端）</title>
   <link rel="stylesheet" href="./style.css">
+  <script>
+  // Lightweight dynamic loader with fallback
+  function loadScriptSeq(urls, onload, onerror){
+    if(!urls.length){ onerror && onerror(new Error('All CDNs failed')); return; }
+    const url = urls.shift();
+    const s = document.createElement('script');
+    s.src = url; s.defer = true; s.onload = onload;
+    s.onerror = function(){ loadScriptSeq(urls, onload, onerror); };
+    document.head.appendChild(s);
+  }
+  // Queue loaders: OpenCC + tinyld; continue even if fail.
+  window.__depsReady = new Promise((resolve)=>{
+    let count = 0, ok = 0;
+    function done(){ count++; if(count>=2) resolve(ok>0); }
+    loadScriptSeq([
+      "https://cdn.jsdelivr.net/npm/opencc-js@1.0.5/dist/umd/full.min.js",
+      "https://unpkg.com/opencc-js@1.0.5/dist/umd/full.min.js"
+    ], ()=>{ ok++; done(); }, ()=>{ done(); });
+    loadScriptSeq([
+      "https://cdn.jsdelivr.net/npm/tinyld@1.1.3/dist/tinyld.min.js",
+      "https://unpkg.com/tinyld@1.1.3/dist/tinyld.min.js"
+    ], ()=>{ ok++; done(); }, ()=>{ done(); });
+  });
+  </script>
 </head>
 <body>
-  <header class="top">
-    <div class="brand">Can‑Tong 粤语助手</div>
-    <div id="mode" class="mode">演示模式（本地规则） · <span id="cloudState" class="muted">云端：未连接</span></div>
+  <header class="topbar">
+    <div class="wrap bar">
+      <div class="brand">
+        <span class="logo">CT</span>
+        <div class="titles">
+          <h1>Can‑Tong 粵語助手</h1>
+          <div class="muted small" id="modeNote">演示模式（本地規則）；未連雲端模型</div>
+        </div>
+      </div>
+      <button id="btnCfg" class="ghost">設置</button>
+    </div>
   </header>
 
-  <main class="chatwrap">
+  <main class="wrap main">
     <div id="chat" class="chat">
-      <div class="msg sys">
+      <div class="msg bot">
         <div class="bubble">
-          👋 歡迎！輸入中文/英文/粵語，我會輸出「粵語正字（繁體，港式）」的多個可用說法。<br>
-          <span class="muted">備註：風格僅作灰色說明，非固定三擋；連接雲端模型後效果更地道。</span>
+          你好，我係粵語助手。輸入中文 / 英文 / 粵語，我會用
+          <span class="muted">繁體·港式</span> 方式回你，多提供幾種講法（灰字標註語體）。
         </div>
       </div>
     </div>
 
     <div class="composer">
-      <button id="btnCfg" class="icon" title="设置">⚙️</button>
-      <textarea id="ipt" rows="1" placeholder="輸入訊息，按 Enter 發送（Shift+Enter 換行）"></textarea>
-      <button id="btnSend">发送</button>
+      <textarea id="input" rows="2" placeholder="輸入要轉成粵語嘅句子…（例：我想退貨 / I need a refund）"></textarea>
+      <button id="btnSend">發送</button>
     </div>
   </main>
 
-  <dialog id="cfgDialog">
-    <form method="dialog" class="cfg">
-      <h3>云端模型连接（OpenAI 兼容 / vLLM 网关 / Ollama）</h3>
-      <label>API Base
-        <input id="apiBase" placeholder="例如：https://api.openai.com/v1 或 http://localhost:11434/v1">
-      </label>
-      <label>API Key
-        <input id="apiKey" placeholder="sk-...（Ollama 一般留空）">
-      </label>
-      <label>模型名
-        <input id="model" placeholder="例如：gpt-4o-mini / qwen2.5-7b-instruct / llama3.1">
-      </label>
-      <label>单次超时（秒）
-        <input id="timeout" type="number" value="40">
-      </label>
-      <div class="row">
-        <button id="btnTest" type="button" class="ghost">测试连接</button>
-        <button id="btnSave" type="button">保存</button>
-        <button id="btnClose" type="submit" class="ghost">关闭</button>
+  <!-- Drawer: settings -->
+  <div id="cfgDrawer" class="drawer hidden">
+    <div class="drawer-inner">
+      <div class="drawer-head">
+        <h2>設置</h2>
+        <button id="btnCloseCfg" class="ghost">關閉</button>
       </div>
-      <p class="muted tiny">
-        说明：三类接口都是 <b>Chat Completions</b> 规范，只是服务来源不同：<br>
-        <b>OpenAI</b>（付费，最稳）· <b>vLLM/自建网关</b>（自托管，低成本）· <b>Ollama</b>（本地离线）。<br>
-        你只需填 API Base/模型名/Key（如需），无需改代码即可切换。
-      </p>
-    </form>
-  </dialog>
-
-  <footer class="foot muted tiny">
-    © Can‑Tong · 演示/云端双模 · 支持灰色风格备注，非固定三挡 · 后续可接 RAG / zh‑HK TTS
-  </footer>
+      <div class="section">
+        <div class="label">模式</div>
+        <div class="desc muted">
+          默認為 <b>演示模式</b>（無後端，僅本地規則）。如配置 <b>雲端模型</b>，英文將使用機器翻譯，並對中文/粵語結果做進一步精修。
+        </div>
+        <div class="muted tiny">備註：後續會加入 RAG / zh‑HK TTS。此版僅預留。</div>
+      </div>
+      <div class="section">
+        <div class="label">雲端模型（OpenAI 兼容）</div>
+        <div class="grid2">
+          <label>提供商
+            <select id="provider">
+              <option value="openai">OpenAI / 兼容（含 vLLM/FastGPT/代理）</option>
+              <option value="ollama">Ollama（本地 OpenAI 兼容）</option>
+            </select>
+          </label>
+          <label>API Base
+            <input id="apiBase" placeholder="https://api.openai.com/v1 或 http://localhost:11434/v1">
+          </label>
+          <label>API Key
+            <input id="apiKey" placeholder="sk-...（Ollama 可留空）">
+          </label>
+          <label>模型名
+            <input id="model" placeholder="如 gpt-4o-mini / qwen2.5-7b-instruct / llama3.1">
+          </label>
+          <label>超時（秒）
+            <input id="timeout" type="number" value="45">
+          </label>
+        </div>
+        <div class="row">
+          <button id="btnSaveCfg">保存配置</button>
+          <button id="btnTest" class="ghost">測試連接</button>
+        </div>
+        <div class="muted tiny">
+          說明：三種接入只是「來源不同」：OpenAI（雲，最穩）、vLLM/代理（私有化）、Ollama（本地免費）。
+          你只需換 <code>API Base / 模型名</code> 即可切換，不必改代碼。
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script src="./app.js" defer></script>
 </body>
