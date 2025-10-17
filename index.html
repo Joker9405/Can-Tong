@@ -3,101 +3,64 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Can‑Tong · 演示模式（本地词库）｜三挡粤语变体</title>
+  <title>Can‑Tong 粤语助手 · 演示/云端双模</title>
   <link rel="stylesheet" href="./style.css">
-  <!-- OpenCC for HK variant (CDN) -->
-  <script defer src="https://cdn.jsdelivr.net/npm/opencc-js@1.0.5/dist/umd/full.min.js"></script>
-  <!-- tinyld language detection (CDN) -->
-  <script defer src="https://cdn.jsdelivr.net/npm/tinyld@1.1.3/dist/tinyld.min.js"></script>
 </head>
 <body>
-  <header class="wrap">
-    <h1>Can‑Tong</h1>
-    <p class="subtitle">演示模式（本地词库）｜输出固定为 <b>粤语正字（繁體，港式）</b> ｜ 三挡：一般 / 地道 / 禮貌</p>
-    <div id="statusBar" class="status info">
-      <span>狀態：</span>
-      <span id="statusChip-demo" class="chip on">演示模式</span>
-      <span id="statusChip-rag" class="chip off">RAG 未啟用</span>
-      <span id="statusChip-tts" class="chip off">TTS 未啟用</span>
-      <span id="statusChip-cloud" class="chip off">雲端模型 未連接</span>
-    </div>
+  <header class="top">
+    <div class="brand">Can‑Tong 粤语助手</div>
+    <div id="mode" class="mode">演示模式（本地规则） · <span id="cloudState" class="muted">云端：未连接</span></div>
   </header>
 
-  <main class="wrap grid">
-    <section class="panel">
-      <h2>輸入</h2>
-      <label class="muted">可輸入中文/英文/粵語（將統一輸出為繁體港式粵語）</label>
-      <textarea id="input" rows="5" placeholder="輸入一句話...例如：我想要一杯冰咖啡。 / I need a refund for my order."></textarea>
-      <div class="actions">
-        <button id="btnRun">轉成三擋變體</button>
-        <button id="btnClear" class="ghost">清空</button>
-        <details class="config">
-          <summary>雲端模型連接（可選）</summary>
-          <div class="cfg-grid">
-            <label>提供商
-              <select id="provider">
-                <option value="openai">OpenAI / 兼容 (vLLM/fastGPT/兼容網關)</option>
-                <option value="ollama">Ollama (本地)</option>
-              </select>
-            </label>
-            <label>API Base
-              <input id="apiBase" placeholder="例如：https://api.openai.com/v1 或 http://localhost:11434/v1" />
-            </label>
-            <label>API Key
-              <input id="apiKey" placeholder="sk-..." />
-            </label>
-            <label>模型名
-              <input id="model" placeholder="例如：gpt-4o-mini / qwen2.5-7b-instruct / llama3.1" />
-            </label>
-            <label>超時 (秒)
-              <input id="timeout" type="number" value="40" />
-            </label>
-          </div>
-          <div class="cfg-actions">
-            <button id="btnSaveCfg">保存配置</button>
-            <button id="btnTestCloud" class="ghost">測試連接</button>
-          </div>
-          <p class="tiny">說明：未配置則保留「演示模式（本地規則）」；配置後將自動使用雲端模型處理英文翻譯與高質量重寫。</p>
-        </details>
+  <main class="chatwrap">
+    <div id="chat" class="chat">
+      <div class="msg sys">
+        <div class="bubble">
+          👋 歡迎！輸入中文/英文/粵語，我會輸出「粵語正字（繁體，港式）」的多個可用說法。<br>
+          <span class="muted">備註：風格僅作灰色說明，非固定三擋；連接雲端模型後效果更地道。</span>
+        </div>
       </div>
-    </section>
+    </div>
 
-    <section class="panel">
-      <h2>輸出 · 三擋變體</h2>
-      <div id="outGeneral" class="card">
-        <div class="card-head">
-          <span class="badge">一般體</span>
-          <button class="copy" data-target="outGeneralText">複製</button>
-        </div>
-        <div id="outGeneralText" class="yue"></div>
-      </div>
-      <div id="outColloquial" class="card">
-        <div class="card-head">
-          <span class="badge">地道體</span>
-          <button class="copy" data-target="outColloquialText">複製</button>
-        </div>
-        <div id="outColloquialText" class="yue"></div>
-      </div>
-      <div id="outPolite" class="card">
-        <div class="card-head">
-          <span class="badge">禮貌/正式體</span>
-          <button class="copy" data-target="outPoliteText">複製</button>
-        </div>
-        <div id="outPoliteText" class="yue"></div>
-      </div>
-    </section>
-
-    <section class="panel">
-      <h2>差異高亮</h2>
-      <div id="diffArea" class="diff"></div>
-      <p class="tiny muted">高亮顯示三擋之間的詞彙差異，方便挑選。</p>
-    </section>
+    <div class="composer">
+      <button id="btnCfg" class="icon" title="设置">⚙️</button>
+      <textarea id="ipt" rows="1" placeholder="輸入訊息，按 Enter 發送（Shift+Enter 換行）"></textarea>
+      <button id="btnSend">发送</button>
+    </div>
   </main>
 
-  <footer class="wrap">
-    <p class="tiny muted">© Can‑Tong · 演示模式。連接雲端模型後可啟用 RAG / zh‑HK 神經 TTS / 更多控制。</p>
+  <dialog id="cfgDialog">
+    <form method="dialog" class="cfg">
+      <h3>云端模型连接（OpenAI 兼容 / vLLM 网关 / Ollama）</h3>
+      <label>API Base
+        <input id="apiBase" placeholder="例如：https://api.openai.com/v1 或 http://localhost:11434/v1">
+      </label>
+      <label>API Key
+        <input id="apiKey" placeholder="sk-...（Ollama 一般留空）">
+      </label>
+      <label>模型名
+        <input id="model" placeholder="例如：gpt-4o-mini / qwen2.5-7b-instruct / llama3.1">
+      </label>
+      <label>单次超时（秒）
+        <input id="timeout" type="number" value="40">
+      </label>
+      <div class="row">
+        <button id="btnTest" type="button" class="ghost">测试连接</button>
+        <button id="btnSave" type="button">保存</button>
+        <button id="btnClose" type="submit" class="ghost">关闭</button>
+      </div>
+      <p class="muted tiny">
+        说明：三类接口都是 <b>Chat Completions</b> 规范，只是服务来源不同：<br>
+        <b>OpenAI</b>（付费，最稳）· <b>vLLM/自建网关</b>（自托管，低成本）· <b>Ollama</b>（本地离线）。<br>
+        你只需填 API Base/模型名/Key（如需），无需改代码即可切换。
+      </p>
+    </form>
+  </dialog>
+
+  <footer class="foot muted tiny">
+    © Can‑Tong · 演示/云端双模 · 支持灰色风格备注，非固定三挡 · 后续可接 RAG / zh‑HK TTS
   </footer>
 
-  <script defer src="./app.js"></script>
+  <script src="./app.js" defer></script>
 </body>
 </html>

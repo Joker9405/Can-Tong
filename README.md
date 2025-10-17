@@ -1,46 +1,44 @@
-# Can‑Tong 前端（演示模式 + 雲端可接）
+# Can‑Tong Chat UI（对话框版）
 
-這是一個可直接覆蓋到 GitHub Pages 的前端，小步快跑：
-- **演示模式（無後端）**：本地規則 + OpenCC（HK 變體）實現「統一輸出為粵語正字」與**三擋變體**（一般 / 地道 / 禮貌）
-- **雲端模式（可選）**：支持 OpenAI 兼容的 `/v1/chat/completions` 端點（OpenAI / vLLM / 一些網關 / Ollama OpenAI 兼容服務），用於**英文翻譯與高質量潤色**
-
-> 注意：本倉庫不包含語料與服務端代碼。RAG / zh-HK 神經 TTS 仍未接入，只是預留位。
-
-## 快速開始
-
-1. 將四個文件（`index.html`、`style.css`、`app.js`、`README.md`）放到你的 GitHub Pages 根目錄（例如 `joker9405.github.io/Can-Tong/`）。
-2. 打開頁面即可使用「演示模式」。
-3. 如需連接雲端模型：打開「雲端模型連接」折疊面板，填入：
-   - **提供商**：OpenAI/兼容（或 Ollama）
-   - **API Base**：如 `https://api.openai.com/v1` 或 `http://localhost:11434/v1`
-   - **API Key**：OpenAI 需填；Ollama 通常不需要
-   - **模型名**：如 `gpt-4o-mini`、`qwen2.5-7b-instruct`、`llama-3.1-8b-instruct` 等
-4. 點擊「保存配置」→「測試連接」。成功後，輸入英文會自動走雲端翻譯；中文/粵語也可讓雲端「修飾」。
-
-## 設計說明
-
-- **統一輸出為粵語正字（繁體，港式）**：
-  - 先用 OpenCC HK 變體將簡體/傳統統一處理
-  - 再用本地啟發式（`app.js` 的 `yueHeuristic`）弱化普通話味道
-- **三擋變體**：
-  - `buildThreeVariantsLocal()` 會生成一般/地道/禮貌三個版本
-  - 若配置了雲端，還會嘗試用一次雲端做 JSON 形式的**精修**，顯著提高地道度與風格差異
-- **差異高亮**：簡單詞級對比，突出各擋不同
-
-## 雲端對接 API（OpenAI 兼容）
-
-`POST {API_BASE}/chat/completions` 以 JSON 請求，要求模型返回：
-```json
-{"general":"", "colloquial":"", "polite":""}
-```
-所有文本要求**繁體粵語**。
-
-## 常見問題
-
-- **CDN 無法訪問**：頁面使用了 `opencc-js` 與 `tinyld` 的 CDN。若你的網絡環境無法拉取，請自行下載並改為本地引用。
-- **英文輸入在未連雲端時效果一般**：演示模式不做機器翻譯，建議配置雲端模型。
-- **RAG / TTS**：此版僅預留 UI 標識，後續可再接。
+本包满足你提出的 5 点：
+1. **ChatGPT 对话框形式**：上下文对话，每次输入一句、AI 回一句。
+2. **不固定“三挡”**：输出为**多条可用说法**，每条带**灰色风格备注**（如“日常用/较口语/礼貌”），不是固定三栏。
+3. **不卡点击**：去除了强依赖的外部脚本；所有异步都有 try/catch；发生异常也会回退到**本地规则**，按钮不失效。
+4. **OpenAI 兼容接口的作用**：
+   - **OpenAI 官方**（付费）：语义理解强、稳定。
+   - **vLLM/自建网关**（自托管）：更低成本，走同一套 Chat Completions 协议。
+   - **Ollama**（本地离线）：在你机器本地跑模型（需启 OpenAI 兼容端）。
+   > 三者的“区别”仅在服务来源与费用，**代码与界面不变**，在设置里填不同的 API Base / 模型名即可切换。
+5. **可直接覆盖上传**：将 4 个文件上传到你的 GitHub Pages 仓库即可启用。
 
 ---
 
-© Can‑Tong demo front-end
+## 使用步骤
+
+1. 上传这四个文件到 `joker9405.github.io/Can-Tong/`（或你的 Pages 根目录）：
+   - `index.html`
+   - `style.css`
+   - `app.js`
+   - `README.md`
+2. 打开网页即可用**演示模式（本地规则）**。
+3. 如需启用云端：点击底部齿轮 ⚙️，填：
+   - **API Base**：`https://api.openai.com/v1` 或自建 `http(s)://your-host/v1`（Ollama：`http://localhost:11434/v1`）
+   - **API Key**：OpenAI 需要；Ollama通常留空
+   - **模型名**：如 `gpt-4o-mini`、`qwen2.5-7b-instruct`、`llama3.1`
+   - 点“测试连接”验证；成功后即会用云端生成更地道的多条说法。
+
+## 本地规则说明（演示模式）
+
+- 极简启发式把普通话味道弱化，统一输出为“繁体·港式”倾向的句式，并生成 3–4 条可用说法。
+- **不依赖外部 CDN**，避免“显示模式下翻译不了/点击停摆”。
+- 若云端调用失败，会自动回退本地规则并提示。
+
+## 备注
+
+- 你后续要接 RAG、TTS，只需在 `app.js` 中扩展：
+  - RAG：在发云端前拼入“知识检索结果”作为 system 或 user 提示。
+  - TTS：在渲染 assistant 消息时，调用浏览器 TTS 或你的 zh‑HK 神经 TTS 服务。
+
+---
+
+© Can‑Tong Chat UI
