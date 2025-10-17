@@ -1,0 +1,32 @@
+*{box-sizing:border-box}html,body{margin:0;padding:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol';line-height:1.5}
+.wrap{width:min(1100px,92vw);margin:0 auto;padding:16px}
+header h1{margin:0 0 4px 0;font-size:28px}
+.subtitle{margin:0 0 12px 0;color:#666}
+.status{padding:8px 12px;border-radius:10px;background:#f6f7f8;border:1px solid #e5e7eb;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.chip{padding:2px 8px;border-radius:999px;border:1px solid #d1d5db;font-size:12px}
+.chip.on{background:#e8f5e9;border-color:#a5d6a7}
+.chip.off{background:#fff;border-color:#e5e7eb;color:#9ca3af}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.panel{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:14px}
+.panel h2{margin:0 0 6px 0;font-size:18px}
+.muted{color:#6b7280}
+textarea{width:100%;padding:10px;border:1px solid #e5e7eb;border-radius:10px;resize:vertical;font-size:14px}
+.actions{display:flex;gap:8px;align-items:flex-start;margin-top:10px}
+button{border:none;background:#111827;color:#fff;padding:10px 14px;border-radius:10px;cursor:pointer}
+button.ghost{background:#f3f4f6;color:#111827}
+button:disabled{opacity:.6;cursor:not-allowed}
+details.config{margin-left:auto;border:1px dashed #e5e7eb;border-radius:10px;padding:8px 10px;background:#fafafa}
+.cfg-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.cfg-grid input,.cfg-grid select{width:100%;padding:8px;border:1px solid #e5e7eb;border-radius:8px}
+.cfg-actions{display:flex;gap:8px;margin-top:8px}
+.card{border:1px solid #e5e7eb;border-radius:12px;padding:10px;margin-bottom:10px;background:#fff}
+.card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.badge{font-size:12px;padding:2px 8px;border-radius:999px;background:#eef2ff;color:#3730a3}
+.copy{background:#374151}
+.yue{min-height:46px;white-space:pre-wrap}
+.diff{border:1px solid #e5e7eb;border-radius:10px;padding:10px;min-height:46px;background:#fcfcfd}
+.add{background:#e6ffed}
+.del{background:#ffeaea;text-decoration:line-through}
+.tiny{font-size:12px}
+footer{color:#6b7280}
+@media (max-width: 960px){.grid{grid-template-columns:1fr}}

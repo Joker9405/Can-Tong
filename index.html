@@ -1,44 +1,103 @@
 <!doctype html>
 <html lang="zh-HK">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Can‑Tong · 粤语助手（Chat 模式 · 静态版）</title>
-  <link rel="stylesheet" href="styles.css" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Can‑Tong · 演示模式（本地词库）｜三挡粤语变体</title>
+  <link rel="stylesheet" href="./style.css">
+  <!-- OpenCC for HK variant (CDN) -->
+  <script defer src="https://cdn.jsdelivr.net/npm/opencc-js@1.0.5/dist/umd/full.min.js"></script>
+  <!-- tinyld language detection (CDN) -->
+  <script defer src="https://cdn.jsdelivr.net/npm/tinyld@1.1.3/dist/tinyld.min.js"></script>
 </head>
 <body>
-  <header class="topbar">
-    <h1>Can‑Tong · 粤语助手</h1>
-    <div class="lang-toggle">
-      <label>UI：</label>
-      <select id="uiLang">
-        <option value="zh">中文</option>
-        <option value="en">English</option>
-      </select>
+  <header class="wrap">
+    <h1>Can‑Tong</h1>
+    <p class="subtitle">演示模式（本地词库）｜输出固定为 <b>粤语正字（繁體，港式）</b> ｜ 三挡：一般 / 地道 / 禮貌</p>
+    <div id="statusBar" class="status info">
+      <span>狀態：</span>
+      <span id="statusChip-demo" class="chip on">演示模式</span>
+      <span id="statusChip-rag" class="chip off">RAG 未啟用</span>
+      <span id="statusChip-tts" class="chip off">TTS 未啟用</span>
+      <span id="statusChip-cloud" class="chip off">雲端模型 未連接</span>
     </div>
   </header>
 
-  <main class="container">
-    <section id="chat" class="chat">
-      <!-- Messages will render here -->
+  <main class="wrap grid">
+    <section class="panel">
+      <h2>輸入</h2>
+      <label class="muted">可輸入中文/英文/粵語（將統一輸出為繁體港式粵語）</label>
+      <textarea id="input" rows="5" placeholder="輸入一句話...例如：我想要一杯冰咖啡。 / I need a refund for my order."></textarea>
+      <div class="actions">
+        <button id="btnRun">轉成三擋變體</button>
+        <button id="btnClear" class="ghost">清空</button>
+        <details class="config">
+          <summary>雲端模型連接（可選）</summary>
+          <div class="cfg-grid">
+            <label>提供商
+              <select id="provider">
+                <option value="openai">OpenAI / 兼容 (vLLM/fastGPT/兼容網關)</option>
+                <option value="ollama">Ollama (本地)</option>
+              </select>
+            </label>
+            <label>API Base
+              <input id="apiBase" placeholder="例如：https://api.openai.com/v1 或 http://localhost:11434/v1" />
+            </label>
+            <label>API Key
+              <input id="apiKey" placeholder="sk-..." />
+            </label>
+            <label>模型名
+              <input id="model" placeholder="例如：gpt-4o-mini / qwen2.5-7b-instruct / llama3.1" />
+            </label>
+            <label>超時 (秒)
+              <input id="timeout" type="number" value="40" />
+            </label>
+          </div>
+          <div class="cfg-actions">
+            <button id="btnSaveCfg">保存配置</button>
+            <button id="btnTestCloud" class="ghost">測試連接</button>
+          </div>
+          <p class="tiny">說明：未配置則保留「演示模式（本地規則）」；配置後將自動使用雲端模型處理英文翻譯與高質量重寫。</p>
+        </details>
+      </div>
     </section>
 
-    <form id="composer" class="composer">
-      <input id="userInput" type="text" placeholder="输入 中文 / English 后回车…" autocomplete="off" />
-      <button type="submit" class="primary">发送</button>
-    </form>
+    <section class="panel">
+      <h2>輸出 · 三擋變體</h2>
+      <div id="outGeneral" class="card">
+        <div class="card-head">
+          <span class="badge">一般體</span>
+          <button class="copy" data-target="outGeneralText">複製</button>
+        </div>
+        <div id="outGeneralText" class="yue"></div>
+      </div>
+      <div id="outColloquial" class="card">
+        <div class="card-head">
+          <span class="badge">地道體</span>
+          <button class="copy" data-target="outColloquialText">複製</button>
+        </div>
+        <div id="outColloquialText" class="yue"></div>
+      </div>
+      <div id="outPolite" class="card">
+        <div class="card-head">
+          <span class="badge">禮貌/正式體</span>
+          <button class="copy" data-target="outPoliteText">複製</button>
+        </div>
+        <div id="outPoliteText" class="yue"></div>
+      </div>
+    </section>
 
-    <section class="notes">
-      <details>
-        <summary>来源（示例）</summary>
-        <ul id="sources">
-          <li>本页面为<span>静态演示</span>，使用自带小型词库映射实现 CN/EN → YUE 三档变体。</li>
-          <li>真实版本请接入 RAG 与 zh‑HK 神经 TTS；HKCanCor（CC‑BY）仅作 <em>retrieval‑only</em> 并署名引用；Common Voice zh‑HK（CC0）可用于 TTS 评测与示例音色。</li>
-        </ul>
-      </details>
+    <section class="panel">
+      <h2>差異高亮</h2>
+      <div id="diffArea" class="diff"></div>
+      <p class="tiny muted">高亮顯示三擋之間的詞彙差異，方便挑選。</p>
     </section>
   </main>
 
-  <script src="app.js"></script>
+  <footer class="wrap">
+    <p class="tiny muted">© Can‑Tong · 演示模式。連接雲端模型後可啟用 RAG / zh‑HK 神經 TTS / 更多控制。</p>
+  </footer>
+
+  <script defer src="./app.js"></script>
 </body>
 </html>
