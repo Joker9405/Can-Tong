@@ -23,6 +23,3 @@ h1{font-size:18px;margin:0}
 .item .note{font-size:12px;color:#94a3b8;margin-top:2px}
 .item .controls button{background:#1f2937;border:1px solid #334155;color:#e5e7eb;border-radius:8px;padding:6px 10px;cursor:pointer}
 .bad{color:#fca5a5}
-.chip{margin-left:8px;font-size:11px;padding:2px 6px;border-radius:999px;border:1px solid #334155}
-.chip.on{background:#0a2a12;color:#86efac;border-color:#14532d}
-.chip.off{background:#2a0a0a;color:#fca5a5;border-color:#7f1d1d}
