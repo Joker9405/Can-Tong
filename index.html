@@ -3,9 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Can-Tong 粵語學習助手（雲端詞庫 + 發音）</title>
+  <title>Can-Tong 粵語學習助手（自動雲端·零配置）</title>
   <link rel="stylesheet" href="./style.css">
   <script>
+  // Optional OpenCC loader; page works even if it fails.
   function loadScriptSeq(urls, onload, onerror){
     if(!urls.length){ onerror && onerror(new Error('All CDNs failed')); return; }
     const url = urls.shift();
@@ -30,7 +31,7 @@
           <h1>Can-Tong 粵語學習助手</h1>
           <div class="muted small">
             對話式練習｜輸入中文/英文/粵語 → 輸出 <b>繁體·港式</b> 粵語說法
-            <span id="cloudStatus" class="chip off">雲端：未配置</span>
+            <span id="cloudStatus" class="chip off">雲端：檢測中…</span>
           </div>
         </div>
       </div>
@@ -42,7 +43,7 @@
       <div class="msg bot">
         <div class="bubble">
           👋 歡迎！輸入一句話，我會提供 1～3 條粵語說法。右側 <span class="muted">發音</span> 按鈕可播放粵語讀音。<br>
-          <span class="muted">（如你已在 <code>app.js</code> 設定了雲端詞庫與發音端點，將自動使用雲端；否則使用本地演示規則。）</span>
+          <span class="muted">（雲端自動檢測：優先使用 ?translate= / ?tts= 的 URL 參數；否則嘗試同域 <code>/api/translate</code>、<code>/api/tts</code>；兩者皆無則使用本地演示。）</span>
         </div>
       </div>
     </div>

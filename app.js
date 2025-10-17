@@ -1,35 +1,38 @@
-const CFG = {
-  CLOUD_TRANSLATE_ENDPOINT: "https://your.domain/api/translate",
-  CLOUD_TTS_ENDPOINT: "https://your.domain/api/tts",
-  CLOUD_HEADERS: {
-    // "Authorization": "Bearer YOUR_TOKEN" // 如需
-  }
-};
-// Cloud-ready simple chat: connect your endpoints for (1) translate via lexicon/model, (2) TTS audio.
-// If endpoints are empty or fail, falls back to local rules + browser TTS.
+// Cloud-auto simple chat: zero-edit.
+// - Auto-detect cloud endpoints via URL params (?translate=...&tts=...) or same-origin /api/*
+// - Minimal Chat UI, vertical suggestions, TTS per line
+// - Always works offline via local heuristics + browser TTS
 
 const chat = document.getElementById('chat');
 const input = document.getElementById('input');
 const btnSend = document.getElementById('btnSend');
 const cloudStatus = document.getElementById('cloudStatus');
 
-// ====== MINIMAL CONFIG (EDIT THESE 3 FIELDS) ======
-const CFG = {
-  CLOUD_TRANSLATE_ENDPOINT: "", // e.g. "https://your.domain/api/translate"
-  CLOUD_TTS_ENDPOINT: "",       // e.g. "https://your.domain/api/tts"
-  CLOUD_HEADERS: {              // optional headers (e.g., auth)
-    // "Authorization": "Bearer YOUR_TOKEN"
-  }
+// ---- Endpoint auto-detection ----
+const params = new URLSearchParams(location.search);
+const autoCFG = {
+  CLOUD_TRANSLATE_ENDPOINT: params.get('translate') || (location.origin + '/api/translate'),
+  CLOUD_TTS_ENDPOINT: params.get('tts') || (location.origin + '/api/tts'),
+  CLOUD_HEADERS: {},
 };
-// ==================================================
-
-function updateCloudStatus(){
-  const on = !!(CFG.CLOUD_TRANSLATE_ENDPOINT || CFG.CLOUD_TTS_ENDPOINT);
-  if(!cloudStatus) return;
-  if(on){ cloudStatus.textContent = '雲端：已配置'; cloudStatus.classList.remove('off'); cloudStatus.classList.add('on'); }
-  else  { cloudStatus.textContent = '雲端：未配置'; cloudStatus.classList.remove('on'); cloudStatus.classList.add('off'); }
+// Probe endpoints (HEAD), but ignore failures silently
+async function probe(url){
+  try{
+    const r = await fetch(url, { method: 'OPTIONS' });
+    return r.ok;
+  }catch(_){ return false; }
 }
-updateCloudStatus();
+(async ()=>{
+  const okTrans = await probe(autoCFG.CLOUD_TRANSLATE_ENDPOINT);
+  const okTts = await probe(autoCFG.CLOUD_TTS_ENDPOINT);
+  if (okTrans || okTts){
+    cloudStatus.textContent = '雲端：已配置';
+    cloudStatus.classList.remove('off'); cloudStatus.classList.add('on');
+  } else {
+    cloudStatus.textContent = '雲端：未配置';
+    cloudStatus.classList.remove('on'); cloudStatus.classList.add('off');
+  }
+})();
 
 function addMsg(role, html){
   const div = document.createElement('div');
@@ -56,7 +59,7 @@ async function toHK(text){
   return text;
 }
 
-// Local heuristic for demo (kept simple)
+// Local heuristic for demo
 function yueHeuristic(s){
   let out = s;
   const pairs = [
@@ -68,7 +71,6 @@ function yueHeuristic(s){
     ['了','咗'],['是','係'],['不要','唔好'],['需要','要']
   ];
   for(const [a,b] of pairs){ out = out.replace(new RegExp(a,'g'), b); }
-  // English quick mapping
   if (/^[\x00-\x7F\s.,!?'"-:;()]+$/.test(out)){
     out = out
       .replace(/i need/gi,'我需要')
@@ -95,7 +97,6 @@ function buildSuggestions(base){
     { text: b, note: '較口語 / 地道' },
     { text: c.endsWith('。')? c : c+'。', note: '禮貌 / 正式' }
   ];
-  // unique
   const seen = new Set(); const uniq = [];
   for(const it of list){ if(!seen.has(it.text)){ seen.add(it.text); uniq.push(it); } }
   return uniq;
@@ -103,11 +104,10 @@ function buildSuggestions(base){
 
 // Cloud translate call
 async function cloudTranslate(text){
-  if (!CFG.CLOUD_TRANSLATE_ENDPOINT) throw new Error('No endpoint');
   const body = { text, source: 'auto', target: 'yue-Hant-HK', n: 3 };
-  const res = await fetch(CFG.CLOUD_TRANSLATE_ENDPOINT, {
+  const res = await fetch(autoCFG.CLOUD_TRANSLATE_ENDPOINT, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...CFG.CLOUD_HEADERS },
+    headers: { 'Content-Type': 'application/json', ...autoCFG.CLOUD_HEADERS },
     body: JSON.stringify(body),
   });
   if(!res.ok){
@@ -127,10 +127,9 @@ async function cloudTranslate(text){
 
 // Cloud TTS call -> play audio
 async function cloudSpeak(text){
-  if (!CFG.CLOUD_TTS_ENDPOINT) throw new Error('No endpoint');
-  const res = await fetch(CFG.CLOUD_TTS_ENDPOINT, {
+  const res = await fetch(autoCFG.CLOUD_TTS_ENDPOINT, {
     method: 'POST',
-    headers: { ...CFG.CLOUD_HEADERS, 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', ...autoCFG.CLOUD_HEADERS },
     body: JSON.stringify({ text, voice: 'zh-HK', format: 'mp3' })
   });
   if(!res.ok){
@@ -158,13 +157,13 @@ function browserSpeak(text){
   let v = pick(); if (v) utter.voice = v;
   synth.cancel(); synth.speak(utter);
 }
-
 async function speak(text){
   try{
-    if (CFG.CLOUD_TTS_ENDPOINT) return await cloudSpeak(text);
-  }catch(e){
-    console.warn(e);
-  }
+    // Use cloud if query param provided or /api/tts reachable
+    if (params.get('tts') || location.origin) {
+      return await cloudSpeak(text);
+    }
+  }catch(e){ console.warn(e); }
   browserSpeak(text);
 }
 
@@ -182,15 +181,16 @@ function renderList(items){
   `).join('') + `</div>`;
 }
 
-// Pipeline: prefer cloud translate, else local
+// Pipeline: prefer cloud translate if param or /api present; else local
 async function processText(t){
   const hk = await toHK(t);
-  if (CFG.CLOUD_TRANSLATE_ENDPOINT) {
+  if (params.get('translate')) {
+    try{ return await cloudTranslate(hk); }catch(e){ console.warn('cloudTranslate(param) fail:', e); }
+  } else {
+    // try same-origin /api/translate with a quick preflight
     try{
       return await cloudTranslate(hk);
-    }catch(e){
-      console.warn('cloudTranslate fail, fallback:', e);
-    }
+    }catch(e){ /* fallback below */ }
   }
   const base = yueHeuristic(hk);
   return buildSuggestions(base);
