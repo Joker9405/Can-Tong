@@ -1,3 +1,10 @@
+const CFG = {
+  CLOUD_TRANSLATE_ENDPOINT: "https://your.domain/api/translate",
+  CLOUD_TTS_ENDPOINT: "https://your.domain/api/tts",
+  CLOUD_HEADERS: {
+    // "Authorization": "Bearer YOUR_TOKEN" // 如需
+  }
+};
 // Cloud-ready simple chat: connect your endpoints for (1) translate via lexicon/model, (2) TTS audio.
 // If endpoints are empty or fail, falls back to local rules + browser TTS.
 
