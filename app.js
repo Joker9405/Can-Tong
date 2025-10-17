@@ -1,8 +1,28 @@
-// Can‑Tong simplified chat: no settings, vertical list of suggestions, HK TTS per line.
+// Cloud-ready simple chat: connect your endpoints for (1) translate via lexicon/model, (2) TTS audio.
+// If endpoints are empty or fail, falls back to local rules + browser TTS.
 
 const chat = document.getElementById('chat');
 const input = document.getElementById('input');
 const btnSend = document.getElementById('btnSend');
+const cloudStatus = document.getElementById('cloudStatus');
+
+// ====== MINIMAL CONFIG (EDIT THESE 3 FIELDS) ======
+const CFG = {
+  CLOUD_TRANSLATE_ENDPOINT: "", // e.g. "https://your.domain/api/translate"
+  CLOUD_TTS_ENDPOINT: "",       // e.g. "https://your.domain/api/tts"
+  CLOUD_HEADERS: {              // optional headers (e.g., auth)
+    // "Authorization": "Bearer YOUR_TOKEN"
+  }
+};
+// ==================================================
+
+function updateCloudStatus(){
+  const on = !!(CFG.CLOUD_TRANSLATE_ENDPOINT || CFG.CLOUD_TTS_ENDPOINT);
+  if(!cloudStatus) return;
+  if(on){ cloudStatus.textContent = '雲端：已配置'; cloudStatus.classList.remove('off'); cloudStatus.classList.add('on'); }
+  else  { cloudStatus.textContent = '雲端：未配置'; cloudStatus.classList.remove('on'); cloudStatus.classList.add('off'); }
+}
+updateCloudStatus();
 
 function addMsg(role, html){
   const div = document.createElement('div');
@@ -17,37 +37,7 @@ function addMsg(role, html){
 
 function escapeHtml(s){ return s.replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
 
-// Tiny bilingual lexicon (EN/CN -> Yue)
-const LEXICON = {
-  "refund": ["要求退款","申請退貨退款"],
-  "order": ["訂單","單"],
-  "coffee": ["咖啡"],
-  "iced coffee": ["凍咖啡","冰咖啡"],
-  "where is": ["喺邊度"],
-  "bathroom": ["洗手間","廁所"],
-  "help": ["幫手","幫忙"],
-  "please": ["唔該","麻煩你"],
-  "thank you": ["多謝你","唔該晒"],
-  "我想": ["我想","我想要","我想買"],
-  "我要": ["我要","畀我"],
-  "退貨": ["退貨"],
-  "退款": ["退款"],
-  "我需要": ["我要","我需要"],
-  "可以": ["可以","得"]
-};
-
-function applyLexiconEN(s){
-  let out = s;
-  const lower = s.toLowerCase();
-  for(const k in LEXICON){
-    if (!/[^\x00-\x7F]/.test(k) && lower.includes(k)){
-      const cand = LEXICON[k][0];
-      out += ' ' + cand;
-    }
-  }
-  return out;
-}
-
+// Optional OpenCC HK
 async function toHK(text){
   try{
     const ok = await window.__openccReady;
@@ -59,6 +49,7 @@ async function toHK(text){
   return text;
 }
 
+// Local heuristic for demo (kept simple)
 function yueHeuristic(s){
   let out = s;
   const pairs = [
@@ -70,8 +61,8 @@ function yueHeuristic(s){
     ['了','咗'],['是','係'],['不要','唔好'],['需要','要']
   ];
   for(const [a,b] of pairs){ out = out.replace(new RegExp(a,'g'), b); }
+  // English quick mapping
   if (/^[\x00-\x7F\s.,!?'"-:;()]+$/.test(out)){
-    out = applyLexiconEN(out);
     out = out
       .replace(/i need/gi,'我需要')
       .replace(/i want/gi,'我想要')
@@ -97,33 +88,77 @@ function buildSuggestions(base){
     { text: b, note: '較口語 / 地道' },
     { text: c.endsWith('。')? c : c+'。', note: '禮貌 / 正式' }
   ];
+  // unique
   const seen = new Set(); const uniq = [];
-  for(const it of list){ const k = it.text; if(!seen.has(k)){ seen.add(k); uniq.push(it); } }
+  for(const it of list){ if(!seen.has(it.text)){ seen.add(it.text); uniq.push(it); } }
   return uniq;
 }
 
-// TTS (HK)
-function speak(text){
-  try{
-    const synth = window.speechSynthesis;
-    if (!synth) throw new Error('TTS not supported');
-    const utter = new SpeechSynthesisUtterance(text);
-    const pick = ()=>{
-      const vs = synth.getVoices()||[];
-      let v = vs.find(v=>/zh[-_]?HK/i.test(v.lang));
-      if(!v) v = vs.find(v=>/yue|cantonese/i.test((v.name||'')+(v.lang||'')));
-      if(!v) v = vs.find(v=>/^zh/i.test(v.lang));
-      return v;
-    };
-    let voice = pick();
-    if(!voice){ synth.onvoiceschanged = ()=>{ voice = pick(); }; }
-    else { utter.voice = voice; }
-    utter.rate = 1; utter.pitch = 1;
-    synth.cancel();
-    synth.speak(utter);
-  }catch(e){
-    alert('瀏覽器未支援或被禁用發音。');
+// Cloud translate call
+async function cloudTranslate(text){
+  if (!CFG.CLOUD_TRANSLATE_ENDPOINT) throw new Error('No endpoint');
+  const body = { text, source: 'auto', target: 'yue-Hant-HK', n: 3 };
+  const res = await fetch(CFG.CLOUD_TRANSLATE_ENDPOINT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...CFG.CLOUD_HEADERS },
+    body: JSON.stringify(body),
+  });
+  if(!res.ok){
+    const msg = await res.text().catch(()=>'');
+    throw new Error('雲端翻譯錯誤 ' + res.status + ': ' + msg);
   }
+  const data = await res.json().catch(()=>null);
+  let items = [];
+  if (data?.items && Array.isArray(data.items)) items = data.items;
+  else if (Array.isArray(data?.texts)) items = data.texts.map(t=>({text:t, note:'可用說法'}));
+  else if (typeof data?.text === 'string') items = [{text:data.text, note:'可用說法'}];
+  else throw new Error('雲端返回格式不正確');
+  items = items.map(it=>({ text: String(it.text||''), note: it.note ? String(it.note) : '可用說法' })).filter(it=>it.text.trim());
+  if (items.length===0) throw new Error('雲端返回為空');
+  return items.slice(0,3);
+}
+
+// Cloud TTS call -> play audio
+async function cloudSpeak(text){
+  if (!CFG.CLOUD_TTS_ENDPOINT) throw new Error('No endpoint');
+  const res = await fetch(CFG.CLOUD_TTS_ENDPOINT, {
+    method: 'POST',
+    headers: { ...CFG.CLOUD_HEADERS, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text, voice: 'zh-HK', format: 'mp3' })
+  });
+  if(!res.ok){
+    const msg = await res.text().catch(()=>'');
+    throw new Error('雲端發音錯誤 ' + res.status + ': ' + msg);
+  }
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+  const audio = new Audio(url);
+  audio.play().catch(()=>{});
+}
+
+// Browser TTS fallback
+function browserSpeak(text){
+  const synth = window.speechSynthesis;
+  if (!synth){ alert('此瀏覽器不支援發音。'); return; }
+  const utter = new SpeechSynthesisUtterance(text);
+  const pick = ()=>{
+    const vs = synth.getVoices()||[];
+    let v = vs.find(v=>/zh[-_]?HK/i.test(v.lang));
+    if(!v) v = vs.find(v=>/yue|cantonese/i.test((v.name||'')+(v.lang||'')));
+    if(!v) v = vs.find(v=>/^zh/i.test(v.lang));
+    return v;
+  };
+  let v = pick(); if (v) utter.voice = v;
+  synth.cancel(); synth.speak(utter);
+}
+
+async function speak(text){
+  try{
+    if (CFG.CLOUD_TTS_ENDPOINT) return await cloudSpeak(text);
+  }catch(e){
+    console.warn(e);
+  }
+  browserSpeak(text);
 }
 
 function renderList(items){
@@ -140,8 +175,16 @@ function renderList(items){
   `).join('') + `</div>`;
 }
 
+// Pipeline: prefer cloud translate, else local
 async function processText(t){
   const hk = await toHK(t);
+  if (CFG.CLOUD_TRANSLATE_ENDPOINT) {
+    try{
+      return await cloudTranslate(hk);
+    }catch(e){
+      console.warn('cloudTranslate fail, fallback:', e);
+    }
+  }
   const base = yueHeuristic(hk);
   return buildSuggestions(base);
 }
