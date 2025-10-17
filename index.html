@@ -2,47 +2,43 @@
 <html lang="zh-HK">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>你系咪真系识 v8</title>
-  <meta name="description" content="中英 → 地道粤语正字；同义词聚合；本地MP3优先、内置 zh-HK TTS 回退（界面不提示）。" />
-  <style>
-    body{font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,"Noto Sans","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif; margin:16px;}
-    .container{max-width:960px;}
-    .title{font-size:28px;font-weight:800;margin-bottom:8px}
-    .bar{display:flex;gap:8px;align-items:center;margin:12px 0}
-    input[type="text"]{flex:1;padding:8px 10px;border:1px solid #ddd;border-radius:6px}
-    button{padding:8px 12px;border:1px solid #ddd;background:#fff;border-radius:6px;cursor:pointer}
-    button:hover{background:#f6f6f6}
-    .card{border:1px solid #eee;border-radius:10px;padding:14px 16px;margin-top:10px}
-    .row{margin:6px 0}
-    .label{color:#666;margin-right:6px}
-    .bullet{margin-left:18px}
-    .pill{display:inline-block;background:#f2f4f7;border:1px solid #e6e9ef;color:#344054;border-radius:999px;padding:2px 8px;font-size:12px;margin-left:6px}
-    .small{font-size:12px;color:#888}
-    .audio-btn{margin-right:8px}
-    .muted{color:#999}
-    /* 不再显示 TTS 提示行（保留占位用 class，样式强制隐藏） */
-    .tts-hint{display:none !important}
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Can‑Tong · 粤语助手（Chat 模式 · 静态版）</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="container">
-    <div class="title">你系咪真系识 v8</div>
-
-    <div class="small muted">输入 中文 / English，然后点【查询】；支持同义词和词根聚合。</div>
-
-    <div class="bar">
-      <input id="q" type="text" placeholder="例如：这么奇怪 / so strange" />
-      <button id="searchBtn">查询</button>
-      <button id="shareBtn">发音</button>
+  <header class="topbar">
+    <h1>Can‑Tong · 粤语助手</h1>
+    <div class="lang-toggle">
+      <label>UI：</label>
+      <select id="uiLang">
+        <option value="zh">中文</option>
+        <option value="en">English</option>
+      </select>
     </div>
+  </header>
 
-    <!-- 旧版会放“若没有本地 mp3，将用浏览器 zh-HK TTS 发音。”的提示，这里直接隐藏 -->
-    <div class="small tts-hint">（已按需隐藏）</div>
+  <main class="container">
+    <section id="chat" class="chat">
+      <!-- Messages will render here -->
+    </section>
 
-    <div id="result"></div>
-  </div>
+    <form id="composer" class="composer">
+      <input id="userInput" type="text" placeholder="输入 中文 / English 后回车…" autocomplete="off" />
+      <button type="submit" class="primary">发送</button>
+    </form>
 
-  <script src="script.js?v=20251015"></script>
+    <section class="notes">
+      <details>
+        <summary>来源（示例）</summary>
+        <ul id="sources">
+          <li>本页面为<span>静态演示</span>，使用自带小型词库映射实现 CN/EN → YUE 三档变体。</li>
+          <li>真实版本请接入 RAG 与 zh‑HK 神经 TTS；HKCanCor（CC‑BY）仅作 <em>retrieval‑only</em> 并署名引用；Common Voice zh‑HK（CC0）可用于 TTS 评测与示例音色。</li>
+        </ul>
+      </details>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
 </body>
 </html>
