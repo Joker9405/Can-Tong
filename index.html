@@ -3,10 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Can‑Tong 粵語學習助手（簡版對話）</title>
+  <title>Can-Tong 粵語學習助手</title>
   <link rel="stylesheet" href="./style.css">
   <script>
-  // Optional OpenCC loader; page works without it.
   function loadScriptSeq(urls, onload, onerror){
     if(!urls.length){ onerror && onerror(new Error('All CDNs failed')); return; }
     const url = urls.shift();
@@ -28,21 +27,15 @@
       <div class="brand">
         <span class="logo">CT</span>
         <div class="titles">
-          <h1>Can‑Tong 粵語學習助手</h1>
-          <div class="muted small">對話式練習｜輸入中文/英文/粵語 → 輸出 <b>繁體·港式</b> 粵語說法</div>
+          <h1>Can-Tong 粵語學習助手</h1>
+          <div class="muted small">輸入中文 / 英文 / 粵語 → 轉為 <b>繁體·港式</b> 用法</div>
         </div>
       </div>
     </div>
   </header>
 
   <main class="wrap main">
-    <div id="chat" class="chat">
-      <div class="msg bot">
-        <div class="bubble">
-          👋 歡迎！輸入一句話，我會提供1～3條粵語說法，每行右側有 <span class="muted">發音</span> 按鈕。
-        </div>
-      </div>
-    </div>
+    <div id="chat" class="chat"></div>
 
     <div class="composer">
       <textarea id="input" rows="2" placeholder="例如：我想退貨 / I need a refund"></textarea>

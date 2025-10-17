@@ -1,5 +1,3 @@
-// Can‑Tong simplified chat: no settings, vertical list of suggestions, HK TTS per line.
-
 const chat = document.getElementById('chat');
 const input = document.getElementById('input');
 const btnSend = document.getElementById('btnSend');
@@ -16,37 +14,6 @@ function addMsg(role, html){
 }
 
 function escapeHtml(s){ return s.replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
-
-// Tiny bilingual lexicon (EN/CN -> Yue)
-const LEXICON = {
-  "refund": ["要求退款","申請退貨退款"],
-  "order": ["訂單","單"],
-  "coffee": ["咖啡"],
-  "iced coffee": ["凍咖啡","冰咖啡"],
-  "where is": ["喺邊度"],
-  "bathroom": ["洗手間","廁所"],
-  "help": ["幫手","幫忙"],
-  "please": ["唔該","麻煩你"],
-  "thank you": ["多謝你","唔該晒"],
-  "我想": ["我想","我想要","我想買"],
-  "我要": ["我要","畀我"],
-  "退貨": ["退貨"],
-  "退款": ["退款"],
-  "我需要": ["我要","我需要"],
-  "可以": ["可以","得"]
-};
-
-function applyLexiconEN(s){
-  let out = s;
-  const lower = s.toLowerCase();
-  for(const k in LEXICON){
-    if (!/[^\x00-\x7F]/.test(k) && lower.includes(k)){
-      const cand = LEXICON[k][0];
-      out += ' ' + cand;
-    }
-  }
-  return out;
-}
 
 async function toHK(text){
   try{
@@ -71,7 +38,6 @@ function yueHeuristic(s){
   ];
   for(const [a,b] of pairs){ out = out.replace(new RegExp(a,'g'), b); }
   if (/^[\x00-\x7F\s.,!?'"-:;()]+$/.test(out)){
-    out = applyLexiconEN(out);
     out = out
       .replace(/i need/gi,'我需要')
       .replace(/i want/gi,'我想要')
@@ -98,32 +64,56 @@ function buildSuggestions(base){
     { text: c.endsWith('。')? c : c+'。', note: '禮貌 / 正式' }
   ];
   const seen = new Set(); const uniq = [];
-  for(const it of list){ const k = it.text; if(!seen.has(k)){ seen.add(k); uniq.push(it); } }
+  for(const it of list){ if(!seen.has(it.text)){ seen.add(it.text); uniq.push(it); } }
   return uniq;
 }
 
-// TTS (HK)
-function speak(text){
-  try{
-    const synth = window.speechSynthesis;
-    if (!synth) throw new Error('TTS not supported');
-    const utter = new SpeechSynthesisUtterance(text);
-    const pick = ()=>{
-      const vs = synth.getVoices()||[];
-      let v = vs.find(v=>/zh[-_]?HK/i.test(v.lang));
-      if(!v) v = vs.find(v=>/yue|cantonese/i.test((v.name||'')+(v.lang||'')));
-      if(!v) v = vs.find(v=>/^zh/i.test(v.lang));
-      return v;
+// --- Very robust TTS ---
+function waitVoicesOnce(){
+  return new Promise(resolve=>{
+    const v = speechSynthesis.getVoices();
+    if (v && v.length) return resolve(v);
+    const handler = ()=>{
+      const vs = speechSynthesis.getVoices();
+      if (vs && vs.length){
+        speechSynthesis.onvoiceschanged = null;
+        resolve(vs);
+      }
     };
-    let voice = pick();
-    if(!voice){ synth.onvoiceschanged = ()=>{ voice = pick(); }; }
-    else { utter.voice = voice; }
-    utter.rate = 1; utter.pitch = 1;
-    synth.cancel();
-    synth.speak(utter);
-  }catch(e){
-    alert('瀏覽器未支援或被禁用發音。');
+    speechSynthesis.onvoiceschanged = handler;
+    setTimeout(()=>resolve(speechSynthesis.getVoices()||[]), 4000);
+  });
+}
+async function getVoicesRobust(){
+  let voices = speechSynthesis.getVoices();
+  for (let i=0;i<3 && (!voices || voices.length===0); i++){
+    voices = await waitVoicesOnce();
   }
+  return voices || [];
+}
+function pickVoice(voices){
+  let v = voices.find(v=>/zh[-_]?HK/i.test(v.lang));
+  if(!v) v = voices.find(v=>/yue|cantonese/i.test((v.name||'')+(v.lang||'')));
+  if(!v) v = voices.find(v=>/^zh/i.test(v.lang));
+  if(!v) v = voices[0];
+  return v || null;
+}
+async function speak(text){
+  const synth = window.speechSynthesis;
+  if (!synth){ alert('此瀏覽器不支援發音。'); return; }
+  try{ synth.resume && synth.resume(); }catch(_){}
+  const voices = await getVoicesRobust();
+  if (!voices.length){
+    alert('此瀏覽器無可用語音。請在系統安裝「中文（香港）」或「中文（繁體）」語音包，或改用桌面 Chrome/Edge。');
+    return;
+  }
+  const voice = pickVoice(voices);
+  const u = new SpeechSynthesisUtterance(text);
+  if (voice) u.voice = voice;
+  u.lang = (voice && voice.lang) ? voice.lang : 'zh-HK';
+  u.rate = 1; u.pitch = 1; u.volume = 1;
+  synth.cancel();
+  synth.speak(u);
 }
 
 function renderList(items){
@@ -157,7 +147,7 @@ btnSend.addEventListener('click', async ()=>{
     const items = await processText(val);
     const node = document.getElementById(holderId);
     if (node){
-      node.parentElement.innerHTML = `<div>以下係幾種講法：</div>` + renderList(items);
+      node.parentElement.innerHTML = renderList(items);
       node.parentElement.querySelectorAll('button[data-tts]').forEach(btn=>{
         btn.addEventListener('click', ()=> speak(btn.getAttribute('data-tts')));
       });
