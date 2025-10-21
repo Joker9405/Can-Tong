@@ -1,35 +1,35 @@
-<!doctype html><html lang="zh-HK"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Can-Tong 粵語學習助手</title>
-<link rel="stylesheet" href="./style.css">
-<script>
-function loadScriptSeq(urls, onload, onerror){
-  if(!urls.length){ onerror && onerror(new Error('All CDNs failed')); return; }
-  const url = urls.shift();
-  const s = document.createElement('script');
-  s.src = url; s.defer = true; s.onload = onload; s.onerror = function(){ loadScriptSeq(urls,onload,onerror); };
-  document.head.appendChild(s);
-}
-window.__openccReady = new Promise((resolve)=>{
-  loadScriptSeq([
-    "https://cdn.jsdelivr.net/npm/opencc-js@1.0.5/dist/umd/full.min.js",
-    "https://unpkg.com/opencc-js@1.0.5/dist/umd/full.min.js"
-  ], ()=>resolve(true), ()=>resolve(false));
-});
-</script>
-</head><body>
-<header class="topbar"><div class="wrap bar"><div class="brand">
-<span class="logo">CT</span>
-<div class="titles"><h1>Can-Tong 粵語學習助手</h1>
-<div class="muted small">輸入中文 / 英文 / 粵語 → 轉為 <b>繁體·港式</b> 用法</div></div>
-</div></div></header>
-<main class="wrap main">
-  <div id="chat" class="chat"></div>
-  <div class="composer">
-    <textarea id="input" rows="2" placeholder="例如：我想退貨 / I need a refund"></textarea>
-    <button id="btnSend">發送</button>
+<!doctype html>
+<html lang="zh-HK">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>你系咪真系识 v9 · OOV 版</title>
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto;max-width:760px;margin:2rem auto;padding:0 1rem;line-height:1.6}
+    h1{font-size:1.4rem;margin:0 0 .5rem}
+    .hint{color:#666;font-size:.95rem;margin-bottom:1rem}
+    textarea{width:100%;min-height:120px;padding:.75rem;border:1px solid #ddd;border-radius:12px;font-size:1rem}
+    .row{display:flex;gap:.5rem;margin:.75rem 0;flex-wrap:wrap}
+    button{padding:.6rem 1rem;border:1px solid #ddd;border-radius:999px;background:#fff;cursor:pointer}
+    button:hover{border-color:#bbb}
+    #out{background:#fafafa;border:1px dashed #ddd;padding:.75rem;border-radius:12px;min-height:60px}
+    .status{font-size:.9rem;color:#555;margin-top:.25rem}
+    .badge{display:inline-block;background:#f0f3ff;border:1px solid #dfe6ff;color:#3f51b5;padding:.15rem .5rem;border-radius:999px;font-size:.8rem}
+  </style>
+</head>
+<body>
+  <h1>你系咪真系识 v9</h1>
+  <div class="hint">输入 <b>中文 / English</b> 然后点「查询」。本页为 <span class="badge">演示模式（OOV 学习）</span>：自动为词库外/忽略词生成并缓存发音（优先你的 TTS，失败用浏览器粤语）。</div>
+
+  <textarea id="inp" placeholder="例子：你好，帮我查下这个词点读。 / Hi, please translate to Cantonese."></textarea>
+  <div class="row">
+    <button id="btn-run">查询</button>
+    <button id="btn-speak">发音</button>
   </div>
-</main>
-<script src="./oov.js"></script>
-<script src="./app.js" defer></script>
-</body></html>
+  <div id="out" aria-live="polite"></div>
+  <div class="status" id="status"></div>
+
+  <script src="./oov.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
