@@ -37,4 +37,617 @@
     "source": {"type":"manual","ref":"seed"},
     "license": "self"
   }
+
+  {
+    "id": "yue_0101",
+    "title": "打招呼",
+    "yue": {
+      "general": "你好呀！",
+      "colloquial": "哈囉～",
+      "polite": "您好，早上好。"
+    },
+    "cn": "你好！",
+    "en": "Hello!",
+    "examples": [
+      {"yue":"你好呀，第一次見。","cn":"你好，第一次见。","en":"Hello, nice to meet you for the first time."}
+    ],
+    "tags": ["問候","寒暄"],
+    "source": {"type":"manual","ref":"seed"},
+    "license": "self"
+  },
+  {
+    "id": "yue_0102",
+    "title": "自我介紹",
+    "yue": {
+      "general": "我叫阿Henry。",
+      "colloquial": "我叫Henry，叫我阿H就得。",
+      "polite": "我姓陳，您叫我Henry就可以。"
+    },
+    "cn": "我叫Henry。",
+    "en": "My name is Henry.",
+    "tags": ["自我介紹","寒暄"],
+    "source": {"type":"manual","ref":"seed"},
+    "license": "self"
+  },
+  {
+    "id": "yue_0103",
+    "title": "感謝",
+    "yue": {
+      "general": "多謝你幫手。",
+      "colloquial": "多謝晒啊！",
+      "polite": "非常感謝您的幫助。"
+    },
+    "cn": "谢谢你的帮助。",
+    "en": "Thank you for your help.",
+    "tags": ["致謝","寒暄"],
+    "source": {"type":"manual","ref":"seed"},
+    "license": "self"
+  },
+  {
+    "id": "yue_0104",
+    "title": "道歉",
+    "yue": {
+      "general": "唔好意思，打擾你。",
+      "colloquial": "唔好意思啊，阻你一陣。",
+      "polite": "非常抱歉給您添麻煩了。"
+    },
+    "cn": "不好意思，打扰你。",
+    "en": "Sorry to bother you.",
+    "tags": ["道歉","寒暄"],
+    "source": {"type":"manual","ref":"seed"},
+    "license": "self"
+  },
+  {
+    "id": "yue_0105",
+    "title": "再見",
+    "yue": {
+      "general": "再見喇！",
+      "colloquial": "拜拜～",
+      "polite": "那先告辭了，再見。"
+    },
+    "cn": "再见！",
+    "en": "Goodbye!",
+    "tags": ["告別","寒暄"],
+    "source": {"type":"manual","ref":"seed"},
+    "license": "self"
+  },
+
+  {
+    "id": "yue_0201",
+    "title": "詢價",
+    "yue": {
+      "general": "呢個幾多錢？",
+      "colloquial": "幾錢呀？",
+      "polite": "請問這個多少錢？"
+    },
+    "cn": "这个多少钱？",
+    "en": "How much is this?",
+    "tags": ["購物","詢價"],
+    "source": {"type":"manual","ref":"shopping"},
+    "license": "self"
+  },
+  {
+    "id": "yue_0202",
+    "title": "能否便宜",
+    "yue": {
+      "general": "呢個價可唔可以平啲？",
+      "colloquial": "仲可唔可以再平啲呀？",
+      "polite": "請問可以再優惠一點嗎？"
+    },
+    "cn": "这个价格可以便宜一点吗？",
+    "en": "Can I get a better price?",
+    "tags": ["購物","砍價"],
+    "source": {"type":"manual","ref":"shopping"},
+    "license": "self"
+  },
+  {
+    "id": "yue_0203",
+    "title": "包郵嗎",
+    "yue": {
+      "general": "有冇包郵？",
+      "colloquial": "包唔包郵啊？",
+      "polite": "請問是否包郵？"
+    },
+    "cn": "有包邮吗？",
+    "en": "Is shipping included?",
+    "tags": ["物流","詢問"],
+    "source": {"type":"manual","ref":"shipping"},
+    "license": "self"
+  },
+  {
+    "id": "yue_0204",
+    "title": "有現貨嗎",
+    "yue": {
+      "general": "而家有冇現貨？",
+      "colloquial": "而家有貨未呀？",
+      "polite": "請問目前是否有現貨？"
+    },
+    "cn": "现在有现货吗？",
+    "en": "Is it in stock now?",
+    "tags": ["庫存","詢問"],
+    "source": {"type":"manual","ref":"stock"},
+    "license": "self"
+  },
+  {
+    "id": "yue_0205",
+    "title": "交期",
+    "yue": {
+      "general": "交期大概幾耐？",
+      "colloquial": "要等幾耐先有貨呀？",
+      "polite": "請問交貨時間大概多久？"
+    },
+    "cn": "交期大概多长？",
+    "en": "What's the lead time?",
+    "tags": ["交期","供應鏈"],
+    "source": {"type":"manual","ref":"supply"},
+    "license": "self"
+  },
+  {
+    "id": "yue_0206",
+    "title": "最終價格",
+    "yue": {
+      "general": "可以報個到手價嗎？",
+      "colloquial": "講實價啦～",
+      "polite": "可否給一個最終成交價？"
+    },
+    "cn": "可以报一个到手价吗？",
+    "en": "Could you give me the final price?",
+    "tags": ["購物","砍價"],
+    "source": {"type":"manual","ref":"shopping"},
+    "license": "self"
+  },
+  {
+    "id": "yue_0207",
+    "title": "折扣",
+    "yue": {
+      "general": "有冇折扣呀？",
+      "colloquial": "有冇啲着數先？",
+      "polite": "請問是否有優惠折扣？"
+    },
+    "cn": "有折扣吗？",
+    "en": "Is there any discount?",
+    "tags": ["優惠","購物"],
+    "source": {"type":"manual","ref":"shopping"},
+    "license": "self"
+  },
+  {
+    "id": "yue_0208",
+    "title": "含稅嗎",
+    "yue": {
+      "general": "呢個價含唔含稅？",
+      "colloquial": "連唔連稅㗎？",
+      "polite": "請問價格是否含稅？"
+    },
+    "cn": "这个价格含税吗？",
+    "en": "Is tax included in the price?",
+    "tags": ["價格","稅費"],
+    "source": {"type":"manual","ref":"shopping"},
+    "license": "self"
+  },
+
+  {
+    "id": "yue_0301",
+    "title": "規格詢問",
+    "yue": {
+      "general": "呢個型號係邊個版本？",
+      "colloquial": "呢部係乜嘢版本呀？",
+      "polite": "請問這個型號是什麼版本？"
+    },
+    "cn": "这个型号是什么版本？",
+    "en": "Which version is this model?",
+    "tags": ["規格","產品"],
+    "source": {"type":"manual","ref":"spec"},
+    "license": "self"
+  },
+  {
+    "id": "yue_0302",
+    "title": "尺寸",
+    "yue": {
+      "general": "有冇細碼同大碼？",
+      "colloquial": "有冇S同L呀？",
+      "polite": "請問是否有小碼與大碼？"
+    },
+    "cn": "有小码和大码吗？",
+    "en": "Do you have small and large sizes?",
+    "tags": ["尺寸","服飾"],
+    "source": {"type":"manual","ref":"spec"},
+    "license": "self"
+  },
+  {
+    "id": "yue_0303",
+    "title": "顏色",
+    "yue": {
+      "general": "有幾多種顏色揀？",
+      "colloquial": "有幾多隻色？",
+      "polite": "請問有多少種顏色可選？"
+    },
+    "cn": "有多少种颜色可选？",
+    "en": "How many colors are available?",
+    "tags": ["顏色","規格"],
+    "source": {"type":"manual","ref":"spec"},
+    "license": "self"
+  },
+  {
+    "id": "yue_0304",
+    "title": "材質",
+    "yue": {
+      "general": "呢個係咩材質？",
+      "colloquial": "用乜料做㗎？",
+      "polite": "請問這款的材質是什麼？"
+    },
+    "cn": "这是什么材质？",
+    "en": "What's the material?",
+    "tags": ["材質","規格"],
+    "source": {"type":"manual","ref":"spec"},
+    "license": "self"
+  },
+  {
+    "id": "yue_0305",
+    "title": "保養",
+    "yue": {
+      "general": "有冇保養期？",
+      "colloquial": "保唔保到㗎？",
+      "polite": "請問是否提供保修期？"
+    },
+    "cn": "有保修期吗？",
+    "en": "Is there a warranty period?",
+    "tags": ["售後","保障"],
+    "source": {"type":"manual","ref":"after"},
+    "license": "self"
+  },
+  {
+    "id": "yue_0306",
+    "title": "用法",
+    "yue": {
+      "general": "點樣用會比較好？",
+      "colloquial": "點用至啱手呀？",
+      "polite": "請問正確的使用方法是？"
+    },
+    "cn": "怎么用会比较好？",
+    "en": "What's the proper way to use it?",
+    "tags": ["說明","使用"],
+    "source": {"type":"manual","ref":"guide"},
+    "license": "self"
+  },
+
+  {
+    "id": "yue_0401",
+    "title": "支付方式",
+    "yue": {
+      "general": "可以用卡定係現金？",
+      "colloquial": "刷卡得唔得？",
+      "polite": "請問可以使用信用卡或現金支付嗎？"
+    },
+    "cn": "可以用卡还是现金？",
+    "en": "Card or cash accepted?",
+    "tags": ["支付","收銀"],
+    "source": {"type":"manual","ref":"pay"},
+    "license": "self"
+  },
+  {
+    "id": "yue_0402",
+    "title": "轉賬",
+    "yue": {
+      "general": "可唔可以銀行轉賬？",
+      "colloquial": "轉數快得唔得？",
+      "polite": "請問是否支持銀行轉賬？"
+    },
+    "cn": "可以银行转账吗？",
+    "en": "Is bank transfer available?",
+    "tags": ["支付","轉賬"],
+    "source": {"type":"manual","ref":"pay"},
+    "license": "self"
+  },
+  {
+    "id": "yue_0403",
+    "title": "發票",
+    "yue": {
+      "general": "可以開發票嗎？",
+      "colloquial": "可唔可以幫我開單？",
+      "polite": "請問能否開具發票？"
+    },
+    "cn": "可以开发票吗？",
+    "en": "Can I get an invoice?",
+    "tags": ["發票","財務"],
+    "source": {"type":"manual","ref":"pay"},
+    "license": "self"
+  },
+  {
+    "id": "yue_0404",
+    "title": "退款",
+    "yue": {
+      "general": "如果唔啱用可以退款嗎？",
+      "colloquial": "唔啱想退得唔得？",
+      "polite": "如不合適，是否可以辦理退款？"
+    },
+    "cn": "如果不合适可以退款吗？",
+    "en": "Is a refund possible if it doesn't fit?",
+    "tags": ["售後","退款"],
+    "source": {"type":"manual","ref":"after"},
+    "license": "self"
+  },
+
+  {
+    "id": "yue_0501",
+    "title": "收貨地址",
+    "yue": {
+      "general": "收貨地址可以改嗎？",
+      "colloquial": "送貨地址可唔可以轉？",
+      "polite": "請問收貨地址是否可以更改？"
+    },
+    "cn": "收货地址可以改吗？",
+    "en": "Can I change the shipping address?",
+    "tags": ["物流","地址"],
+    "source": {"type":"manual","ref":"shipping"},
+    "license": "self"
+  },
+  {
+    "id": "yue_0502",
+    "title": "快遞單號",
+    "yue": {
+      "general": "可以畀我快遞單號嗎？",
+      "colloquial": "有冇單號呀？",
+      "polite": "請問能提供快遞單號嗎？"
+    },
+    "cn": "可以给我快递单号吗？",
+    "en": "Could you provide the tracking number?",
+    "tags": ["物流","查詢"],
+    "source": {"type":"manual","ref":"shipping"},
+    "license": "self"
+  },
+  {
+    "id": "yue_0503",
+    "title": "配送時間",
+    "yue": {
+      "general": "大概幾時送到？",
+      "colloquial": "幾時先到貨呀？",
+      "polite": "請問大約何時能送達？"
+    },
+    "cn": "大概什么时候送到？",
+    "en": "Roughly when will it arrive?",
+    "tags": ["物流","時間"],
+    "source": {"type":"manual","ref":"shipping"},
+    "license": "self"
+  },
+  {
+    "id": "yue_0504",
+    "title": "簽收",
+    "yue": {
+      "general": "到時需要簽收嗎？",
+      "colloquial": "要唔要簽名㗎？",
+      "polite": "到貨時是否需要簽收？"
+    },
+    "cn": "到时需要签收吗？",
+    "en": "Is a signature required on delivery?",
+    "tags": ["物流","簽收"],
+    "source": {"type":"manual","ref":"shipping"},
+    "license": "self"
+  },
+  {
+    "id": "yue_0505",
+    "title": "運費",
+    "yue": {
+      "general": "運費點計？",
+      "colloquial": "運費幾多錢？",
+      "polite": "請問運費如何計算？"
+    },
+    "cn": "运费怎么计算？",
+    "en": "How is the shipping fee calculated?",
+    "tags": ["物流","費用"],
+    "source": {"type":"manual","ref":"shipping"},
+    "license": "self"
+  },
+  {
+    "id": "yue_0506",
+    "title": "海外配送",
+    "yue": {
+      "general": "可唔可以寄海外？",
+      "colloquial": "寄唔寄到外國㗎？",
+      "polite": "請問是否支持海外配送？"
+    },
+    "cn": "可以寄海外吗？",
+    "en": "Do you ship internationally?",
+    "tags": ["物流","跨境"],
+    "source": {"type":"manual","ref":"shipping"},
+    "license": "self"
+  },
+
+  {
+    "id": "yue_0601",
+    "title": "售後聯繫",
+    "yue": {
+      "general": "有問題應該點聯絡你哋？",
+      "colloquial": "有事點搵你哋？",
+      "polite": "如有問題，應如何聯繫貴方？"
+    },
+    "cn": "有问题应该怎么联系你们？",
+    "en": "How should I contact you if there's an issue?",
+    "tags": ["售後","聯絡"],
+    "source": {"type":"manual","ref":"after"},
+    "license": "self"
+  },
+  {
+    "id": "yue_0602",
+    "title": "退換貨流程",
+    "yue": {
+      "general": "退換貨流程係點？",
+      "colloquial": "點樣先可以退換貨？",
+      "polite": "請問退換貨的流程是什麼？"
+    },
+    "cn": "退换货流程是怎样？",
+    "en": "What's the return/exchange process?",
+    "tags": ["售後","流程"],
+    "source": {"type":"manual","ref":"after"},
+    "license": "self"
+  },
+  {
+    "id": "yue_0603",
+    "title": "質量問題",
+    "yue": {
+      "general": "收到有少少瑕疵點算？",
+      "colloquial": "件貨有啲問題點搞？",
+      "polite": "若商品有瑕疵，應如何處理？"
+    },
+    "cn": "收到有些瑕疵怎么办？",
+    "en": "What if the item has defects?",
+    "tags": ["售後","質量"],
+    "source": {"type":"manual","ref":"after"},
+    "license": "self"
+  },
+  {
+    "id": "yue_0604",
+    "title": "維修",
+    "yue": {
+      "general": "壞咗可唔可以維修？",
+      "colloquial": "整得返唔返？",
+      "polite": "故障時是否可以維修？"
+    },
+    "cn": "坏了可以维修吗？",
+    "en": "Can it be repaired if broken?",
+    "tags": ["售後","維修"],
+    "source": {"type":"manual","ref":"after"},
+    "license": "self"
+  },
+  {
+    "id": "yue_0605",
+    "title": "換件",
+    "yue": {
+      "general": "可以換新件嗎？",
+      "colloquial": "可唔可以幫我換件呀？",
+      "polite": "請問是否可以更換新品？"
+    },
+    "cn": "可以换新件吗？",
+    "en": "Can I get a replacement?",
+    "tags": ["售後","換貨"],
+    "source": {"type":"manual","ref":"after"},
+    "license": "self"
+  },
+  {
+    "id": "yue_0606",
+    "title": "補發",
+    "yue": {
+      "general": "少件可唔可以補發？",
+      "colloquial": "漏發可唔可以補返？",
+      "polite": "如有缺漏，能否補寄？"
+    },
+    "cn": "少件可以补发吗？",
+    "en": "Can the missing item be resent?",
+    "tags": ["售後","補發"],
+    "source": {"type":"manual","ref":"after"},
+    "license": "self"
+  },
+
+  {
+    "id": "yue_0701",
+    "title": "問路",
+    "yue": {
+      "general": "去地鐵站點行？",
+      "colloquial": "去地鐵點去呀？",
+      "polite": "請問到地鐵站怎麼走？"
+    },
+    "cn": "去地铁站怎么走？",
+    "en": "How can I get to the subway station?",
+    "tags": ["出行","問路"],
+    "source": {"type":"manual","ref":"travel"},
+    "license": "self"
+  },
+  {
+    "id": "yue_0702",
+    "title": "多久到",
+    "yue": {
+      "general": "仲要幾耐先到？",
+      "colloquial": "幾時到呀？",
+      "polite": "還需要多久能到達？"
+    },
+    "cn": "还需要多久能到？",
+    "en": "How much longer will it take?",
+    "tags": ["時間","出行"],
+    "source": {"type":"manual","ref":"travel"},
+    "license": "self"
+  },
+  {
+    "id": "yue_0703",
+    "title": "預約",
+    "yue": {
+      "general": "要唔要提前預約？",
+      "colloquial": "要唔要先book位？",
+      "polite": "是否需要提前預約？"
+    },
+    "cn": "需要提前预约吗？",
+    "en": "Is a reservation required?",
+    "tags": ["預約","服務"],
+    "source": {"type":"manual","ref":"service"},
+    "license": "self"
+  },
+  {
+    "id": "yue_0704",
+    "title": "排隊",
+    "yue": {
+      "general": "要排幾耐隊？",
+      "colloquial": "要排好耐咩？",
+      "polite": "大約需要排隊多久？"
+    },
+    "cn": "大约需要排队多久？",
+    "en": "Roughly how long is the queue?",
+    "tags": ["排隊","等候"],
+    "source": {"type":"manual","ref":"service"},
+    "license": "self"
+  },
+
+  {
+    "id": "yue_0801",
+    "title": "點餐",
+    "yue": {
+      "general": "我要呢個同埋嗰個。",
+      "colloquial": "要呢個，加嗰個～",
+      "polite": "我想點這個，另外再要那個。"
+    },
+    "cn": "我要这个和那个。",
+    "en": "I'll have this and that.",
+    "tags": ["餐飲","點餐"],
+    "source": {"type":"manual","ref":"food"},
+    "license": "self"
+  },
+  {
+    "id": "yue_0802",
+    "title": "少辣",
+    "yue": {
+      "general": "少少辣就夠。",
+      "colloquial": "唔好太辣呀。",
+      "polite": "麻煩做清淡一點，不要太辣。"
+    },
+    "cn": "少辣就够。",
+    "en": "Make it slightly spicy, please.",
+    "tags": ["餐飲","口味"],
+    "source": {"type":"manual","ref":"food"},
+    "license": "self"
+  },
+  {
+    "id": "yue_0803",
+    "title": "打包",
+    "yue": {
+      "general": "可以幫我打包嗎？",
+      "colloquial": "幫我打包走得唔得？",
+      "polite": "勞駕，幫我打包一下，謝謝。"
+    },
+    "cn": "可以帮我打包吗？",
+    "en": "Could you pack it to go?",
+    "tags": ["餐飲","打包"],
+    "source": {"type":"manual","ref":"food"},
+    "license": "self"
+  },
+  {
+    "id": "yue_0804",
+    "title": "買單",
+    "yue": {
+      "general": "埋單，唔該。",
+      "colloquial": "埋單啦～",
+      "polite": "麻煩結帳，謝謝。"
+    },
+    "cn": "买单，谢谢。",
+    "en": "Check, please.",
+    "tags": ["餐飲","結賬"],
+    "source": {"type":"manual","ref":"food"},
+    "license": "self"
+  }
 ]
