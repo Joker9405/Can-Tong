@@ -2,6 +2,8 @@ const chat = document.getElementById('chat');
 const input = document.getElementById('input');
 const btnSend = document.getElementById('btnSend');
 
+const TTS_ENDPOINT = "https://can-tong-huc3.vercel.app/api/tts";
+
 function addMsg(role, html){
   const div = document.createElement('div');
   div.className = 'msg ' + (role==='user' ? 'user' : 'bot');
@@ -12,24 +14,15 @@ function addMsg(role, html){
   chat.appendChild(div);
   chat.scrollTop = chat.scrollHeight;
 }
-function escapeHtml(s){ return s.replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
+function escapeHtml(s){ return s.replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;' }[m])); }
 async function toHK(text){
-  try{
-    const ok = await window.__openccReady;
-    if (ok && window.OpenCC){
-      const conv = await OpenCC.Converter({ from:'cn', to:'hk' });
-      return conv(text);
-    }
-  }catch(e){}
-  return text;
+  try{ const ok = await window.__openccReady; if (ok && window.OpenCC){ const conv = await OpenCC.Converter({ from:'cn', to:'hk' }); return conv(text); } }catch(e){} return text;
 }
 function yueHeuristic(s){
   let out = s;
   const pairs = [['没有','冇'],['沒有','冇'],['不是','唔係'],['我们','我哋'],['我們','我哋'],['你们','你哋'],['他们','佢哋'],['他們','佢哋'],['这个','呢個'],['這個','呢個'],['那个','嗰個'],['那個','嗰個'],['什么','乜嘢'],['甚麼','乜嘢'],['怎么','點樣'],['為什麼','點解'],['为什么','點解'],['在 ','喺 '],['在于','喺於'],['了','咗'],['是','係'],['不要','唔好'],['需要','要']];
   for(const [a,b] of pairs){ out = out.replace(new RegExp(a,'g'), b); }
-  if (/^[\x00-\x7F\s.,!?'"-:;()]+$/.test(out)){
-    out = out.replace(/i need/gi,'我需要').replace(/i want/gi,'我想要').replace(/please/gi,'唔該').replace(/refund/gi,'退款').replace(/return/gi,'退貨').replace(/order/gi,'訂單').replace(/where is/gi,'喺邊度有').replace(/bathroom/gi,'洗手間').replace(/coffee/gi,'咖啡').replace(/iced/gi,'凍');
-  }
+  if (/^[\x00-\x7F\s.,!?"'-:;()]+$/.test(out)){ out = out.replace(/i need/gi,'我需要').replace(/i want/gi,'我想要').replace(/please/gi,'唔該').replace(/refund/gi,'退款').replace(/return/gi,'退貨').replace(/order/gi,'訂單').replace(/where is/gi,'喺邊度有').replace(/bathroom/gi,'洗手間').replace(/coffee/gi,'咖啡').replace(/iced/gi,'凍'); }
   if(!/[。！？!?]$/.test(out.trim())) out = out.trim() + '。';
   return out;
 }
@@ -42,9 +35,12 @@ function buildSuggestions(base){
   for(const it of list){ if(!seen.has(it.text)){ seen.add(it.text); uniq.push(it); } }
   return uniq;
 }
-
 async function cloudSpeak(text){
-  const res = await fetch('/api/tts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text, voice: 'zh-HK', format: 'mp3' }) });
+  const res = await fetch(TTS_ENDPOINT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text, voice: 'zh-HK', format: 'mp3' })
+  });
   if(!res.ok) throw new Error('cloud TTS error '+res.status);
   const blob = await res.blob();
   const url = URL.createObjectURL(blob);
@@ -53,9 +49,8 @@ async function cloudSpeak(text){
 }
 async function speak(text){
   try{ await cloudSpeak(text); }
-  catch(e){ alert('雲端發音不可用。請稍後再試。'); }
+  catch(e){ alert('雲端發音不可用：'+(e.message||e)); }
 }
-
 function renderList(items){
   return `<div class="list">` + items.map(it=>`
     <div class="item">
@@ -75,16 +70,10 @@ btnSend.addEventListener('click', async ()=>{
   input.value='';
   const holderId = 'h'+Date.now();
   addMsg('bot', `<span id="${holderId}" class="muted">處理中…</span>`);
-  try{
-    const items = await processText(val);
+  try{ const items = await processText(val);
     const node = document.getElementById(holderId);
-    if (node){
-      node.parentElement.innerHTML = renderList(items);
-      node.parentElement.querySelectorAll('button[data-tts]').forEach(btn=>{ btn.addEventListener('click', ()=> speak(btn.getAttribute('data-tts'))); });
-    }
-  }catch(e){
-    const node = document.getElementById(holderId);
-    if (node) node.parentElement.innerHTML = `<span class="bad">出錯：${escapeHtml(e.message||'未知錯誤')}</span>`;
-  }
+    if (node){ node.parentElement.innerHTML = renderList(items);
+      node.parentElement.querySelectorAll('button[data-tts]').forEach(btn=>{ btn.addEventListener('click', ()=> speak(btn.getAttribute('data-tts'))); }); }
+  }catch(e){ const node = document.getElementById(holderId); if (node) node.parentElement.innerHTML = `<span class="bad">出錯：${escapeHtml(e.message||'未知錯誤')}</span>`; }
 });
 input.addEventListener('keydown', (e)=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); btnSend.click(); } });
