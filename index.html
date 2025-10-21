@@ -1,35 +1,91 @@
 <!doctype html>
 <html lang="zh-HK">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>你系咪真系识 v9 · OOV 版</title>
-  <style>
-    body{font-family:system-ui,-apple-system,Segoe UI,Roboto;max-width:760px;margin:2rem auto;padding:0 1rem;line-height:1.6}
-    h1{font-size:1.4rem;margin:0 0 .5rem}
-    .hint{color:#666;font-size:.95rem;margin-bottom:1rem}
-    textarea{width:100%;min-height:120px;padding:.75rem;border:1px solid #ddd;border-radius:12px;font-size:1rem}
-    .row{display:flex;gap:.5rem;margin:.75rem 0;flex-wrap:wrap}
-    button{padding:.6rem 1rem;border:1px solid #ddd;border-radius:999px;background:#fff;cursor:pointer}
-    button:hover{border-color:#bbb}
-    #out{background:#fafafa;border:1px dashed #ddd;padding:.75rem;border-radius:12px;min-height:60px}
-    .status{font-size:.9rem;color:#555;margin-top:.25rem}
-    .badge{display:inline-block;background:#f0f3ff;border:1px solid #dfe6ff;color:#3f51b5;padding:.15rem .5rem;border-radius:999px;font-size:.8rem}
-  </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Can-Tong｜中英粵 三語互通 · 搜索 · 發音</title>
+  <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-  <h1>你系咪真系识 v9</h1>
-  <div class="hint">输入 <b>中文 / English</b> 然后点「查询」。本页为 <span class="badge">演示模式（OOV 学习）</span>：自动为词库外/忽略词生成并缓存发音（优先你的 TTS，失败用浏览器粤语）。</div>
+  <header class="container">
+    <h1>Can-Tong 粵語助手</h1>
+    <p class="sub">輸入中文 / 英文 / 粵語 → 一鍵得到「地道粵語 3 檔 + 對應中文 & English」並可發音</p>
+  </header>
 
-  <textarea id="inp" placeholder="例子：你好，帮我查下这个词点读。 / Hi, please translate to Cantonese."></textarea>
-  <div class="row">
-    <button id="btn-run">查询</button>
-    <button id="btn-speak">发音</button>
-  </div>
-  <div id="out" aria-live="polite"></div>
-  <div class="status" id="status"></div>
+  <main class="container">
+    <section class="card">
+      <label for="q" class="label">輸入句子（中 / 粵 / EN 均可）：</label>
+      <textarea id="q" rows="3" placeholder="例：这个价格可以便宜一点吗？ / Can I get a better price? / 呢個價可唔可以平啲？"></textarea>
+      <div class="row">
+        <button id="btnSend">發送</button>
+        <button id="btnClear" class="ghost">清空</button>
+        <label class="switch">
+          <input type="checkbox" id="chkAuto">
+          <span>自動語種檢測</span>
+        </label>
+      </div>
+    </section>
 
-  <script src="./oov.js"></script>
+    <section id="detectBox" class="card small">
+      <div>檢測語種：<b id="lang"></b>（yue / zh / en / mixed）</div>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <h3>粵語·一般說法</h3>
+        <p id="yue_general" class="res"></p>
+        <div class="row"><button class="speak" data-target="yue_general">🔊 發音</button></div>
+      </div>
+      <div class="card">
+        <h3>粵語·更口語</h3>
+        <p id="yue_colloquial" class="res"></p>
+        <div class="row"><button class="speak" data-target="yue_colloquial">🔊 發音</button></div>
+      </div>
+      <div class="card">
+        <h3>粵語·較禮貌</h3>
+        <p id="yue_polite" class="res"></p>
+        <div class="row"><button class="speak" data-target="yue_polite">🔊 發音</button></div>
+      </div>
+    </section>
+
+    <section class="grid slim">
+      <div class="card">
+        <h3>中文對應</h3>
+        <p id="cn" class="res"></p>
+      </div>
+      <div class="card">
+        <h3>English</h3>
+        <p id="en" class="res"></p>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="row">
+        <label class="switch">
+          <input type="checkbox" id="chkLocalAudio">
+          <span>優先用本地音頻（/data/audio）</span>
+        </label>
+        <label class="switch">
+          <input type="checkbox" id="chkZHk" checked>
+          <span>瀏覽器 zh-HK TTS</span>
+        </label>
+      </div>
+      <p class="note">若瀏覽器沒有安裝 <code>zh-HK</code> 語音包，會自動嘗試 <code>yue/cantonese</code> 或 <code>zh</code> 聲線。</p>
+    </section>
+
+    <section class="card small">
+      <details>
+        <summary>OOV（未登錄詞）處理策略</summary>
+        <ul class="note">
+          <li>子詞切分（簡化規則）+ 常見字讀音表回退</li>
+          <li>英文詞直接保留詞根，必要時外來詞近似音（實驗性）</li>
+        </ul>
+      </details>
+    </section>
+  </main>
+
+  <footer class="container foot">© Can-Tong · 前端純靜態 Demo</footer>
+
   <script src="./app.js"></script>
 </body>
 </html>
