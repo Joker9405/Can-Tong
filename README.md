@@ -22,9 +22,9 @@ uvicorn main:app --host 0.0.0.0 --port 8000
 
 ## 与前端对接
 启动后端后，在前端页面底部填入：
-- ASR: `https://你的域名/api/asr`
-- MT:  `https://你的域名/api/translate`
-- TTS: `https://你的域名/api/tts`
+- ASR: `https://api.can-tong.com/api/asr`
+- MT:  `https://api.can-tong.com/api/translate`
+- TTS: `https://api.can-tong.com/api/tts`
 
 即可切换到真推理链路。
 
