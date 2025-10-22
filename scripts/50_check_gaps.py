@@ -1,7 +1,7 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 import json, sys, os
 def is_cantonese(s):
-    keys = ["冇","喺","咁","啲","咩","啦","喎","噉","嗰","嚟","畀","咗","喇","呀","囉","嘛"]
+    keys = ["鍐?,"鍠?,"鍜?,"鍟?,"鍜?,"鍟?,"鍠?,"鍣?,"鍡?,"鍤?,"鐣€","鍜?,"鍠?,"鍛€","鍥?,"鍢?]
     return any(k in s for k in keys)
 def main(path):
     report = {"total":0,"non_yue":0,"missing_jyut":0,"missing_emotion":0,"examples":{"non_yue":[]}}
@@ -21,15 +21,16 @@ def main(path):
                 report["missing_jyut"] += 1
             if not obj.get("emotion"):
                 report["missing_emotion"] += 1
-    os.makedirs("datasets/interim", exist_ok=True)
-    out = "datasets/interim/gap_report.json"
+    os.makedirs("data_store/interim", exist_ok=True)
+    out = "data_store/interim/gap_report.json"
     with open(out, "w", encoding="utf-8") as f:
         json.dump(report, f, ensure_ascii=False, indent=2)
-    print("—— 检测完成 ——")
+    print("鈥斺€?妫€娴嬪畬鎴?鈥斺€?)
     print(json.dumps(report, ensure_ascii=False, indent=2))
-    print(f"📄 写出：{out}")
+    print(f"馃搫 鍐欏嚭锛歿out}")
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("用法: python scripts/50_check_gaps.py <jsonl_path>")
+        print("鐢ㄦ硶: python scripts/50_check_gaps.py <jsonl_path>")
         raise SystemExit(1)
     main(sys.argv[1])
+
