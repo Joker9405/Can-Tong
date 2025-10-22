@@ -1,1 +1,17 @@
-gTTS==2.5.1
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+pydantic==2.8.2
+# ASR
+modelscope==1.16.1
+funasr==1.1.6
+# MT
+dl-translate==0.6.3
+sentencepiece>=0.1.99
+sacremoses>=0.0.53
+# TTS
+# CosyVoice2 is distributed via FunAudioLLM; install via pip:
+# pip install -U funaudiollm
+funaudiollm==0.3.4
+# audio utils
+soundfile>=0.12.1
+numpy>=1.26.4
