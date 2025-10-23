@@ -2,6 +2,11 @@ import fs from 'fs/promises';
 import path from 'path';
 function normalize(s){ return (s||'').trim().toLowerCase(); }
 export default async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  if (req.method === 'OPTIONS') return res.status(204).end();
+
   if (req.method !== 'POST') return res.status(405).json({error:'Method not allowed'});
   const { text, src='zhh', tgt='chs' } = req.body || {};
   const base = path.join(process.cwd(), 'public', 'lexicon.json');

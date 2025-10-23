@@ -55,14 +55,13 @@
         <div>
           <div class="muted">调试 / 健康检查</div>
           <div id="ping" class="out">检查中…</div>
-          <div class="tip">如果此处显示错误，请确认 <code>/api/ping</code> 在 Vercel 可访问。</div>
+          <div class="tip">如报错，请先确认 Vercel 的 Output Directory 为空，并重新部署。</div>
         </div>
       </div>
       <p class="muted">说明：若没有后端 TTS，将回退浏览器 zh‑HK 语音。</p>
     </div>
   </div>
   <script>
-    // 自动判断：如果是 github.io 域名，就走 Vercel 的完整域名；否则（在 Vercel 上）用相对路径
     const API_BASE = location.hostname.includes("github.io") ? "https://can-tong.vercel.app" : "";
     document.getElementById("where").textContent = API_BASE ? "前端: GitHub Pages · 后端: Vercel" : "前后端: Vercel";
     const $ = (s)=>document.querySelector(s);
@@ -103,7 +102,7 @@
           audio.play();
           return;
         }
-      }catch(e){ /* fallthrough */ }
+      }catch(e){}
       const u = new SpeechSynthesisUtterance(text);
       u.lang = "zh-HK";
       speechSynthesis.cancel();
