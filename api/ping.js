@@ -1,10 +1,3 @@
 export default async function handler(req, res) {
-  const origin = req.headers.origin || '*';
-  res.setHeader('Access-Control-Allow-Origin', origin);
-  res.setHeader('Vary', 'Origin');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  if (req.method === 'OPTIONS') return res.status(204).end();
-
-  return res.status(200).send('pong');
+  return res.status(200).json({ ok: true, now: new Date().toISOString(), note: "Vercel Serverless OK" });
 }

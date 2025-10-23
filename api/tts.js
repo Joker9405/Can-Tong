@@ -1,15 +1,18 @@
-export const config = {
-  runtime: 'nodejs18.x',
-};
-
+// Optional proxy to external TTS if TTS_URL is set, else 204 to trigger browser fallback
 export default async function handler(req, res) {
-  const origin = req.headers.origin || '*';
-  res.setHeader('Access-Control-Allow-Origin', origin);
-  res.setHeader('Vary', 'Origin');
-  res.setHeader('Access-Control-Allow-Methods', 'POST,GET,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  if (req.method === 'OPTIONS') return res.status(204).end();
-
-  // 这里只是占位返回，方便你后续接入真正 TTS
-  res.status(501).json({ ok: false, message: 'TTS endpoint not implemented yet.' });
+  const { text='' } = req.query;
+  const TTS_URL = process.env.TTS_URL || '';
+  if(!TTS_URL){
+    // no server TTS; tell client to fallback
+    return res.status(204).end();
+  }
+  try{
+    const target = TTS_URL + (TTS_URL.includes('?') ? '&' : '?') + 'text=' + encodeURIComponent(text);
+    const r = await fetch(target);
+    const buf = Buffer.from(await r.arrayBuffer());
+    res.setHeader('content-type', r.headers.get('content-type') || 'audio/mpeg');
+    return res.status(200).send(buf);
+  }catch(e){
+    return res.status(502).json({ error: 'TTS proxy failed', detail: String(e) });
+  }
 }

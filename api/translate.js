@@ -1,11 +1,28 @@
-export default async function handler(req,res){
-  if(req.method!=='POST') return res.status(405).json({error:'Method Not Allowed'});
+import fs from 'fs/promises';
+import path from 'path';
+
+function normalize(s){ return (s||'').trim().toLowerCase(); }
+
+export default async function handler(req, res) {
+  if (req.method !== 'POST') return res.status(405).json({error:'Method not allowed'});
+  const { text, src='zhh', tgt='chs' } = req.body || {};
+  const base = path.join(process.cwd(), 'public', 'lexicon.json');
+  let lex = {};
   try{
-    const url=process.env.BACKEND_URL;
-    if(!url) return res.status(500).json({error:'Missing BACKEND_URL env'});
-    const r=await fetch(url.replace(/\/$/,'')+'/api/translate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(req.body||{})});
-    const data=await r.json();
-    res.setHeader('Access-Control-Allow-Origin','*');
-    res.status(r.ok?200:500).json(data);
-  }catch(e){ res.status(500).json({error:String(e)}) }
+    const raw = await fs.readFile(base, 'utf8');
+    lex = JSON.parse(raw);
+  }catch(e){ /* ignore */ }
+
+  // very small demo: try exact match in lexicon
+  const t = normalize(text);
+  let out = text || '';
+  const items = Object.values(lex);
+  const hit = items.find(it => normalize(it[src]) === t);
+  if(hit){
+    out = hit[tgt] || text;
+  }else{
+    // naive rules: if tgt is zhh, try map chs->zhh by dictionary-like fallback
+    out = text;
+  }
+  return res.status(200).json({ text: out, meta: { src, tgt, matched: !!hit } });
 }

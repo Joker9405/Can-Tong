@@ -1,8 +1,10 @@
 {
-  "name": "can-tong-final",
-  "version": "1.0.0",
+  "name": "can-tong-mvp",
   "private": true,
-  "engines": {
-    "node": ">=18"
+  "type": "module",
+  "version": "0.1.0",
+  "scripts": {
+    "build": "echo 'skip build'",
+    "start": "node api/ping.js"
   }
 }
