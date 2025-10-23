@@ -1,1 +1,15 @@
-export const config={api:{bodyParser:false}};export default async function handler(req,res){if(req.method==='OPTIONS'){res.setHeader('Access-Control-Allow-Origin','*');res.setHeader('Access-Control-Allow-Methods','GET,POST,OPTIONS');res.setHeader('Access-Control-Allow-Headers','*');return res.status(200).end()}if(req.method!=='POST')return res.status(405).json({error:'Method Not Allowed'});try{const url=process.env.BACKEND_URL;if(!url)return res.status(500).json({error:'Missing BACKEND_URL env'});const chunks=[];for await(const c of req)chunks.push(c);const buffer=Buffer.concat(chunks);const form=new FormData;form.append('file',new Blob([buffer]),'audio.webm');const r=await fetch(url.replace(/\/$/,'')+'/api/asr',{method:'POST',body:form});const data=await r.json();res.setHeader('Access-Control-Allow-Origin','*');res.status(r.ok?200:500).json(data)}catch(e){res.status(500).json({error:String(e)})}}
+export const config={api:{bodyParser:false}};
+export default async function handler(req,res){
+  if(req.method!=='POST') return res.status(405).json({error:'Method Not Allowed'});
+  try{
+    const url=process.env.BACKEND_URL;
+    if(!url) return res.status(500).json({error:'Missing BACKEND_URL env'});
+    const chunks=[]; for await(const c of req) chunks.push(c);
+    const buffer=Buffer.concat(chunks);
+    const form=new FormData(); form.append('file', new Blob([buffer]), 'audio.webm');
+    const r=await fetch(url.replace(/\/$/,'')+'/api/asr',{method:'POST',body:form});
+    const data=await r.json();
+    res.setHeader('Access-Control-Allow-Origin','*');
+    res.status(r.ok?200:500).json(data);
+  }catch(e){ res.status(500).json({error:String(e)}) }
+}
