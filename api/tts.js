@@ -1,11 +1,7 @@
-// Optional proxy to external TTS if TTS_URL is set, else 204 to trigger browser fallback
 export default async function handler(req, res) {
   const { text='' } = req.query;
   const TTS_URL = process.env.TTS_URL || '';
-  if(!TTS_URL){
-    // no server TTS; tell client to fallback
-    return res.status(204).end();
-  }
+  if(!TTS_URL){ return res.status(204).end(); }
   try{
     const target = TTS_URL + (TTS_URL.includes('?') ? '&' : '?') + 'text=' + encodeURIComponent(text);
     const r = await fetch(target);

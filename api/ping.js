@@ -1,3 +1,3 @@
 export default async function handler(req, res) {
-  return res.status(200).json({ ok: true, now: new Date().toISOString(), note: "Vercel Serverless OK" });
+  return res.status(200).json({ ok: true, now: new Date().toISOString(), env: process.env.VERCEL ? "vercel" : "local" });
 }

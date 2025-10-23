@@ -1,8 +1,6 @@
 import fs from 'fs/promises';
 import path from 'path';
-
 function normalize(s){ return (s||'').trim().toLowerCase(); }
-
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({error:'Method not allowed'});
   const { text, src='zhh', tgt='chs' } = req.body || {};
@@ -11,18 +9,13 @@ export default async function handler(req, res) {
   try{
     const raw = await fs.readFile(base, 'utf8');
     lex = JSON.parse(raw);
-  }catch(e){ /* ignore */ }
-
-  // very small demo: try exact match in lexicon
+  }catch(e){}
   const t = normalize(text);
   let out = text || '';
   const items = Object.values(lex);
   const hit = items.find(it => normalize(it[src]) === t);
   if(hit){
     out = hit[tgt] || text;
-  }else{
-    // naive rules: if tgt is zhh, try map chs->zhh by dictionary-like fallback
-    out = text;
   }
   return res.status(200).json({ text: out, meta: { src, tgt, matched: !!hit } });
 }

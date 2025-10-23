@@ -1,10 +1,1 @@
-{
-  "name": "can-tong-mvp",
-  "private": true,
-  "type": "module",
-  "version": "0.1.0",
-  "scripts": {
-    "build": "echo 'skip build'",
-    "start": "node api/ping.js"
-  }
-}
+{"name": "can-tong-unified", "private": true, "type": "module", "version": "0.1.0", "scripts": {"build": "echo skip"}}
