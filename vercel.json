@@ -2,6 +2,14 @@
   "version": 2,
   "routes": [
     {
+      "src": "/api/ping",
+      "dest": "/api/ping.js"
+    },
+    {
+      "src": "/api/config",
+      "dest": "/api/config.js"
+    },
+    {
       "src": "/api/(.*)",
       "dest": "/api/$1.js"
     },
