@@ -1,7 +1,8 @@
 export default async function handler(req, res) {
-  const { text='' } = req.query;
-  const TTS_URL = process.env.TTS_URL || '';
-  if(!TTS_URL){ return res.status(204).end(); }
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+  if (req.method === 'OPTIONS') return res.status(204).end();
+}
   try{
     const target = TTS_URL + (TTS_URL.includes('?') ? '&' : '?') + 'text=' + encodeURIComponent(text);
     const r = await fetch(target);
