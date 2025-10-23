@@ -1,15 +1,45 @@
 <!doctype html>
-<html lang="zh-HK">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Can‑Tong · Vercel 修复2</title><link rel="icon" href="data:,">
-<style>body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;background:#0b0d10;color:#e6edf3}header{padding:16px 20px;border-bottom:1px solid #1e2430;background:#12161b}</style>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Can‑Tong Starter</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "PingFang SC", "Microsoft YaHei", sans-serif; 
+           padding: 24px; line-height: 1.6; }
+    .card { max-width: 800px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; }
+    .row { display:flex; gap:12px; flex-wrap: wrap; align-items: center; }
+    button { padding:10px 14px; border-radius:10px; border:1px solid #e5e7eb; cursor:pointer; }
+    pre { background:#f8f9fb; padding:12px; border-radius:8px; overflow:auto; }
+    .muted { color:#666 }
+  </style>
+  <script>
+    // 如果你要把前端放在 GitHub Pages，而后端在 Vercel，
+    // 请在 config.js 里设置 window.BACKEND_URL = 'https://can-tong.vercel.app'
+    // 如果不设置，则默认同域（推荐把前后端都放在同一个 Vercel 项目，无需 CORS 与环境变量）。
+    function apiBase() {
+      return (window.BACKEND_URL || '')  // '' 表示同域
+    }
+    async function ping() {
+      const res = await fetch(apiBase() + '/api/ping');
+      const text = await res.text();
+      document.getElementById('out').textContent = text;
+    }
+  </script>
 </head>
 <body>
-<header><h1>Can‑Tong（Vercel 修复2）</h1></header>
-<main style="max-width:900px;margin:0 auto;padding:20px">
-  <p>如果你看到这一页，说明静态路由已修复。</p>
-  <p>测试 API：打开浏览器控制台并运行 <code>fetch('/api/ping').then(r=>r.json()).then(console.log)</code></p>
-  <script>console.log('OK: index.html loaded')</script>
-</main>
-<script src="./app.js?v=4"></script>
-</body></html>
+  <div class="card">
+    <h1>Can‑Tong Vercel 部署检测页</h1>
+    <p class="muted">此页面用于检测 <code>/api/ping</code> 是否部署成功。</p>
+    <div class="row">
+      <button onclick="ping()">测试 /api/ping</button>
+      <a href="/api/ping" target="_blank">直接打开 /api/ping</a>
+    </div>
+    <h3>输出：</h3>
+    <pre id="out">（点击“测试 /api/ping”查看结果）</pre>
+    <hr/>
+    <p class="muted">若你把前端放在其他域，请在根目录新建 <code>config.js</code>，写入：<br/>
+    <code>window.BACKEND_URL = 'https://你的后端域名';</code></p>
+  </div>
+</body>
+</html>

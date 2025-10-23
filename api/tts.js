@@ -1,12 +1,15 @@
-export default async function handler(req,res){
-  if(req.method!=='POST') return res.status(405).json({error:'Method Not Allowed'});
-  try{
-    const url=process.env.BACKEND_URL;
-    if(!url) return res.status(500).json({error:'Missing BACKEND_URL env'});
-    const r=await fetch(url.replace(/\/$/,'')+'/api/tts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(req.body||{})});
-    const buf=Buffer.from(await r.arrayBuffer());
-    res.setHeader('Access-Control-Allow-Origin','*');
-    res.setHeader('Content-Type', r.headers.get('content-type')||'audio/mpeg');
-    res.status(r.ok?200:500).send(buf);
-  }catch(e){ res.status(500).json({error:String(e)}) }
+export const config = {
+  runtime: 'nodejs18.x',
+};
+
+export default async function handler(req, res) {
+  const origin = req.headers.origin || '*';
+  res.setHeader('Access-Control-Allow-Origin', origin);
+  res.setHeader('Vary', 'Origin');
+  res.setHeader('Access-Control-Allow-Methods', 'POST,GET,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  if (req.method === 'OPTIONS') return res.status(204).end();
+
+  // 这里只是占位返回，方便你后续接入真正 TTS
+  res.status(501).json({ ok: false, message: 'TTS endpoint not implemented yet.' });
 }
