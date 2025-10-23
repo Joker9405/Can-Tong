@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="zh-HK">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Can‑Tong · 粤语助手（前端：GitHub Pages / 后端：Vercel）</title>
+  <style>
+    html,body{margin:0;padding:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,'Noto Sans',sans-serif;background:#0b0b0c;color:#e8e8ea}
+    .wrap{max-width:960px;margin:40px auto;padding:24px}
+    .card{background:#141416;border:1px solid #22232a;border-radius:16px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+    h1{font-size:22px;margin:0 0 12px}
+    .row{display:flex;gap:12px;flex-wrap:wrap;margin:8px 0}
+    select,textarea,button,input{background:#0f1013;color:#e8e8ea;border:1px solid #2a2b31;border-radius:10px;padding:10px 12px}
+    textarea{width:100%;min-height:120px;resize:vertical}
+    button{cursor:pointer}
+    .muted{color:#a7a8ad;font-size:12px}
+    .grid{display:grid;grid-template-columns:1fr;gap:12px}
+    @media(min-width:900px){.grid{grid-template-columns:1fr 1fr}}
+    .out{white-space:pre-wrap;background:#0f1013;border:1px solid #2a2b31;border-radius:10px;padding:12px;min-height:120px}
+    .badge{font-size:11px;background:#1b1c22;border:1px solid #2a2b31;border-radius:999px;padding:2px 8px;margin-left:8px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>Can‑Tong · 中英粤互译 + 发音 <span class="badge">前端: GitHub Pages · 后端: Vercel</span></h1>
+      <div class="row">
+        <label>源语言
+          <select id="src">
+            <option value="en">English</option>
+            <option value="chs">中文（简体）</option>
+            <option value="zhh" selected>粤语（正字）</option>
+          </select>
+        </label>
+        <label>目标语言
+          <select id="tgt">
+            <option value="zhh" selected>粤语（正字）</option>
+            <option value="chs">中文（简体）</option>
+            <option value="en">English</option>
+          </select>
+        </label>
+        <button id="swap">⇄ 互换</button>
+      </div>
+      <textarea id="inp" placeholder="输入要翻译的内容…（支持 EN / 中文 / 粤语正字）"></textarea>
+      <div class="row">
+        <button id="go">翻译</button>
+        <button id="speak">🔊 粤语发音</button>
+      </div>
+      <div class="grid">
+        <div>
+          <div class="muted">结果</div>
+          <div id="out" class="out"></div>
+        </div>
+        <div>
+          <div class="muted">调试 / 健康检查</div>
+          <div id="ping" class="out">检查中…</div>
+        </div>
+      </div>
+      <p class="muted">说明：此页面仅前端；API 来自 Vercel 后端。若没有后端 TTS，将回退浏览器 zh‑HK 语音。</p>
+    </div>
+  </div>
+  <script>
+    const API_BASE = "https://can-tong.vercel.app"; // ← 这里固定指向你的 Vercel 后端
+    const $ = (s)=>document.querySelector(s);
+    const src = $("#src"), tgt=$("#tgt"), inp=$("#inp"), out=$("#out"), pingBox=$("#ping");
+    $("#swap").onclick=()=>{ const a=src.value; src.value=tgt.value; tgt.value=a; };
+    async function ping(){
+      try{
+        const r = await fetch(API_BASE + "/api/ping");
+        const j = await r.json();
+        pingBox.textContent = JSON.stringify(j, null, 2);
+      }catch(e){
+        pingBox.textContent = "Ping 失败：" + e.message;
+      }
+    }
+    async function translate(){
+      out.textContent = "翻译中…";
+      try{
+        const r = await fetch(API_BASE + "/api/translate",{
+          method:"POST",
+          headers:{"content-type":"application/json"},
+          body: JSON.stringify({ text: inp.value, src: src.value, tgt: tgt.value })
+        });
+        const j = await r.json();
+        out.textContent = j.text || JSON.stringify(j);
+      }catch(e){
+        out.textContent = "出错：" + e.message;
+      }
+    }
+    async function speak(){
+      const text = (out.textContent || inp.value || "").trim();
+      if(!text){ alert("没有可读的文本"); return; }
+      try{
+        const r = await fetch(API_BASE + "/api/tts?text="+encodeURIComponent(text));
+        if(r.ok && r.headers.get("content-type")?.includes("audio")){
+          const blob = await r.blob();
+          const url = URL.createObjectURL(blob);
+          const audio = new Audio(url);
+          audio.play();
+          return;
+        }
+      }catch(e){ /* fallthrough */ }
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = "zh-HK";
+      speechSynthesis.cancel();
+      speechSynthesis.speak(u);
+    }
+    $("#go").onclick = translate;
+    $("#speak").onclick = speak;
+    ping();
+  </script>
+</body>
+</html>
