@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Can‑Tong · 中英粤互译 + 发音</title>
+  <title>Can‑Tong · 粤语助手（KV 版）</title>
   <style>
     html,body{margin:0;padding:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,'Noto Sans',sans-serif;background:#0b0b0c;color:#e8e8ea}
-    .wrap{max-width:960px;margin:40px auto;padding:24px}
+    .wrap{max-width:1000px;margin:40px auto;padding:24px}
     .card{background:#141416;border:1px solid #22232a;border-radius:16px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
     h1{font-size:22px;margin:0 0 12px}
     .row{display:flex;gap:12px;flex-wrap:wrap;margin:8px 0}
@@ -18,13 +18,15 @@
     @media(min-width:900px){.grid{grid-template-columns:1fr 1fr}}
     .out{white-space:pre-wrap;background:#0f1013;border:1px solid #2a2b31;border-radius:10px;padding:12px;min-height:120px}
     .badge{font-size:11px;background:#1b1c22;border:1px solid #2a2b31;border-radius:999px;padding:2px 8px;margin-left:8px}
-    .tip{font-size:12px;opacity:.8;margin-top:6px}
+    .hr{height:1px;background:#2a2b31;margin:16px 0}
+    label{display:flex;flex-direction:column;gap:6px}
+    input[type="password"]{letter-spacing:2px}
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="card">
-      <h1>Can‑Tong · 中英粤互译 + 发音 <span id="where" class="badge"></span></h1>
+      <h1>Can‑Tong · 中英粤互译 + 发音 <span class="badge">KV 版</span></h1>
       <div class="row">
         <label>源语言
           <select id="src">
@@ -55,21 +57,44 @@
         <div>
           <div class="muted">调试 / 健康检查</div>
           <div id="ping" class="out">检查中…</div>
-          <div class="tip">如报错，请先确认 Vercel 的 Output Directory 为空，并重新部署。</div>
         </div>
       </div>
-      <p class="muted">说明：若没有后端 TTS，将回退浏览器 zh‑HK 语音。</p>
+
+      <div class="hr"></div>
+      <h2 style="font-size:18px;margin:4px 0 8px">管理员 · 词库学习（写入 KV，需要密钥）</h2>
+      <div class="row">
+        <label>管理密钥
+          <input id="key" type="password" placeholder="x-api-key（仅你自己使用）"/>
+        </label>
+        <button id="saveKey">保存到本机</button>
+      </div>
+      <div class="row">
+        <label>粤语（zhh）<input id="lz" placeholder="例如：唔該"/></label>
+        <label>中文（chs）<input id="lc" placeholder="例如：劳驾/麻烦"/></label>
+        <label>英文（en）<input id="le" placeholder="例如：please"/></label>
+      </div>
+      <div class="row">
+        <button id="learnOne">学习（单条）</button>
+      </div>
+      <label>批量学习（JSON 数组，元素含 zhh/chs/en）</label>
+      <textarea id="bulk" placeholder='[{"zhh":"食飯未？","chs":"吃饭了吗？","en":"have you eaten?"}]'></textarea>
+      <div class="row">
+        <button id="learnBulk">批量学习</button>
+      </div>
+      <p class="muted">写入 KV 即为你的“闭源私库”；翻译时会<strong>优先</strong>命中 KV，再回退到公开 lexicon.json。</p>
     </div>
   </div>
   <script>
-    const API_BASE = location.hostname.includes("github.io") ? "https://can-tong.vercel.app" : "";
-    document.getElementById("where").textContent = API_BASE ? "前端: GitHub Pages · 后端: Vercel" : "前后端: Vercel";
     const $ = (s)=>document.querySelector(s);
     const src = $("#src"), tgt=$("#tgt"), inp=$("#inp"), out=$("#out"), pingBox=$("#ping");
+    const keyInput = $("#key");
+    keyInput.value = localStorage.getItem("ct_key") || "";
+    $("#saveKey").onclick = ()=>{ localStorage.setItem("ct_key", keyInput.value||""); alert("已保存到本机"); };
+
     $("#swap").onclick=()=>{ const a=src.value; src.value=tgt.value; tgt.value=a; };
     async function ping(){
       try{
-        const r = await fetch(API_BASE + "/api/ping");
+        const r = await fetch("/api/ping");
         const j = await r.json();
         pingBox.textContent = JSON.stringify(j, null, 2);
       }catch(e){
@@ -79,7 +104,7 @@
     async function translate(){
       out.textContent = "翻译中…";
       try{
-        const r = await fetch(API_BASE + "/api/translate",{
+        const r = await fetch("/api/translate",{
           method:"POST",
           headers:{"content-type":"application/json"},
           body: JSON.stringify({ text: inp.value, src: src.value, tgt: tgt.value })
@@ -94,7 +119,7 @@
       const text = (out.textContent || inp.value || "").trim();
       if(!text){ alert("没有可读的文本"); return; }
       try{
-        const r = await fetch(API_BASE + "/api/tts?text="+encodeURIComponent(text));
+        const r = await fetch("/api/tts?text="+encodeURIComponent(text));
         if(r.ok && r.headers.get("content-type")?.includes("audio")){
           const blob = await r.blob();
           const url = URL.createObjectURL(blob);
@@ -108,8 +133,32 @@
       speechSynthesis.cancel();
       speechSynthesis.speak(u);
     }
+    async function learnOne(){
+      const payload = { zhh: $("#lz").value.trim(), chs: $("#lc").value.trim(), en: $("#le").value.trim() };
+      if(!payload.zhh && !payload.chs && !payload.en){ alert("请至少填写一个字段"); return; }
+      const r = await fetch("/api/learn", {
+        method:"POST",
+        headers:{ "content-type":"application/json", "x-api-key": localStorage.getItem("ct_key") || "" },
+        body: JSON.stringify({ entries: [payload] })
+      });
+      const j = await r.json();
+      alert("已写入：" + JSON.stringify(j));
+    }
+    async function learnBulk(){
+      let arr = [];
+      try{ arr = JSON.parse($("#bulk").value || "[]"); }catch(e){ alert("JSON 无法解析"); return; }
+      const r = await fetch("/api/learn", {
+        method:"POST",
+        headers:{ "content-type":"application/json", "x-api-key": localStorage.getItem("ct_key") || "" },
+        body: JSON.stringify({ entries: arr })
+      });
+      const j = await r.json();
+      alert("批量结果：" + JSON.stringify(j));
+    }
     $("#go").onclick = translate;
     $("#speak").onclick = speak;
+    $("#learnOne").onclick = learnOne;
+    $("#learnBulk").onclick = learnBulk;
     ping();
   </script>
 </body>
