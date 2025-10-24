@@ -17,21 +17,5 @@ export async function kvGet(key){
   return j.result ? JSON.parse(j.result) : null;
 }
 
-export async function kvSet(key, val){
-  return kvCmd(["SET", key, JSON.stringify(val)]);
-}
-
-export async function kvMget(keys){
-  if(!keys.length) return [];
-  const j = await kvCmd(["MGET", ...keys]);
-  return (j.result||[]).map(x => x ? JSON.parse(x) : null);
-}
-
-export async function kvScan(pattern="ct:vec:*", count=200){
-  const j = await kvCmd(["SCAN", "0", "MATCH", pattern, "COUNT", String(count)]);
-  return j.result?.[1] || [];
-}
-
 export function norm(s){ return (s||"").trim().toLowerCase(); }
-export function keyEntry(id){ return `ct:entry:${id}`; }
-export function keyVec(id){ return `ct:vec:${id}`; }
+export function keyOf(lang, text){ return `ct:pair:${lang}:${norm(text)}`; }

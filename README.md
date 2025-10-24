@@ -1,29 +1,17 @@
-# Can‑Tong · KV 版（Vercel）
+# Can‑Tong · KV + 语义召回 版（Vercel）
 
-功能
-- `/` 单页应用（中英粤互译 + 发音）
-- `/api/translate`：先查 KV（你的私库）→ 再查 `public/lexicon.json`（开源底库）
-- `/api/learn`：写入词条到 KV（需要 `x-api-key`）
-- `/api/ping`：健康检查
-- `/api/tts`：可选代理外部 TTS（未配置时前端回退浏览器 `zh-HK`）
+新增能力
+- `/api/learn_semantic`：写入词条并为现有语言值（zhh/chs/en）计算嵌入向量，保存到 KV。
+- `/api/search`：输入任意语言短语，做语义相似召回（Top-K）。
+- `/api/translate`：支持 `withSimilar=true` 返回相似表达列表。
 
-## 环境变量
-- `KV_REST_API_URL`：Upstash KV 的 REST URL
-- `KV_REST_API_TOKEN`：Upstash KV 的 REST Token（或只读 token 也可，但 /api/learn 需要可写）
-- `ADMIN_API_KEY`：管理密钥（你自己设置一个强密码）
-- `TTS_URL`：（可选）你的 TTS 接口
+环境变量
+- `KV_REST_API_URL` / `KV_REST_API_TOKEN`
+- `ADMIN_API_KEY`
+- `OPENAI_API_KEY`
+- `EMBED_MODEL`（可选，默认 text-embedding-3-small）
+- `TTS_URL`（可选）
 
-## 部署
-1. 将整个目录覆盖上传到 GitHub 仓库根；Vercel 框架选择 **Other**。
-2. 填好环境变量 → 重新部署。
-3. `/api/ping` 返回 `{ ok: true }` 即成功。
-
-## 数据模型（KV）
-key：`ct:pair:<lang>:<normalized_text>` → value：`{ zhh, chs, en }`。
-
-## 批量学习
-POST `/api/learn`
-```json
-{ "entries": [ { "zhh":"多謝", "chs":"谢谢", "en":"thanks" } ] }
-```
-至少两个字段非空。
+说明
+- 当前用 `SCAN ct:vec:* COUNT 500` 拉最多 500 条向量参与相似度计算（MVP 简化）。
+- 后续量大时，请迁移到专业向量库（Upstash Vector/Pinecone/Qdrant），或新增倒排/ANN。

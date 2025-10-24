@@ -1,21 +1,20 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { kvGet, keyOf, norm } from './kv.js';
+import { kvGet, keyOf, norm } from './kv_basic.js';
+import searchHandler from './search.js';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({error:'Method not allowed'});
-  const { text, src='zhh', tgt='chs' } = req.body || {};
+  const { text, src='zhh', tgt='chs', withSimilar=false } = req.body || {};
   const t = norm(text);
   let out = text || '';
   let matched = false;
   try{
-    // 1) KV first (private)
-    const hit = await kvGet(keyOf(src, t));
-    if(hit && hit[tgt]){
+    const basicKV = await kvGet(keyOf(src, t));
+    if(basicKV && basicKV[tgt]){
       matched = true;
-      out = hit[tgt];
+      out = basicKV[tgt];
     }else{
-      // 2) fallback to public lexicon.json
       const base = path.join(process.cwd(), 'public', 'lexicon.json');
       const raw = await fs.readFile(base, 'utf8');
       const lex = JSON.parse(raw);
@@ -26,8 +25,14 @@ export default async function handler(req, res) {
         out = item[tgt];
       }
     }
-  }catch(e){
-    // ignore
+  }catch(e){}
+  let similar = [];
+  if(withSimilar){
+    const fakeReq = { method:'GET', query: { text, topk: 8 } };
+    const container = { payload:null, code:200 };
+    const fakeRes = { status:(c)=>({ json:(o)=>{ container.code=c; container.payload=o; } }) };
+    await searchHandler(fakeReq, fakeRes);
+    if(container.payload?.hits) similar = container.payload.hits;
   }
-  return res.status(200).json({ text: out, meta: { src, tgt, matched } });
+  return res.status(200).json({ text: out, meta: { src, tgt, matched }, similar });
 }
