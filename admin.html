@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="zh-HK">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Can‑Tong · Admin 学习面板</title>
+  <style>
+    html,body{margin:0;padding:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,'Noto Sans',sans-serif;background:#0b0b0c;color:#e8e8ea}
+    .wrap{max-width:1100px;margin:40px auto;padding:24px}
+    .card{background:#141416;border:1px solid #22232a;border-radius:16px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+    h1{font-size:22px;margin:0 0 12px}
+    .row{display:flex;gap:12px;flex-wrap:wrap;margin:8px 0}
+    textarea,input,button{background:#0f1013;color:#e8e8ea;border:1px solid #2a2b31;border-radius:10px;padding:10px 12px}
+    textarea{width:100%;min-height:140px;resize:vertical}
+    .muted{color:#a7a8ad;font-size:12px}
+    .hr{height:1px;background:#2a2b31;margin:16px 0}
+    .grid{display:grid;grid-template-columns:1fr;gap:16px}
+    @media(min-width:1000px){.grid{grid-template-columns:1fr 1fr}}
+    .ok{color:#67e8f9} .warn{color:#fbbf24} .err{color:#fb7185}
+    .pill{display:inline-block;border:1px solid #2a2b31;border-radius:999px;padding:3px 10px;margin-right:6px}
+    input[type="file"]{padding:8px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>Can‑Tong · Admin 学习面板</h1>
+      <p class="muted">把网址 / 文本 / 字幕 丢进来 → 生成 entries → 一键写入 KV + 嵌入。</p>
+
+      <div class="row">
+        <label>Admin Key
+          <input id="key" type="password" placeholder="x-api-key（与你的 ADMIN_API_KEY 一致）"/>
+        </label>
+        <button id="saveKey">保存</button>
+        <span id="keyStatus" class="muted"></span>
+      </div>
+
+      <div class="grid">
+        <div>
+          <div class="pill">📎 多个网址（每行一个）</div>
+          <textarea id="urls" placeholder="https://example.com/...\nhttps://..."></textarea>
+          <div class="pill">📝 原始文本（可直接粘贴）</div>
+          <textarea id="texts" placeholder="在此粘贴整段文本……"></textarea>
+        </div>
+        <div>
+          <div class="pill">🎞️ 字幕文件（SRT，可多选）</div>
+          <input id="srt" type="file" accept=".srt" multiple/>
+          <div id="srtInfo" class="muted" style="margin-top:8px">未选择文件</div>
+        </div>
+      </div>
+
+      <div class="row">
+        <button id="gen">生成 entries（调用 /api/ingest）</button>
+        <span id="genInfo" class="muted"></span>
+      </div>
+
+      <div class="hr"></div>
+      <div class="pill">🧱 entries 预览 / 可编辑（JSON 数组，元素包含 zhh/chs/en，至少两项非空；多变体用“/”分隔）</div>
+      <textarea id="entries" placeholder='[{"zhh":"唔好ong / 咪ong","chs":"别推 / 不要推","en":"don\'t push"}]'></textarea>
+
+      <div class="row">
+        <button id="commit">一键写入（/api/ingest_commit）</button>
+        <span id="commitInfo" class="muted"></span>
+      </div>
+
+      <div class="hr"></div>
+      <div class="muted">
+        ✅ 写入成功后，查询接口 <code>/api/translate</code> 会返回：<code>{ best: { zhh, en }, related: [...] }</code>。<br/>
+        ✅ 同义/多变体会自动打组（group），用于语义召回。<br/>
+        ⚠️ 本页面只在你知道 <code>ADMIN_API_KEY</code> 的情况下有用，请勿公开外传。
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const $ = s => document.querySelector(s);
+    const keyEl = $("#key"), urlsEl=$("#urls"), textsEl=$("#texts"), srtEl=$("#srt");
+    const entriesEl=$("#entries"), keyStatus=$("#keyStatus"), genInfo=$("#genInfo"), commitInfo=$("#commitInfo"), srtInfo=$("#srtInfo");
+
+    keyEl.value = localStorage.getItem("ct_key") || "";
+    keyStatus.textContent = keyEl.value ? "已从浏览器本地读取" : "未保存";
+
+    $("#saveKey").onclick = () => {
+      localStorage.setItem("ct_key", keyEl.value || "");
+      keyStatus.textContent = "已保存到本机";
+      setTimeout(()=> keyStatus.textContent = "", 1500);
+    };
+
+    srtEl.addEventListener("change", ()=>{
+      if(!srtEl.files?.length){ srtInfo.textContent="未选择文件"; return; }
+      srtInfo.textContent = Array.from(srtEl.files).map(f=>f.name).join(", ");
+    });
+
+    async function readSRTFiles(){
+      const texts = [];
+      for(const f of (srtEl.files || [])){
+        const t = await f.text();
+        texts.push(t);
+      }
+      return texts;
+    }
+
+    function splitLines(s){ return (s||"").split(/\r?\n/).map(x=>x.trim()).filter(Boolean); }
+
+    $("#gen").onclick = async () => {
+      genInfo.textContent = "生成中…";
+      const urls = splitLines(urlsEl.value);
+      const texts = textsEl.value ? [textsEl.value] : [];
+      const srt = await readSRTFiles();
+      try{
+        const r = await fetch("/api/ingest", {
+          method: "POST",
+          headers: {"content-type":"application/json"},
+          body: JSON.stringify({ urls, texts, srt })
+        });
+        const j = await r.json();
+        entriesEl.value = JSON.stringify(j.entries || [], null, 2);
+        genInfo.textContent = `生成完成：${(j.entries||[]).length} 条`;
+      }catch(e){
+        genInfo.textContent = "失败：" + e.message;
+      }
+    };
+
+    $("#commit").onclick = async () => {
+      commitInfo.textContent = "写入中…";
+      let arr = [];
+      try{ arr = JSON.parse(entriesEl.value || "[]"); }catch(e){
+        commitInfo.textContent = "JSON 无法解析"; return;
+      }
+      try{
+        const r = await fetch("/api/ingest_commit", {
+          method: "POST",
+          headers: { "content-type":"application/json", "x-api-key": (localStorage.getItem('ct_key')||'') },
+          body: JSON.stringify({ entries: arr })
+        });
+        const j = await r.json();
+        commitInfo.textContent = `结果：ok=${j.ok||0}, fail=${j.fail||0}, wrote=${j.wrote||0}`;
+      }catch(e){
+        commitInfo.textContent = "失败：" + e.message;
+      }
+    };
+  </script>
+</body>
+</html>
