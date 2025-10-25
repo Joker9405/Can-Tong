@@ -1,14 +1,14 @@
-// api/translate.js (multi-target return)
 import fs from 'fs/promises';
 import path from 'path';
 import { kvGet, keyOf, scanEmbKeys } from './kv.js';
 import { embed, cosine } from './openai.js';
 
 const normalize = s => (s || '').trim().toLowerCase();
-const pickBest = (group, lang) => {
+
+function pickBest(group, lang) {
   const arr = (group.items && group.items[lang]) || [];
   return arr.length ? arr[0] : '';
-};
+}
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
@@ -27,7 +27,7 @@ export default async function handler(req, res) {
         related.push({ group: 'exact', items: { [src]: [text], zhh: exact.zhh ? [exact.zhh] : [], en: exact.en ? [exact.en] : [] } });
       }
     }
-  } catch (e) {}
+  } catch {}
 
   if (withRelated || !matched) {
     try {
@@ -41,15 +41,15 @@ export default async function handler(req, res) {
           cands.push({ sim, ref: obj });
         }
       }
-      cands.sort((a, b) => b.sim - a.sim);
-      const top = cands.filter(x => x.sim >= 0.78).slice(0, 12);
+      cands.sort((a,b)=>b.sim-a.sim);
+      const top = cands.filter(x=>x.sim>=0.78).slice(0,8);
       const groupMap = new Map();
       for (const c of top) {
         const id = c.ref.group || c.ref.text;
         if (!groupMap.has(id)) groupMap.set(id, { group: id, items: {}, bestSim: c.sim });
         const pack = groupMap.get(id);
-        const lang = c.ref.lang; const tx = c.ref.text;
-        (pack.items[lang] ||= []).push(tx);
+        const { lang, text } = c.ref;
+        (pack.items[lang] ||= []).push(text);
       }
       const groups = [...groupMap.values()].sort((a,b)=>b.bestSim-a.bestSim);
       if (!matched && groups.length) {
@@ -57,7 +57,7 @@ export default async function handler(req, res) {
         matched = !!(best.zhh || best.en);
       }
       if (withRelated) related = groups;
-    } catch (e) {}
+    } catch {}
   }
 
   if (!matched) {
@@ -71,7 +71,7 @@ export default async function handler(req, res) {
         best = { zhh: item.zhh || '', en: item.en || '' };
         matched = !!(best.zhh || best.en);
       }
-    } catch (e) {}
+    } catch {}
   }
 
   return res.status(200).json({ best, meta: { src, matched }, related });
