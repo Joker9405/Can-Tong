@@ -1,7 +1,96 @@
-import fs from 'fs/promises';import path from 'path';import {kvGet,keyOf,scanEmbKeys} from './kv.js';import {embed,cosine} from './openai.js';
-function normalize(s){return (s||'').trim().toLowerCase();}
-export default async function handler(req,res){if(req.method!=='POST')return res.status(405).json({error:'Method not allowed'});const {text,src='zhh',tgt='chs',withRelated=false}=req.body||{};const t=normalize(text);let out=text||'';let matched=false;let related=[];
-try{const exact=await kvGet(keyOf(src,t));if(exact){matched=true;out=exact[tgt]||text;if(withRelated){related.push({group:'exact',items:{[src]:[t],[tgt]:[exact[tgt]]}});}}}catch(e){}
-if(withRelated||!matched){try{const qvec=await embed(text);const keys=await scanEmbKeys(400);const cands=[];for(const k of keys){const obj=await kvGet(k);if(obj&&Array.isArray(obj.vec)){const sim=cosine(qvec,obj.vec);cands.push({sim,ref:obj});}}cands.sort((a,b)=>b.sim-a.sim);const top=cands.filter(x=>x.sim>=0.78).slice(0,8);const groupMap=new Map();for(const c of top){const id=c.ref.group||c.ref.id||c.ref.key;if(!groupMap.has(id))groupMap.set(id,{group:id,items:{},bestSim:c.sim});const pack=groupMap.get(id);(pack.items[c.ref.lang]??=([])).push(c.ref.text);}const groups=Array.from(groupMap.values()).sort((a,b)=>b.bestSim-a.bestSim);if(!matched&&groups.length){const g=groups[0];const tgtList=g.items[tgt]||[];if(tgtList.length){out=tgtList[0];matched=true;}}if(withRelated){related=groups;}}catch(e){}}
-if(!matched){try{const base=path.join(process.cwd(),'public','lexicon.json');const raw=await fs.readFile(base,'utf8');const lex=JSON.parse(raw);const arr=Object.values(lex);const item=arr.find(it=>normalize(it[src])===t);if(item&&item[tgt]){matched=true;out=item[tgt];}}catch(e){}}
-return res.status(200).json({text:out,meta:{src,tgt,matched},related});}
+// api/translate.js
+import fs from 'fs/promises';
+import path from 'path';
+import { kvGet, keyOf, scanEmbKeys } from './kv.js';
+import { embed, cosine } from './openai.js';
+
+const normalize = s => (s || '').trim().toLowerCase();
+
+// 从一个“组”里挑主推写法
+function pickBest(group, lang) {
+  const arr = (group.items && group.items[lang]) || [];
+  return arr.length ? arr[0] : '';
+}
+
+export default async function handler(req, res) {
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+  const { text, src = 'chs', withRelated = true } = req.body || {}; // 默认你现在经常从中文查
+  const t = normalize(text || '');
+  let matched = false;
+  let best = { zhh: '', en: '' };
+  let related = [];
+
+  // 1) 精确匹配（KV）
+  try {
+    const exact = await kvGet(keyOf(src, t)); // {zhh, chs, en}
+    if (exact) {
+      matched = true;
+      best = { zhh: exact.zhh || '', en: exact.en || '' };
+      if (withRelated) {
+        related.push({
+          group: 'exact',
+          items: {
+            [src]: [text],
+            zhh: exact.zhh ? [exact.zhh] : [],
+            en: exact.en ? [exact.en] : []
+          }
+        });
+      }
+    }
+  } catch (e) {}
+
+  // 2) 语义相似召回（嵌入）
+  if (withRelated || !matched) {
+    try {
+      const qvec = await embed(text);
+      const keys = await scanEmbKeys(400); // MVP: 最多扫描400条
+      const cands = [];
+      for (const k of keys) {
+        const obj = await kvGet(k); // { lang, text, group, vec }
+        if (obj && Array.isArray(obj.vec)) {
+          const sim = cosine(qvec, obj.vec);
+          cands.push({ sim, ref: obj });
+        }
+      }
+      cands.sort((a, b) => b.sim - a.sim);
+      const top = cands.filter(x => x.sim >= 0.78).slice(0, 8);
+
+      // 按 group 聚合
+      const groupMap = new Map();
+      for (const c of top) {
+        const id = c.ref.group || c.ref.text;
+        if (!groupMap.has(id)) groupMap.set(id, { group: id, items: {}, bestSim: c.sim });
+        const pack = groupMap.get(id);
+        const { lang, text } = c.ref;
+        (pack.items[lang] ||= []).push(text);
+      }
+      const groups = [...groupMap.values()].sort((a, b) => b.bestSim - a.bestSim);
+
+      if (!matched && groups.length) {
+        best = {
+          zhh: pickBest(groups[0], 'zhh'),
+          en: pickBest(groups[0], 'en')
+        };
+        matched = !!(best.zhh || best.en);
+      }
+      if (withRelated) related = groups;
+    } catch (e) {}
+  }
+
+  // 3) 回退：公开 lexicon.json（只作为兜底）
+  if (!matched) {
+    try {
+      const base = path.join(process.cwd(), 'public', 'lexicon.json');
+      const raw = await fs.readFile(base, 'utf8');
+      const lex = JSON.parse(raw);
+      const arr = Object.values(lex);
+      const item = arr.find(it => normalize(it[src]) === t);
+      if (item) {
+        best = { zhh: item.zhh || '', en: item.en || '' };
+        matched = !!(best.zhh || best.en);
+      }
+    } catch (e) {}
+  }
+
+  return res.status(200).json({ best, meta: { src, matched }, related });
+}
