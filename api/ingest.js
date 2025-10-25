@@ -1,86 +1,32 @@
-// api/ingest.js
-export const config = { api: { bodyParser: { sizeLimit: '4mb' } } };
-
-const isLatin = s => /[A-Za-z]/.test(s);
-const isCJK = s => /[\u4E00-\u9FFF]/.test(s);
-const isCantoneseHeur = s => /[唔咗冇啲嘅嗰哋喺嚟咁啦啱邊咩哇喎]/.test(s);
-
-function srtToLines(srt){
-  const lines = (srt||'').split(/\r?\n/);
-  const texts=[];
-  for(const line of lines){
-    if(/^\d+$/.test(line)) continue;
-    if(/\d+:\d+:\d+/.test(line)) continue;
-    const t=line.trim(); if(t) texts.push(t);
-  }
-  return texts;
-}
-function stripHtml(html){
-  return (html||'').replace(/<script[\s\S]*?<\/script>/gi,'')
-                   .replace(/<style[\s\S]*?<\/style>/gi,'')
-                   .replace(/<[^>]+>/g,' ')
-                   .replace(/\s+/g,' ')
-                   .trim();
-}
-function splitSentences(text){
-  return (text||'').split(/[。！？!?\n\r]+/).map(x=>x.trim()).filter(Boolean);
-}
-function langOf(s){
-  if(!s) return 'unknown';
-  if(isLatin(s) && !isCJK(s)) return 'en';
-  if(isCantoneseHeur(s)) return 'zhh';
-  if(isCJK(s)) return 'chs';
-  return 'unknown';
-}
-function buildPairs(lines){
-  const entries=[];
-  for(let i=0;i<lines.length;i++){
-    const w = lines.slice(i, i+3);
-    const bucket = { zhh:[], chs:[], en:[] };
-    for(const t of w){
-      const L = langOf(t);
-      if(L==='zhh') bucket.zhh.push(t);
-      else if(L==='chs') bucket.chs.push(t);
-      else if(L==='en') bucket.en.push(t);
-    }
-    const ok = (bucket.zhh.length + bucket.chs.length + bucket.en.length) >= 2;
-    if(ok){
-      entries.push({
-        zhh: bucket.zhh.join(' / ') || '',
-        chs: bucket.chs.join(' / ') || '',
-        en: bucket.en.join(' / ') || ''
-      });
-      i += 2;
-    }
-  }
-  return dedupe(entries);
-}
-function dedupe(arr){
-  const seen=new Set(); const out=[];
-  for(const it of arr){
-    const key=[it.zhh,it.chs,it.en].join('|').toLowerCase();
-    if(seen.has(key)) continue; seen.add(key); out.push(it);
-  }
-  return out;
-}
-
-export default async function handler(req,res){
+export default async function handler(req, res){
   if(req.method!=='POST') return res.status(405).json({error:'Method not allowed'});
-  const { urls=[], texts=[], srt=[] } = req.body || {};
-  const lines=[];
-
-  for(const u of urls){
-    try{
-      const r = await fetch(u);
-      const ct = r.headers.get('content-type') || '';
-      const raw = await r.text();
-      if(ct.includes('html')) lines.push(...splitSentences(stripHtml(raw)));
-      else lines.push(...splitSentences(raw));
-    }catch(e){}
+  const { texts = [], srt = '' } = req.body || {};
+  const entries = [];
+  const pushEntry = (zhh, chs, en) => {
+    const obj = { zhh: (zhh||'').trim(), chs: (chs||'').trim(), en: (en||'').trim() };
+    const filled = ['zhh','chs','en'].filter(k=>obj[k]).length;
+    if(filled >= 2) entries.push(obj);
+  };
+  for(const t of texts){
+    const lines = String(t).split(/\r?\n/);
+    let cur = { zhh:'', chs:'', en:'' };
+    for(const line of lines){
+      const m = line.match(/^\s*(zhh|chs|en)\s*[:：]\s*(.+)$/i);
+      if(m){ cur[m[1].toLowerCase()] = m[2].trim(); }
+      else if(line.trim()===''){ pushEntry(cur.zhh, cur.chs, cur.en); cur={zhh:'',chs:'',en:''}; }
+    }
+    pushEntry(cur.zhh, cur.chs, cur.en);
   }
-  for(const t of texts){ lines.push(...splitSentences(t)); }
-  for(const s of srt){ lines.push(...srtToLines(s)); }
-
-  const entries = buildPairs(lines).slice(0, 500);
+  if(srt){
+    const clean = srt.split(/\r?\n/).filter(l=>!/^\d+$/.test(l) && !/-->/.test(l)).join(' ');
+    const bits = clean.split(/[。！？!?]/).map(x=>x.trim()).filter(Boolean);
+    for(const b of bits){
+      const hasLatin = /[a-zA-Z]/.test(b);
+      const hasCJK = /[\u4e00-\u9fff]/.test(b);
+      if(hasLatin && hasCJK){}
+      else if(hasLatin){ pushEntry('', '', b); }
+      else if(hasCJK){ pushEntry(b, b, ''); }
+    }
+  }
   return res.status(200).json({ entries, count: entries.length });
 }
