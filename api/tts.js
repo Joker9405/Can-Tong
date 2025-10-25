@@ -1,16 +1,1 @@
-export default async function handler(req, res) {
-  const { text='' } = req.query;
-  const TTS_URL = process.env.TTS_URL || '';
-  if(!TTS_URL){
-    return res.status(204).end();
-  }
-  try{
-    const target = TTS_URL + (TTS_URL.includes('?') ? '&' : '?') + 'text=' + encodeURIComponent(text);
-    const r = await fetch(target);
-    const buf = Buffer.from(await r.arrayBuffer());
-    res.setHeader('content-type', r.headers.get('content-type') || 'audio/mpeg');
-    return res.status(200).send(buf);
-  }catch(e){
-    return res.status(502).json({ error: 'TTS proxy failed', detail: String(e) });
-  }
-}
+export default async function handler(req,res){const {text=''}=req.query;const TTS_URL=process.env.TTS_URL||'';if(!TTS_URL){return res.status(204).end();}try{const target=TTS_URL+(TTS_URL.includes('?')?'&':'?')+'text='+encodeURIComponent(text);const r=await fetch(target);const buf=Buffer.from(await r.arrayBuffer());res.setHeader('content-type',r.headers.get('content-type')||'audio/mpeg');return res.status(200).send(buf);}catch(e){return res.status(502).json({error:'TTS proxy failed',detail:String(e)});} }
