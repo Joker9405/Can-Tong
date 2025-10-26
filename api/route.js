@@ -1,0 +1,164 @@
+import fs from 'fs/promises';
+import path from 'path';
+import { kvGet, kvSet, keyOf, embKey, scanEmbKeys, norm } from './lib/kv.js';
+import { embed, cosine } from './lib/openai.js';
+
+const ADMIN_KEY = process.env.ADMIN_API_KEY || '';
+const TTS_URL   = process.env.TTS_URL || '';
+const normalize = s => (s || '').trim().toLowerCase();
+const splitVariants = s => (s || '').split(/\s*[,/|、]\s*/).map(x=>x.trim()).filter(Boolean);
+const pickBest = (group, lang) => { const arr = (group.items && group.items[lang]) || []; return arr.length ? arr[0] : ''; };
+
+async function fn_ping(req, res){
+  return res.status(200).json({ ok:true, now:new Date().toISOString(), note:'single-function router running' });
+}
+
+async function fn_translate(req, res){
+  if(req.method!=='POST') return res.status(405).json({error:'Method not allowed'});
+  const { text, src='chs', tgt='', withRelated=true } = req.body || {};
+  const t = normalize(text||'');
+  let matched=false, best={ zhh:'', en:'' }, related=[];
+
+  try{
+    const exact = await kvGet(keyOf(src,t));
+    if(exact){
+      matched = true;
+      best = { zhh: exact.zhh || '', en: exact.en || '' };
+      if(withRelated){
+        related.push({ group:'exact', items:{ [src]:[text], zhh: exact.zhh?[exact.zhh]:[], en: exact.en?[exact.en]:[] } });
+      }
+    }
+  }catch{}
+
+  if(withRelated || !matched){
+    try{
+      const qvec = await embed(text);
+      const keys = await scanEmbKeys(400);
+      const cands = [];
+      for(const k of keys){
+        const obj = await kvGet(k);
+        if(obj && Array.isArray(obj.vec)){
+          const sim = cosine(qvec, obj.vec);
+          cands.push({ sim, ref: obj });
+        }
+      }
+      cands.sort((a,b)=>b.sim-a.sim);
+      const top = cands.filter(x=>x.sim>=0.78).slice(0,8);
+      const groupMap = new Map();
+      for(const c of top){
+        const id = c.ref.group || c.ref.text;
+        if(!groupMap.has(id)) groupMap.set(id, { group:id, items:{}, bestSim:c.sim });
+        const pack = groupMap.get(id);
+        const { lang, text } = c.ref;
+        (pack.items[lang] ||= []).push(text);
+      }
+      const groups = [...groupMap.values()].sort((a,b)=>b.bestSim-a.bestSim);
+      if(!matched && groups.length){
+        best = { zhh: pickBest(groups[0],'zhh'), en: pickBest(groups[0],'en') };
+        matched = !!(best.zhh || best.en);
+      }
+      if(withRelated) related = groups;
+    }catch{}
+  }
+
+  if(!matched){
+    try{
+      const base = path.join(process.cwd(),'public','lexicon.json');
+      const raw  = await fs.readFile(base,'utf8');
+      const lex  = JSON.parse(raw);
+      const arr  = Object.values(lex);
+      const item = arr.find(it => normalize(it[src]) === t);
+      if(item){ best = { zhh:item.zhh||'', en:item.en||'' }; matched = !!(best.zhh || best.en); }
+    }catch{}
+  }
+
+  const text_compat = tgt ? (best[tgt] || '') : (best.zhh || best.en || '');
+  return res.status(200).json({ best, text_compat, meta:{ src, matched }, related });
+}
+
+async function fn_learn(req, res){
+  if(req.method!=='POST') return res.status(405).json({error:'Method not allowed'});
+  if(!ADMIN_KEY || (req.headers['x-api-key'] !== ADMIN_KEY)) return res.status(401).json({error:'Unauthorized'});
+  const { entries = [] } = req.body || {};
+  let ok=0, fail=0, wrote=0;
+
+  for(const raw of entries){
+    const z=splitVariants(raw.zhh||''), c=splitVariants(raw.chs||''), e=splitVariants(raw.en||'');
+    const nonEmpty = [z.length>0, c.length>0, e.length>0].filter(Boolean).length;
+    if(nonEmpty < 2){ fail++; continue; }
+    const group = (e[0] && ('grp:'+norm(e[0]))) || ('grp:'+Date.now()+'-'+Math.random().toString(36).slice(2,8));
+    const variants=[]; for(const t of z){variants.push({lang:'zhh',text:t,group});} for(const t of c){variants.push({lang:'chs',text:t,group});} for(const t of e){variants.push({lang:'en',text:t,group});}
+    for(const v of variants){
+      try{
+        const vec = await embed(v.text);
+        await kvSet(embKey(v.lang,v.text), { ...v, vec });
+        const map = { zhh:z[0]||'', chs:c[0]||'', en:e[0]||'' };
+        await kvSet(keyOf(v.lang,v.text), map);
+        wrote++;
+      }catch(e){}
+    }
+    ok++;
+  }
+  return res.status(200).json({ ok, fail, wrote });
+}
+
+async function fn_tts(req, res){
+  const text = (req.query?.text || '').trim();
+  if(!TTS_URL) return res.status(204).end();
+  try{
+    const target = TTS_URL + (TTS_URL.includes('?')?'&':'?') + 'text=' + encodeURIComponent(text);
+    const r = await fetch(target);
+    const buf = Buffer.from(await r.arrayBuffer());
+    res.setHeader('content-type', r.headers.get('content-type') || 'audio/mpeg');
+    return res.status(200).send(buf);
+  }catch(e){ return res.status(502).json({ error:'TTS proxy failed' }); }
+}
+
+async function fn_ingest(req,res){
+  if(req.method!=='POST') return res.status(405).json({error:'Method not allowed'});
+  const { texts = [], srt = '' } = req.body || {};
+  const entries = [];
+  const pushEntry = (zhh, chs, en) => {
+    const obj = { zhh:(zhh||'').trim(), chs:(chs||'').trim(), en:(en||'').trim() };
+    const filled = ['zhh','chs','en'].filter(k=>obj[k]).length;
+    if(filled >= 2) entries.push(obj);
+  };
+  for(const t of texts){
+    const lines = String(t).split(/\r?\n/);
+    let cur = { zhh:'', chs:'', en:'' };
+    for(const line of lines){
+      const m = line.match(/^\s*(zhh|chs|en)\s*[:：]\s*(.+)$/i);
+      if(m){ cur[m[1].toLowerCase()] = m[2].trim(); }
+      else if(line.trim()===''){ pushEntry(cur.zhh,cur.chs,cur.en); cur={zhh:'',chs:'',en:''}; }
+    }
+    pushEntry(cur.zhh,cur.chs,cur.en);
+  }
+  if(srt){
+    const clean = srt.split(/\r?\n/).filter(l=>!/^\d+$/.test(l) && !/-->/.test(l)).join(' ');
+    const bits  = clean.split(/[。！？!?]/).map(x=>x.trim()).filter(Boolean);
+    for(const b of bits){
+      const hasLatin = /[a-zA-Z]/.test(b);
+      const hasCJK   = /[\u4e00-\u9fff]/.test(b);
+      if(hasLatin && hasCJK){}
+      else if(hasLatin){ pushEntry('', '', b); }
+      else if(hasCJK){ pushEntry(b, b, ''); }
+    }
+  }
+  return res.status(200).json({ entries, count: entries.length });
+}
+
+async function fn_ingest_commit(req,res){
+  req.headers['x-api-key'] = req.headers['x-api-key'] || req.headers['X-Api-Key'];
+  return fn_learn(req,res);
+}
+
+export default async function handler(req, res){
+  const fn = (req.query?.fn || '').toString().toLowerCase();
+  if(fn==='ping')            return fn_ping(req,res);
+  if(fn==='translate')       return fn_translate(req,res);
+  if(fn==='learn')           return fn_learn(req,res);
+  if(fn==='tts')             return fn_tts(req,res);
+  if(fn==='ingest')          return fn_ingest(req,res);
+  if(fn==='ingest_commit')   return fn_ingest_commit(req,res);
+  return res.status(404).json({ error:'unknown action', hint:'ping, translate, learn, tts, ingest, ingest_commit' });
+}

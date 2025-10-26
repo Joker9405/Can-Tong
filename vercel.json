@@ -3,15 +3,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "/api/$1"
-    },
-    {
-      "source": "/admin",
-      "destination": "/admin.html"
-    },
-    {
-      "source": "/admin.html",
-      "destination": "/admin.html"
+      "destination": "/api/route?fn=$1"
     },
     {
       "source": "/((?!api/).*)",
