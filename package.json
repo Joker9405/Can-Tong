@@ -1,9 +1,0 @@
-{
-  "name": "can-tong-kv-embed",
-  "private": true,
-  "type": "module",
-  "version": "0.3.0",
-  "scripts": {
-    "build": "echo 'skip build'"
-  }
-}
