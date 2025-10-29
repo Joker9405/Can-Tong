@@ -1,0 +1,12 @@
+
+{
+  "name": "cantong",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'Edge runtime, nothing to build'",
+    "start": "vercel dev"
+  }
+}

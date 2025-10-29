@@ -1,0 +1,59 @@
+
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Cantong v1 Demo</title>
+  <style>
+    body{font-family:system-ui,Arial;margin:20px;max-width:720px}
+    .card{border:1px solid #ddd;border-radius:12px;padding:16px;margin-top:12px}
+    .row{display:flex;gap:8px;align-items:center}
+    button{padding:6px 10px;border-radius:8px;border:1px solid #ccc;background:#f8f8f8;cursor:pointer}
+    input{flex:1;padding:10px;border-radius:8px;border:1px solid #ccc}
+    .dot{width:10px;height:10px;border-radius:50%}
+    .dot.green{background:#11a36a}.dot.yellow{background:#f3b700}.dot.gray{background:#9aa0a6}
+    small{color:#666}
+  </style>
+</head>
+<body>
+  <h1>Cantong v1</h1>
+  <div class="row">
+    <input id="q" placeholder="輸入：早抖 / 好攰 / rest early / 早点休息">
+    <select id="lang">
+      <option value="zhh">粵語</option>
+      <option value="chs">中文</option>
+      <option value="en">English</option>
+    </select>
+    <button onclick="lookup()">查</button>
+  </div>
+  <div id="out"></div>
+<script>
+async function lookup(){
+  const q = document.getElementById('q').value.trim();
+  const lang = document.getElementById('lang').value;
+  if(!q) return;
+  const res = await fetch(`/api/route?fn=lookup&q=${encodeURIComponent(q)}&lang=${lang}`);
+  const data = await res.json();
+  const out = document.getElementById('out');
+  out.innerHTML = '';
+  const card = document.createElement('div'); card.className='card';
+  const dotClass = data.normalize?.suggestion && data.normalize.suggestion !== data.query ? 'yellow' : (data.best ? 'green':'gray');
+  card.innerHTML = `
+    <div class="row"><div class="dot ${dotClass}"></div><strong>結果</strong></div>
+    <div style="margin-top:8px">
+      ${data.best ? `<div><b>粵語正寫</b>：${data.best.headword} <button onclick="speak('${(data.best.headword||'').replace(/'/g,'')}')">🔊</button></div>` : `<div>未收錄</div>`}
+      ${data.best?.senses?.[0]?.gloss_chs ? `<div><b>中文</b>：${data.best.senses[0].gloss_chs}</div>`:''}
+      ${data.best?.senses?.[0]?.gloss_en ? `<div><b>English</b>：${data.best.senses[0].gloss_en}</div>`:''}
+      ${data.normalize?.suggestion ? `<div><b>糾錯</b>：你要找的是 <u>${data.normalize.suggestion}</u></div>`:''}
+      <div style="margin-top:6px"><small>候選：${(data.candidates||[]).map(c=>c.headword).slice(0,5).join('、')||'—'}</small></div>
+    </div>`;
+  out.appendChild(card);
+}
+function speak(text){
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'zh-HK'; speechSynthesis.speak(u);
+}
+</script>
+</body>
+</html>
