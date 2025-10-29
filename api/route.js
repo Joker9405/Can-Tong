@@ -155,3 +155,78 @@ export default async function handler(req) {
     return json({ error: String(e && e.message or e) }, 500);
   }
 }
+
+
+// --- UGC helpers ---
+async function fnContribList(){
+  const items = await supabaseQuery(`user_contrib?status=eq.pending&select=id,headword,lang,gloss_chs,gloss_en,source_url,license,created_at`);
+  return json({items});
+}
+
+async function fnContribSubmit(req){
+  const body = await req.json();
+  const payload = [{
+    user_name: body.user_name || null,
+    headword: body.headword,
+    lang: body.lang || 'zhh',
+    gloss_chs: body.gloss_chs || null,
+    gloss_en: body.gloss_en || null,
+    source_url: body.source_url || null,
+    license: body.license || 'CC0',
+    status: 'pending'
+  }];
+  const url = `${SUPABASE_URL}/rest/v1/user_contrib`;
+  const headers = {
+    apikey: SUPABASE_ANON_KEY,
+    Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+    "content-type": "application/json"
+  };
+  const res = await fetch(url, { method:'POST', headers, body: JSON.stringify(payload) });
+  if (!res.ok) return bad(await res.text(), 500);
+  return json({ok:true});
+}
+
+async function fnContribApprove(req){
+  const token = req.headers.get("x-admin-token") || "";
+  if (!ADMIN_TOKEN || token !== ADMIN_TOKEN) return bad("unauthorized", 401);
+  const body = await req.json();
+  const id = body.id;
+  if (!id) return bad("id required");
+  // move from user_contrib -> lexeme/sense (simple insert)
+  const rows = await supbaseGetRow(`user_contrib?id=eq.${id}&select=*`);
+  const row = rows && rows[0];
+  if (!row) return bad("not found", 404);
+  // insert lexeme + sense
+  const lx = await supabaseService("lexeme", [{ headword: row.headword, lang: row.lang }]);
+  const lexeme_id = lx[0].id;
+  const sensePayload = [{ lexeme_id, gloss_chs: row.gloss_chs, gloss_en: row.gloss_en }];
+  await supabaseService("sense", sensePayload);
+  // mark approved
+  const upd = await fetch(`${SUPABASE_URL}/rest/v1/user_contrib?id=eq.${id}`, {
+    method:'PATCH',
+    headers:{
+      apikey: SUPABASE_SERVICE_ROLE,
+      Authorization: `Bearer ${SUPABASE_SERVICE_ROLE}`,
+      "content-type":"application/json"
+    },
+    body: JSON.stringify({ status: 'approved' })
+  });
+  if (!upd.ok) return bad(await upd.text(), 500);
+  return json({ok:true, lexeme_id});
+}
+
+async function supbaseGetRow(path) {
+  const url = `${SUPABASE_URL}/rest/v1/${path}`;
+  const headers = {
+    apikey: SUPABASE_ANON_KEY,
+    Authorization: `Bearer ${SUPABASE_ANON_KEY}`
+  };
+  const res = await fetch(url, { headers });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+// UGC endpoints
+if (fn === 'contrib_list') return fnContribList();
+if (fn === 'contrib_submit') return fnContribSubmit(req);
+if (fn === 'contrib_approve') return fnContribApprove(req);
