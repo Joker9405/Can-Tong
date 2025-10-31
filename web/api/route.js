@@ -1,6 +1,4 @@
-// Bridge that loads the real handler from web/api/route.js (bundled via includeFiles)
-// Adds CORS and normalizes fn from either /api/:fn or ?fn=
-
+// /api/route.js
 function setCors(res) {
   const allow = process.env.FRONTEND_URL || "*";
   res.setHeader("Access-Control-Allow-Origin", allow);
@@ -10,12 +8,9 @@ function setCors(res) {
 
 export default async function handler(req, res) {
   setCors(res);
-  if (req.method === "OPTIONS") {
-    res.status(204).end();
-    return;
-  }
+  if (req.method === "OPTIONS") return res.status(204).end();
+
   try {
-    // normalize fn
     const url = new URL(req.url, "http://localhost");
     let fn = url.searchParams.get("fn");
     if (!fn) {
@@ -25,11 +20,13 @@ export default async function handler(req, res) {
     if (!req.query) req.query = {};
     if (fn) req.query.fn = fn;
 
-    // static relative import; file is bundled via vercel.json includeFiles
+    // 这里用静态相对路径；文件会因 includeFiles 被打包
     const mod = await import("../web/api/route.js");
     const entry = mod.default || mod.handler || mod;
     return entry(req, res);
   } catch (e) {
-    res.status(500).json({ ok: false, error: "route-bridge-failed", detail: String(e) });
+    return res
+      .status(500)
+      .json({ ok: false, error: "route-bridge-failed", detail: String(e) });
   }
 }
