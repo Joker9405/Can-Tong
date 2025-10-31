@@ -6,21 +6,9 @@
     }
   },
   "rewrites": [
-    {
-      "source": "/api/ping",
-      "destination": "/api/ping"
-    },
-    {
-      "source": "/api/:fn",
-      "destination": "/api/route?fn=:fn"
-    },
-    {
-      "source": "/admin",
-      "destination": "/web/admin.html"
-    },
-    {
-      "source": "/",
-      "destination": "/web/index.html"
-    }
+    { "source": "/api/ping", "destination": "/api/ping" },
+    { "source": "/api/:fn", "destination": "/api/route?fn=:fn" },
+    { "source": "/admin", "destination": "/web/admin.html" },
+    { "source": "/", "destination": "/web/index.html" }
   ]
 }
