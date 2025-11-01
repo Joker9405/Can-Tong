@@ -1,12 +1,11 @@
-
 {
-  "name": "cantong",
+  "name": "cantong-clean",
   "private": true,
-  "type": "module",
-  "version": "0.1.0",
-  "scripts": {
-    "dev": "vercel dev",
-    "build": "echo 'Edge runtime, nothing to build'",
-    "start": "vercel dev"
-  }
+  "version": "0.0.1",
+  "description": "Minimal Vercel clean starter (Node 20, static web + serverless api)",
+  "engines": {
+    "node": ">=20 <21"
+  },
+  "scripts": {},
+  "license": "MIT"
 }

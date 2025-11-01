@@ -1,5 +1,3 @@
-// Minimal serverless router for Vercel Node.js 20
-// Usage: /api/route?fn=ping
 module.exports = async (req, res) => {
   const fn = (req.query && req.query.fn) || "";
   if (req.method === "OPTIONS") { 
