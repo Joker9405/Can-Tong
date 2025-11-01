@@ -1,26 +1,15 @@
-// Bridge to real handler in /web/api/route.js
-function cors(res){
-  const allow = process.env.FRONTEND_URL || "*";
-  res.setHeader("Access-Control-Allow-Origin", allow);
-  res.setHeader("Access-Control-Allow-Methods","GET,POST,OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers","Content-Type, Authorization");
-}
-export default async function handler(req, res){
-  cors(res);
-  if (req.method === "OPTIONS") return res.status(204).end();
-  try{
-    const url = new URL(req.url, "http://localhost");
-    let fn = url.searchParams.get("fn");
-    if(!fn){
-      const m = url.pathname.match(/^\/api\/(\w+)/);
-      if(m) fn = m[1];
-    }
-    if(!req.query) req.query = {};
-    if(fn) req.query.fn = fn;
-    const mod = await import("../web/api/route.js");
-    const entry = mod.default || mod.handler || mod;
-    return entry(req, res);
-  }catch(e){
-    res.status(500).json({ ok:false, error:"route-bridge-failed", detail: String(e) });
+// Minimal serverless router for Vercel Node.js 20
+// Usage: /api/route?fn=ping
+module.exports = async (req, res) => {
+  const fn = (req.query && req.query.fn) || "";
+  if (req.method === "OPTIONS") { 
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    return res.status(204).end();
   }
-}
+  if (fn === "ping") {
+    return res.status(200).json({ ok: true, ts: Date.now() });
+  }
+  return res.status(404).json({ error: "fn not found", hint: "try /api/route?fn=ping" });
+};
