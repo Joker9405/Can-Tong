@@ -1,61 +1,82 @@
-// Unified route: ?fn=ping|translate|tts|ingest
+// Robust unified route with debug; fetch seed.csv via absolute origin URL
 export default async function handler(req, res) {
-  const url = new URL(req.url, `http://${req.headers.host}`);
+  const proto = (req.headers['x-forwarded-proto'] || 'https');
+  const host = req.headers.host;
+  const origin = `${proto}://${host}`;
+
+  const url = new URL(req.url, origin);
   const fn = url.searchParams.get('fn') || 'ping';
+
+  async function readSeedText() {
+    const seedUrl = new URL('/data/seed.csv', origin).toString();
+    let text = '';
+    let error = null;
+    try {
+      const r = await fetch(seedUrl);
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      text = await r.text();
+    } catch (e) {
+      error = String(e);
+    }
+    return { text, error, seedUrl };
+  }
 
   try {
     if (fn === 'ping') {
       return res.status(200).json({ ok: true, ts: Date.now() });
     }
 
-    if (fn === 'translate') {
-      // Minimal: read /data/seed.csv and match in-memory for MVP
-      const seedUrl = `${process.env.VERCEL_URL ? 'https://' + process.env.VERCEL_URL : ''}/data/seed.csv`;
-      let seed = '';
-      try {
-        seed = await fetch(seedUrl).then(r => r.text());
-      } catch (e) {
-        seed = '';
-      }
+    if (fn === 'debug') {
+      const { text, error, seedUrl } = await readSeedText();
+      return res.status(200).json({ ok: !error, origin, seedUrl, error, sample: text.slice(0, 120) });
+    }
 
+    if (fn === 'translate') {
       const q = (url.searchParams.get('q') || '').trim();
       if (!q) return res.status(400).json({ ok: false, error: 'missing q' });
 
-      const lines = seed.split(/\r?\n/);
-      const header = lines.shift() || '';
-      const rows = lines.map(l => l.split(','));
+      const { text, error } = await readSeedText();
+      if (error) {
+        return res.status(500).json({ ok: false, error: 'seed-load-failed' });
+      }
+
+      const lines = text.split(/\r?\n/);
+      const header = (lines.shift() || '').split(',');
+      const idx = {
+        chs: header.findIndex(h => h.trim().toLowerCase() === 'chs'),
+        zhh: header.findIndex(h => h.trim().toLowerCase() === 'zhh'),
+        en:  header.findIndex(h => h.trim().toLowerCase() === 'en'),
+      };
       const norm = s => (s || '').trim().toLowerCase();
 
       let hit = null;
-      for (const r of rows) {
-        const chs = r[0] || '';
-        const zhh = r[1] || '';
-        const en  = r[2] || '';
+      for (const line of lines) {
+        if (!line.trim()) continue;
+        const parts = line.split(',');
+        const chs = parts[idx.chs] || '';
+        const zhh = parts[idx.zhh] || '';
+        const en  = parts[idx.en]  || '';
         if (norm(chs) === norm(q) || norm(zhh) === norm(q) || norm(en) === norm(q)) {
           hit = { chs, zhh, en };
           break;
         }
       }
-
       const best = hit ? { zhh: hit.zhh || q, chs: hit.chs || q, en: hit.en || q }
                        : { zhh: q, chs: q, en: q };
-
       return res.status(200).json({ ok: true, best });
     }
 
     if (fn === 'tts') {
-      // Placeholder: front-end will use browser zh-HK Web Speech
       const text = url.searchParams.get('text') || '';
       return res.status(200).json({ ok: true, mode: 'client-zh-HK', text });
     }
 
     if (fn === 'ingest') {
-      // Disabled in MVP to keep dataset private/read-only
       return res.status(403).json({ ok: false, error: 'read-only seed; ingest disabled in MVP' });
     }
 
-    return res.status(404).json({ ok: false, error: 'unknown fn' });
+    return res.status(404).json({ ok:false, error:'unknown fn' });
   } catch (e) {
-    return res.status(500).json({ ok: false, error: String(e) });
+    return res.status(500).json({ ok:false, error: String(e) });
   }
 }

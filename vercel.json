@@ -1,11 +1,24 @@
 {
   "version": 2,
-  "cleanUrls": true,
-  "trailingSlash": false,
-  "rewrites": [
+  "functions": {
+    "api/route.js": {
+      "runtime": "nodejs18.x",
+      "memory": 128,
+      "maxDuration": 10
+    }
+  },
+  "routes": [
     {
-      "source": "/(.*)",
-      "destination": "/web/$1"
+      "src": "/api/(.*)",
+      "dest": "/api/route.js"
+    },
+    {
+      "src": "/data/(.*)",
+      "dest": "/data/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ]
 }
