@@ -1,2 +1,13 @@
-src_lexeme_id,tgt_lexeme_id,relation
-,,equivalent
+﻿term,lang,target_id,kind
+扔东西,chs,L0001,head
+丢东西,chs,L0001,alias
+扔/丢,chs,L0001,alias
+throw,en,L0001,head
+drop,en,L0001,alias
+leave,en,L0001,alias
+chuck,en,L0001,alias
+掟垃圾,zhh,L0001,example
+撇低,zhh,L0001,alias
+撇,zhh,L0001,alias
+摆低,zhh,L0001,example
+垃圾桶,note,L0001,note
