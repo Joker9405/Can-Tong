@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="zh-HK">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Funwa-1101CanTongMVP · v2</title>
+  <style>
+    :root{--bg:#0b0f14;--panel:#0f1720;--muted:#94a3b8;--hi:#a7f3d0;--pink:#f472b6;--lime:#d9f99d;--card:#111827;--border:#1f2937}
+    html,body{margin:0;background:var(--bg);color:#e5e7eb;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue','PingFang SC','Noto Sans SC','Hiragino Sans GB','Segoe UI Emoji',emoji,sans-serif}
+    .wrap{max-width:980px;margin:28px auto;padding:0 16px}
+    .panel{background:var(--panel);border-radius:14px;padding:18px 20px;box-shadow:0 10px 24px rgba(0,0,0,.25);border:1px solid var(--border)}
+    h1{font-size:22px;margin:0 0 8px}
+    .tag{font-size:12px;background:#1f2937;border:1px solid #374151;border-radius:999px;padding:2px 8px;margin-left:8px}
+    .row{display:flex;gap:10px}
+    input[type="search"]{flex:1;background:#111827;color:#e5e7eb;border:1px solid #374151;border-radius:10px;padding:12px 14px;font-size:16px;outline:none}
+    button{background:#0ea5e9;border:0;color:#fff;border-radius:10px;padding:10px 14px;cursor:pointer}
+    button.secondary{background:#374151}
+    .hint{color:var(--muted);font-size:13px;margin-top:8px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px 14px;margin-top:16px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .cell{background:#0d1320;border:1px solid #1f2937;border-radius:12px;padding:12px}
+    .cell h3{margin:0 0 6px;font-size:14px;color:#94a3b8}
+    .pill{display:inline-block;background:#1f2937;color:#f9fafb;border:1px solid #374151;border-radius:999px;padding:6px 10px;margin:4px 6px 0 0}
+    .pill .play{margin-left:8px;color:#93c5fd;cursor:pointer}
+    .alt{color:#f472b6;margin-left:8px}
+    .notes{background:#0d1726;border:1px dashed #334155;border-radius:10px;padding:10px;margin-top:12px;color:#cbd5e1}
+    table{width:100%;border-collapse:collapse;margin-top:10px}
+    th,td{border-bottom:1px solid #1f2937;padding:10px 8px;font-size:14px;vertical-align:top}
+    th{color:#94a3b8;font-weight:600}
+    .tips{color:#a7f3d0}
+    .suggest{margin-top:10px;color:#cbd5e1}
+    .suggest a{color:#93c5fd;margin-right:12px;text-decoration:none}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#a5b4fc}
+  </style>
+</head>
+<body>
+  <div class="wrap panel">
+    <h1>Funwa-1101CanTongMVP <span class="tag">v2 CSV</span></h1>
+    <div class="row">
+      <input id="q" type="search" placeholder="输入 中文 / English / 粤语（皆可检索）…" />
+      <button id="btn">查询</button>
+      <button id="speak" class="secondary">朗读</button>
+    </div>
+    <div class="hint">输入一个字也会出现联想（来自 <span class="mono">data/crossmap.csv</span>）。发音：浏览器 zh-HK（占位）。</div>
+
+    <div id="suggest" class="suggest"></div>
+
+    <div id="res" class="card" style="display:none">
+      <div class="grid">
+        <div class="cell">
+          <h3>粤语 (zhh)</h3>
+          <div id="zhh"></div>
+        </div>
+        <div class="cell">
+          <h3>中文 (chs)</h3>
+          <div id="chs"></div>
+        </div>
+        <div class="cell">
+          <h3>英文 (en)</h3>
+          <div id="en"></div>
+        </div>
+        <div class="cell">
+          <h3>备注 / Notes</h3>
+          <div id="notes"></div>
+        </div>
+      </div>
+      <div class="notes"><span class="tips">提示：</span>红色块可以显示更自然的替代说法（alias）；蓝色块支持英文反查。</div>
+
+      <div class="cell" style="margin-top:12px">
+        <h3>example</h3>
+        <table>
+          <thead><tr><th>粵語</th><th>中文</th><th>英文</th></tr></thead>
+          <tbody id="exbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="hint" style="margin-top:12px">© Funwa—1101CanTongMVP — Code MIT, Lexicon Closed；数据来自 <span class="mono">data/*.csv</span></div>
+  </div>
+
+  <script>
+  // --- small CSV parser (handles quotes, commas, CRLF) ---
+  function parseCSV(text){
+    const rows=[]; let row=[], field='', i=0, inq=false;
+    while(i<text.length){
+      const c=text[i];
+      if(inq){
+        if(c==='\"'){
+          if(text[i+1]==='\"'){ field+='\"'; i+=2; continue; }
+          inq=false; i++; continue;
+        } else { field+=c; i++; continue; }
+      } else {
+        if(c==='\"'){ inq=true; i++; continue; }
+        if(c===','){ row.push(field); field=''; i++; continue; }
+        if(c==='\n'){ row.push(field); rows.push(row); row=[]; field=''; i++; continue; }
+        if(c==='\r'){ i++; continue; }
+        field+=c; i++; continue;
+      }
+    }
+    if(field.length || row.length) { row.push(field); rows.push(row); }
+    const header = rows.shift().map(s=>s.trim());
+    return rows.filter(r=>r.length && r.some(x=>x.trim()!=='')).map(r=>{
+      const o={}; header.forEach((h,idx)=> o[h]= (r[idx]??'').trim()); return o;
+    });
+  }
+
+  async function loadCSV(path){
+    const res = await fetch(path+'?v='+Date.now(), {cache:'no-store'});
+    if(!res.ok) throw new Error('Load fail '+path);
+    const txt = await res.text();
+    return parseCSV(txt);
+  }
+
+  const state = { lexemeMap:new Map(), examplesMap:new Map(), termIndex:new Map() };
+
+  function splitMulti(s){ return (s||'').split('/').map(x=>x.trim()).filter(Boolean); }
+
+  function idxTermPut(key, val){
+    key = key.toLowerCase();
+    if(!state.termIndex.has(key)) state.termIndex.set(key, []);
+    state.termIndex.get(key).push(val);
+  }
+
+  async function boot(){
+    const [lex, ex, mp] = await Promise.all([
+      loadCSV('/data/lexeme.csv'),
+      loadCSV('/data/examples.csv'),
+      loadCSV('/data/crossmap.csv'),
+    ]);
+    for(const r of lex){ state.lexemeMap.set(r.id, r); }
+    for(const r of ex){
+      if(!state.examplesMap.has(r.lexeme_id)) state.examplesMap.set(r.lexeme_id, []);
+      state.examplesMap.get(r.lexeme_id).push(r);
+    }
+    for(const r of mp){ if(r.term) idxTermPut(r.term, {id:r.target_id,kind:r.kind,lang:r.lang}); }
+    wire();
+  }
+
+  function wire(){
+    const q = document.getElementById('q');
+    const btn = document.getElementById('btn');
+    const speak = document.getElementById('speak');
+    q.addEventListener('input', ()=> showSuggest(q.value));
+    btn.addEventListener('click', ()=> search(q.value));
+    q.addEventListener('keydown', e=>{ if(e.key==='Enter') search(q.value); });
+    speak.addEventListener('click', ()=> speakHK(q.value||'揼嘢'));
+  }
+
+  function speakHK(t){
+    try{
+      const u = new SpeechSynthesisUtterance(t);
+      u.lang='zh-HK'; u.rate=1.0;
+      speechSynthesis.cancel(); speechSynthesis.speak(u);
+    }catch(err){ console.log('speak fail', err); }
+  }
+
+  function showSuggest(input){
+    const box = document.getElementById('suggest');
+    box.innerHTML='';
+    const q = (input||'').trim().toLowerCase();
+    if(!q){ return; }
+    const all = Array.from(state.termIndex.keys());
+    const hit = all.filter(k=>k.startsWith(q)).slice(0,8);
+    if(!hit.length) return;
+    const frag = document.createDocumentFragment();
+    hit.forEach(k=>{
+      const a = document.createElement('a');
+      a.textContent = k;
+      a.href = 'javascript:void(0)';
+      a.onclick = ()=> { document.getElementById('q').value = k; search(k); }
+      frag.appendChild(a);
+    });
+    box.appendChild(frag);
+  }
+
+  function search(input){
+    const q=(input||'').trim().toLowerCase();
+    const resBox=document.getElementById('res');
+    if(!q){ resBox.style.display='none'; return; }
+
+    // exact
+    let cand = state.termIndex.get(q);
+    if(!cand){
+      // prefix fallback
+      const key = Array.from(state.termIndex.keys()).find(k=>k.startsWith(q));
+      if(key) cand = state.termIndex.get(key);
+    }
+    if(!cand){ resBox.style.display='none'; return; }
+
+    // weight: head > alias > example > note
+    const order = {head:3, alias:2, example:1, note:0};
+    cand.sort((a,b)=> (order[b.kind]||0) - (order[a.kind]||0));
+    const id = cand[0].id;
+    renderLexeme(id);
+  }
+
+  function renderLexeme(id){
+    const r = state.lexemeMap.get(id);
+    if(!r) return;
+    document.getElementById('res').style.display='block';
+
+    // zhh with per-segment play
+    const z = document.getElementById('zhh');
+    z.innerHTML='';
+    const seg = splitMulti(r.zhh);
+    const prn = splitMulti(r.zhh_pron);
+    seg.forEach((s, i)=>{
+      const pill = document.createElement('span');
+      pill.className='pill';
+      pill.textContent = s;
+      const play = document.createElement('span');
+      play.className='play';
+      play.textContent='▶';
+      play.title= (prn[i]||''); 
+      play.onclick=()=> speakHK(s);
+      pill.appendChild(play);
+      z.appendChild(pill);
+    });
+
+    // chs (with alias suggestion)
+    const c = document.getElementById('chs');
+    c.innerHTML='';
+    splitMulti(r.chs).forEach((s)=>{
+      const span=document.createElement('span'); span.className='pill'; span.textContent=s; c.appendChild(span);
+    });
+    const aliasCHS = splitMulti(r.alias_chs);
+    if(aliasCHS.length){
+      const em=document.createElement('span'); em.className='alt'; em.textContent='建议：'+aliasCHS[0]; c.appendChild(em);
+    }
+
+    // en block
+    const e = document.getElementById('en');
+    e.innerHTML='';
+    splitMulti(r.en).forEach((s)=>{
+      const span=document.createElement('span'); span.className='pill'; span.textContent=s; e.appendChild(span);
+    });
+
+    // notes
+    document.getElementById('notes').innerHTML = 
+      [r.note_chs, r.note_en].filter(Boolean).map(x=>`<div>${x}</div>`).join('');
+
+    // examples
+    const tbody = document.getElementById('exbody');
+    tbody.innerHTML='';
+    const arr = state.examplesMap.get(id)||[];
+    for(const ex of arr){
+      const tr=document.createElement('tr');
+      const td0=document.createElement('td');
+      td0.innerHTML = `<span class="pill">${ex.ex_zhh}</span>`;
+      const td1=document.createElement('td'); td1.textContent = ex.ex_chs||'';
+      const td2=document.createElement('td'); td2.textContent = ex.ex_en||'';
+      tr.appendChild(td0); tr.appendChild(td1); tr.appendChild(td2);
+      tbody.appendChild(tr);
+    }
+  }
+
+  boot();
+  </script>
+</body>
+</html>
