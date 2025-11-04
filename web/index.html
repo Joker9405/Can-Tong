@@ -1,73 +1,17 @@
 <!doctype html>
 <html lang="zh-HK">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Funwa-1101CanTongMVP · v2</title>
-  <style>
-    :root{--bg:#0b0f14;--panel:#0f1720;--muted:#94a3b8;--hi:#a7f3d0;--pink:#f472b6;--lime:#d9f99d;--card:#111827;--border:#1f2937}
-    html,body{margin:0;background:var(--bg);color:#e5e7eb;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue','PingFang SC','Noto Sans SC','Hiragino Sans GB','Segoe UI Emoji',emoji,sans-serif}
-    .wrap{max-width:980px;margin:28px auto;padding:0 16px}
-    .panel{background:var(--panel);border-radius:14px;padding:18px 20px;box-shadow:0 10px 24px rgba(0,0,0,.25);border:1px solid var(--border)}
-    h1{font-size:22px;margin:0 0 8px}
-    .tag{font-size:12px;background:#1f2937;border:1px solid #374151;border-radius:999px;padding:2px 8px;margin-left:8px}
-    .row{display:flex;gap:10px}
-    input[type="search"]{flex:1;background:#111827;color:#e5e7eb;border:1px solid #374151;border-radius:10px;padding:12px 14px;font-size:16px;outline:none}
-    button{background:#0ea5e9;border:0;color:#fff;border-radius:10px;padding:10px 14px;cursor:pointer}
-    button.secondary{background:#374151}
-    .hint{color:var(--muted);font-size:13px;margin-top:8px}
-    .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px 14px;margin-top:16px}
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .cell{background:#0d1320;border:1px solid #1f2937;border-radius:12px;padding:12px}
-    .cell h3{margin:0 0 6px;font-size:14px;color:#94a3b8}
-    .pill{display:inline-block;background:#1f2937;color:#f9fafb;border:1px solid #374151;border-radius:999px;padding:6px 10px;margin:4px 6px 0 0}
-    .pill .play{margin-left:8px;color:#93c5fd;cursor:pointer}
-    .alt{color:#f472b6;margin-left:8px}
-    .notes{background:#0d1726;border:1px dashed #334155;border-radius:10px;padding:10px;margin-top:12px;color:#cbd5e1}
-    table{width:100%;border-collapse:collapse;margin-top:10px}
-    th,td{border-bottom:1px solid #1f2937;padding:10px 8px;font-size:14px;vertical-align:top}
-    th{color:#94a3b8;font-weight:600}
-    .tips{color:#a7f3d0}
-    .suggest{margin-top:10px;color:#cbd5e1}
-    .suggest a{color:#93c5fd;margin-right:12px;text-decoration:none}
-  </style>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Funwa-1101CanTongMVP · v2</title>
+<style>body{font-family:sans-serif;padding:20px}</style>
 </head>
 <body>
-  <div class="wrap panel">
-    <h1>Funwa-1101CanTongMVP <span class="tag">v2 CSV</span></h1>
-    <div class="row">
-      <input id="q" type="search" placeholder="输入 中文 / English / 粤语（皆可检索）…" />
-      <button id="btn">查询</button>
-      <button id="speak" class="secondary">朗读</button>
-    </div>
-    <div class="hint">输入一个字也会出现联想（来自 data/crossmap.csv）。</div>
-    <div id="suggest" class="suggest"></div>
-    <div id="res" class="card" style="display:none">
-      <div class="grid">
-        <div class="cell"><h3>粤语 (zhh)</h3><div id="zhh"></div></div>
-        <div class="cell"><h3>中文 (chs)</h3><div id="chs"></div></div>
-        <div class="cell"><h3>英文 (en)</h3><div id="en"></div></div>
-        <div class="cell"><h3>备注 / Notes</h3><div id="notes"></div></div>
-      </div>
-      <div class="cell" style="margin-top:12px">
-        <h3>example</h3>
-        <table><thead><tr><th>粵語</th><th>中文</th><th>英文</th></tr></thead><tbody id="exbody"></tbody></table>
-      </div>
-    </div>
-  </div>
+<h2>Funwa v2 (CSV)</h2>
+<p>这个占位页面会读取 <code>data/lexeme.csv</code>，请发布后在控制台查看。</p>
 <script>
-function seg(s){return (s||'').split('/').map(x=>x.trim()).filter(Boolean);}
-function parseCSV(t){const rows=[];let r=[],f='',i=0,inq=false;while(i<t.length){const c=t[i];if(inq){if(c=='"'){if(t[i+1]=='"'){f+='"';i+=2;continue;}inq=false;i++;continue;}else{f+=c;i++;continue;}}else{if(c=='"'){inq=true;i++;continue;}if(c==','){r.push(f);f='';i++;continue;}if(c=='\n'){r.push(f);rows.push(r);r=[];f='';i++;continue;}if(c=='\r'){i++;continue;}f+=c;i++;continue;}}if(f.length||r.length){r.push(f);rows.push(r);}const h=rows.shift().map(s=>s.trim());return rows.map(a=>{const o={};h.forEach((x,j)=>o[x]=a[j]||'');return o;});}
-async function loadCSV(p){const r=await fetch(p+'?v='+Date.now(),{cache:'no-store'});const t=await r.text();return parseCSV(t);}
-const S={lex:new Map(),ex:new Map(),idx:new Map()};
-function putIdx(k,v){k=k.toLowerCase();if(!S.idx.has(k))S.idx.set(k,[]);S.idx.get(k).push(v);}
-async function boot(){const [lx,ex,mp]=await Promise.all([loadCSV('/data/lexeme.csv'),loadCSV('/data/examples.csv'),loadCSV('/data/crossmap.csv')]);for(const r of lx)S.lex.set(r.id,r);for(const r of ex){if(!S.ex.has(r.lexeme_id))S.ex.set(r.lexeme_id,[]);S.ex.get(r.lexeme_id).push(r);}for(const r of mp){if(r.term)putIdx(r.term,{id:r.target_id,kind:r.kind,lang:r.lang});}bind();}
-function bind(){q.oninput=()=>suggest(q.value);btn.onclick=()=>search(q.value);q.onkeydown=e=>{if(e.key==='Enter')search(q.value);};speak.onclick=()=>tts(q.value);}
-function tts(t){try{const u=new SpeechSynthesisUtterance(t);u.lang='zh-HK';speechSynthesis.cancel();speechSynthesis.speak(u);}catch(e){}}
-function suggest(v){const b=document.getElementById('suggest');b.innerHTML='';const q=v.trim().toLowerCase();if(!q)return;const all=Array.from(S.idx.keys());const hit=all.filter(k=>k.startsWith(q)).slice(0,8);if(!hit.length)return;hit.forEach(k=>{const a=document.createElement('a');a.textContent=k;a.href='javascript:void(0)';a.onclick=()=>{document.getElementById('q').value=k;search(k);};b.appendChild(a);});}
-function search(v){const q=v.trim().toLowerCase();let c=S.idx.get(q);if(!c){const key=Array.from(S.idx.keys()).find(k=>k.startsWith(q));if(key)c=S.idx.get(key);}if(!c){res.style.display='none';return;}const o={head:3,alias:2,example:1,note:0};c.sort((a,b)=>(o[b.kind]||0)-(o[a.kind]||0));render(c[0].id);}
-function render(id){const r=S.lex.get(id);if(!r)return;res.style.display='block';zhh.innerHTML='';const sg=seg(r.zhh),jp=seg(r.zhh_pron);sg.forEach((s,i)=>{const p=document.createElement('span');p.className='pill';p.textContent=s;const pl=document.createElement('span');pl.className='play';pl.textContent='▶';pl.onclick=()=>tts(s);p.appendChild(pl);zhh.appendChild(p);});chs.innerHTML='';seg(r.chs).forEach(s=>{const sp=document.createElement('span');sp.className='pill';sp.textContent=s;chs.appendChild(sp);});en.innerHTML='';seg(r.en).forEach(s=>{const sp=document.createElement('span');sp.className='pill';sp.textContent=s;en.appendChild(sp);});notes.innerHTML=[r.note_chs,r.note_en].filter(Boolean).map(x=>`<div>${x}</div>`).join('');exbody.innerHTML='';(S.ex.get(id)||[]).forEach(ex=>{const tr=document.createElement('tr');tr.innerHTML=`<td><span class='pill'>${ex.ex_zhh}</span></td><td>${ex.ex_chs}</td><td>${ex.ex_en}</td>`;exbody.appendChild(tr);});}
-boot();
+async function t(p){const r=await fetch(p+'?v='+Date.now());return await r.text();}
+function parseCSV(txt){const lines=txt.trim().split(/\r?\n/);const h=lines.shift().split(',');return lines.map(l=>{const a=l.split(',');const o={};h.forEach((k,i)=>o[k]=a[i]||'');return o;});}
+(async()=>{try{const lx=parseCSV(await t('/data/lexeme.csv'));console.log('lexeme sample',lx.slice(0,3));}catch(e){console.error(e);}})();
 </script>
 </body>
 </html>

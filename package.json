@@ -1,11 +1,7 @@
 {
-  "name": "cantong-clean",
+  "name": "can-tong",
   "private": true,
-  "version": "0.0.1",
-  "description": "Minimal Vercel clean starter (Node 20, static web + serverless api)",
-  "engines": {
-    "node": ">=20 <21"
-  },
-  "scripts": {},
+  "version": "1.0.0",
+  "description": "Funwa-1101CanTongMVP static edition (pure front-end)",
   "license": "MIT"
 }

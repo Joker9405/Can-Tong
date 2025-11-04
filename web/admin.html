@@ -1,0 +1,25 @@
+
+<!doctype html><meta charset="utf-8">
+<title>Cantong Admin (Approve)</title>
+<style>body{font-family:system-ui;margin:20px}input,button{padding:8px;border-radius:8px;border:1px solid #ccc}</style>
+<h1>Approve Contributions</h1>
+<p>Admin Token: <input id="tok" placeholder="paste ADMIN_TOKEN"></p>
+<p><button onclick="load()">Load Pending</button></p>
+<div id="list"></div>
+<script>
+async function load(){
+  const r = await fetch('/api/route?fn=contrib_list');
+  const data = await r.json();
+  const el = document.getElementById('list'); el.innerHTML='';
+  data.items.forEach((x)=>{
+    const d = document.createElement('div'); d.style.border='1px solid #ddd'; d.style.margin='8px 0'; d.style.padding='8px';
+    d.innerHTML = `<b>${x.headword}</b> | ${x.lang} | ${x.gloss_chs||''} | ${x.gloss_en||''} <button>Approve</button>`;
+    d.querySelector('button').onclick = async()=>{
+      const tok = document.getElementById('tok').value;
+      await fetch('/api/route?fn=contrib_approve', {method:'POST', headers:{'content-type':'application/json','x-admin-token':tok}, body: JSON.stringify({id:x.id})});
+      load();
+    };
+    el.appendChild(d);
+  });
+}
+</script>
