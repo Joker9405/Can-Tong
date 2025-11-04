@@ -1,60 +1,206 @@
-<!doctype html><html lang="zh-HK"><head>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Funwa-1101CanTongMVP · v3</title>
-<style>
-:root{--bg:#0b0f14;--panel:#0f1720;--muted:#94a3b8;--bd:#1f2937}
-html,body{margin:0;background:var(--bg);color:#e5e7eb;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'PingFang SC','Noto Sans SC',sans-serif}
-.wrap{max-width:1100px;margin:28px auto;padding:0 14px}
-.panel{background:var(--panel);border:1px solid var(--bd);border-radius:14px;padding:18px}
-h1{margin:0 0 10px;font-size:22px}
-.row{display:flex;gap:10px}
-input{flex:1;background:#111827;border:1px solid #374151;border-radius:10px;color:#e5e7eb;padding:12px 14px;font-size:16px}
-button{background:#0ea5e9;border:0;color:#fff;border-radius:10px;padding:10px 14px;cursor:pointer}
-button.secondary{background:#374151}
-.hint{color:var(--muted);font-size:13px;margin-top:8px}
-.suggest a{display:inline-block;color:#93c5fd;border:1px solid #334155;border-radius:999px;padding:6px 10px;margin:8px 10px 0 0;text-decoration:none}
-.grid{display:grid;grid-template-columns:1.3fr 1fr;gap:12px;margin-top:16px}
-.box{border-radius:12px;padding:12px;border:1px solid #1f2937}
-.box h3{margin:0 0 6px;font-size:13px;color:#94a3b8}
-.y{background:#1b2105;border-color:#3a3f1b}.b{background:#0b1528;border-color:#1f3352}.r{background:#2b0f12;border-color:#4a1e23}.w{background:#141922;border-color:#2c3440}.g{background:#0f131a;border-color:#1f2937}
-.pill{display:inline-flex;align-items:center;background:#1f2937;border:1px solid #374151;border-radius:999px;padding:6px 10px;margin:4px 6px 0 0}
-.play{margin-left:8px;color:#93c5fd;cursor:pointer}
-table{width:100%;border-collapse:collapse;margin-top:6px}
-th,td{border-bottom:1px solid #1f2937;padding:10px 8px;font-size:14px;vertical-align:top}
-th{color:#94a3b8;font-weight:600}
-.footer{color:#94a3b8;font-size:12px;margin-top:14px}
-.ok{background:#14321f;border:1px solid #1c4b2e;padding:8px 10px;border-radius:8px;margin-top:10px}
-.bad{background:#3b1d1d;border:1px solid #5b2d2d;padding:8px 10px;border-radius:8px;margin-top:10px}
-</style></head><body>
-<div class="wrap panel">
-  <h1>Funwa-1101CanTongMVP <span style="font-size:12px;border:1px solid #374151;border-radius:999px;padding:2px 8px;background:#1f2937">v3 CSV</span></h1>
-  <div class="row"><input id="q" placeholder="输入 中文 / English / 粤语（皆可检索）…"><button id="go">查询</button><button id="say" class="secondary">朗读</button></div>
-  <div class="hint">支持按备注、例句、别名搜索；输入一两个字母亦会联想（来自 <code>data/crossmap.csv</code>）。</div>
-  <div id="sg" class="suggest"></div><div id="st"></div>
-  <div class="grid">
-    <div class="box y"><h3>粤语 (zhh)</h3><div id="zhh"></div></div>
-    <div class="box b"><h3>英文 (en)</h3><div id="en"></div></div>
-    <div class="box r"><h3>同义 / 相关</h3><div id="alias"></div></div>
-    <div class="box w"><h3>备注 / Notes</h3><div id="notes"></div></div>
+<!doctype html>
+<html lang="zh-HK">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Funwa-1101CanTongMVP · v1.1</title>
+  <style>
+    :root{--bg:#0b0f14;--panel:#0f1720;--muted:#94a3b8;--hi:#a7f3d0;--pink:#f472b6;--lime:#d9f99d;--card:#111827;--border:#1f2937}
+    html,body{margin:0;background:var(--bg);color:#e5e7eb;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue','PingFang SC','Noto Sans SC','Hiragino Sans GB','Segoe UI Emoji',emoji,sans-serif}
+    .wrap{max-width:980px;margin:28px auto;padding:0 16px}
+    .panel{background:var(--panel);border-radius:14px;padding:18px 20px;box-shadow:0 10px 24px rgba(0,0,0,.25);border:1px solid var(--border)}
+    h1{font-size:22px;margin:0 0 8px}
+    .tag{font-size:12px;background:#1f2937;border:1px solid #374151;border-radius:999px;padding:2px 8px;margin-left:8px}
+    .row{display:flex;gap:10px}
+    input[type="search"]{flex:1;background:#111827;color:#e5e7eb;border:1px solid #374151;border-radius:10px;padding:12px 14px;font-size:16px;outline:none}
+    button{background:#0ea5e9;border:0;color:#fff;border-radius:10px;padding:10px 14px;cursor:pointer}
+    button.secondary{background:#374151}
+    .hint{color:var(--muted);font-size:13px;margin-top:8px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px 14px;margin-top:16px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .cell{background:#0d1320;border:1px solid #1f2937;border-radius:12px;padding:12px}
+    .cell h3{margin:0 0 6px;font-size:14px;color:#94a3b8}
+    .pill{display:inline-block;background:#1f2937;color:#f9fafb;border:1px solid #374151;border-radius:999px;padding:6px 10px;margin:4px 6px 0 0}
+    .pill .play{margin-left:8px;color:#93c5fd;cursor:pointer}
+    .alt{color:#f472b6;margin-left:8px}
+    .notes{background:#0d1726;border:1px dashed #334155;border-radius:10px;padding:10px;margin-top:12px;color:#cbd5e1}
+    table{width:100%;border-collapse:collapse;margin-top:10px}
+    th,td{border-bottom:1px solid #1f2937;padding:10px 8px;font-size:14px;vertical-align:top}
+    th{color:#94a3b8;font-weight:600}
+    .tips{color:#a7f3d0}
+    .suggest{margin-top:10px;color:#cbd5e1}
+    .suggest a{color:#93c5fd;margin-right:12px;text-decoration:none}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#a5b4fc}
+    .dbg{margin-top:8px;font-size:12px;color:#9ca3af}
+    .warn{color:#fbbf24}
+  </style>
+</head>
+<body>
+  <div class="wrap panel">
+    <h1>Funwa-1101CanTongMVP <span class="tag">v1.1 CSV</span></h1>
+    <div class="row">
+      <input id="q" type="search" placeholder="输入 中文 / English / 粤语（皆可检索）…" />
+      <button id="btn">查询</button>
+      <button id="speak" class="secondary">朗读</button>
+    </div>
+    <div class="hint">数据来自 <span class="mono">data/lexeme.csv, data/examples.csv, data/crossmap.csv</span>。若 crossmap 为空，将自动从 lexeme 构建索引。</div>
+
+    <div id="suggest" class="suggest"></div>
+    <div id="dbg" class="dbg"></div>
+
+    <div id="res" class="card" style="display:none">
+      <div class="grid">
+        <div class="cell">
+          <h3>粤语 (zhh)</h3>
+          <div id="zhh"></div>
+        </div>
+        <div class="cell">
+          <h3>中文 (chs)</h3>
+          <div id="chs"></div>
+        </div>
+        <div class="cell">
+          <h3>英文 (en)</h3>
+          <div id="en"></div>
+        </div>
+        <div class="cell">
+          <h3>备注 / Notes</h3>
+          <div id="notes"></div>
+        </div>
+      </div>
+      <div class="notes"><span class="tips">提示：</span>红色块可以显示更自然的替代说法（alias）；蓝色块支持英文反查。</div>
+
+      <div class="cell" style="margin-top:12px">
+        <h3>example</h3>
+        <table>
+          <thead><tr><th>粵語</th><th>中文</th><th>英文</th></tr></thead>
+          <tbody id="exbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="hint" style="margin-top:12px">© Funwa—1101CanTongMVP — Code MIT, Lexicon Closed；数据 CSV 必须 UTF-8（推荐 UTF-8-SIG）。</div>
   </div>
-  <div class="box" style="margin-top:12px;background:#141418;border-color:#2c2c30"><h3>中文 (chs)</h3><div id="chs"></div></div>
-  <div class="box g" style="margin-top:12px"><h3>example</h3><table><thead><tr><th>粵語</th><th>中文</th><th>英文</th></tr></thead><tbody id="ex"></tbody></table></div>
-  <div class="footer">© Funwa-1101CanTongMVP — Code MIT, Lexicon Closed; data/*.csv CC BY-NC-ND.</div>
-</div>
-<script>
-function parseCSV(t){const rows=[],cur=[];let f='',i=0,q=false;while(i<t.length){const c=t[i];if(q){if(c=='"'){if(t[i+1]=='"'){f+='"';i+=2;continue;}q=false;i++;continue;}f+=c;i++;continue;}else{if(c=='"'){q=true;i++;continue;}if(c==','){cur.push(f);f='';i++;continue;}if(c=='\n'){cur.push(f);rows.push(cur.slice());cur.length=0;f='';i++;continue;}if(c=='\r'){i++;continue;}f+=c;i++;continue;}}if(f.length||cur.length){cur.push(f);rows.push(cur);}const head=(rows.shift()||[]).map(s=>s.trim());return rows.filter(r=>r.length&&r.some(x=>String(x).trim()!=='')).map(r=>{const o={};head.forEach((k,j)=>o[k]=(r[j]??'').trim());return o;});}
-async function loadCSV(p){const r=await fetch(p+'?v='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error(p+': '+r.status);return parseCSV(await r.text());}
-const S={lex:new Map(),ex:new Map(),idx:new Map()};const $=id=>document.getElementById(id);
-function seg(s){return(s||'').split('/').map(x=>x.trim()).filter(Boolean);}
-function idxPut(k,v){k=(k||'').toLowerCase().trim();if(!k)return;if(!S.idx.has(k))S.idx.set(k,[]);S.idx.get(k).push(v);}
-function chip(t,play){const e=document.createElement('span');e.className='pill';e.textContent=t;if(play){const p=document.createElement('span');p.className='play';p.textContent='▶';p.onclick=play;e.appendChild(p);}return e;}
-function tts(t){try{const u=new SpeechSynthesisUtterance(t);u.lang='zh-HK';speechSynthesis.cancel();speechSynthesis.speak(u);}catch(e){}}
-function st(ok,msg){const n=$('st');n.className=ok?'ok':'bad';n.textContent=msg;}
-async function boot(){try{const[lx,ex,mp]=await Promise.all([loadCSV('/data/lexeme.csv'),loadCSV('/data/examples.csv'),loadCSV('/data/crossmap.csv')]);for(const r of lx){const id=r.id||r.ID||r.Id;if(!id)continue;S.lex.set(id,{id,zhh:r.zhh||r.cantonese||'',chs:r.chs||r.zh||r.cn||'',en:r.en||r.eng||'',notes:r.notes||r.note||''});}for(const r of ex){const lid=r.lexeme_id||r.lex_id||r.id||r.ID;if(!lid)continue;if(!S.ex.has(lid))S.ex.set(lid,[]);S.ex.get(lid).push({zhh:r.zhh||'',chs:r.chs||'',en:r.en||''});}for(const r of mp){const tid=r.target_id||r.lexeme_id||r.id||r.ID;const term=r.term||r.key||r.word;if(term&&tid)idxPut(term,{id:tid,kind:r.kind||'head'});}for(const r of S.lex.values()){[...seg(r.zhh),...seg(r.chs),...seg(r.en)].forEach(k=>idxPut(k,{id:r.id,kind:'head'}));(r.notes||'').split(/[\s,，。；;、/]+/).forEach(t=>idxPut(t,{id:r.id,kind:'note'}));(S.ex.get(r.id)||[]).forEach(e=>{[e.zhh,e.chs,e.en].forEach(x=>(x||'').split(/[\s,，。；;、/]+/).forEach(t=>idxPut(t,{id:r.id,kind:'example'})));});}bind();st(true,'CSV 加载成功，可开始查询。');}catch(err){console.error(err);st(false,'加载 CSV 失败：'+err.message);}}
-function bind(){const q=$('q');$('go').onclick=()=>search(q.value);$('say').onclick=()=>tts(q.value||'掟嘢');q.onkeydown=e=>{if(e.key==='Enter')search(q.value)};q.oninput=()=>suggest(q.value);}
-function suggest(v){const box=$('sg');box.innerHTML='';const q=(v||'').trim().toLowerCase();if(!q)return;Array.from(S.idx.keys()).filter(k=>k.startsWith(q)).slice(0,10).forEach(k=>{const a=document.createElement('a');a.textContent=k;a.href='javascript:void(0)';a.onclick=()=>{ $('q').value=k; search(k); }; box.appendChild(a);});}
-function search(v){const q=(v||'').trim().toLowerCase();let c=S.idx.get(q);if(!c){const f=Array.from(S.idx.keys()).find(k=>k.startsWith(q));if(f)c=S.idx.get(f);}if(!c){renderNone();st(false,'未命中：'+(v||''));return;}render(c[0].id,q);st(true,'命中 '+(v||''));}
-function renderNone(){['zhh','chs','en','notes','alias'].forEach(id=>$(id).textContent='');$('ex').innerHTML='';}
-function render(id,q){const r=S.lex.get(id);if(!r){renderNone();return;}const z=$('zhh');z.innerHTML='';seg(r.zhh).forEach(s=>z.appendChild(chip(s,()=>tts(s))));const c=$('chs');c.innerHTML='';seg(r.chs).forEach(s=>c.appendChild(chip(s)));const e=$('en');e.innerHTML='';seg(r.en).forEach(s=>e.appendChild(chip(s)));$('notes').textContent=r.notes||'—';const a=$('alias');a.innerHTML='';const set=new Set([...seg(r.chs),...seg(r.zhh),...seg(r.en)]);set.forEach(s=>{if((s||'').toLowerCase()!=q){const sp=document.createElement('span');sp.className='pill';sp.textContent=s;a.appendChild(sp);}});const tb=$('ex');tb.innerHTML='';(S.ex.get(r.id)||[]).forEach(row=>{const tr=document.createElement('tr');['zhh','chs','en'].forEach(k=>{const td=document.createElement('td');td.textContent=row[k]||'';tr.appendChild(td);});tb.appendChild(tr);});}
-boot();
-</script></body></html>
+
+  <script>
+  function stripBOM(s){ return s.replace(/^\uFEFF/,''); }
+  function parseCSV(text){
+    text = stripBOM(text);
+    const rows=[]; let row=[], field='', i=0, inq=false;
+    while(i<text.length){
+      const c=text[i];
+      if(inq){
+        if(c==='"'){
+          if(text[i+1]==='"'){ field+='"'; i+=2; continue; }
+          inq=false; i++; continue;
+        } else { field+=c; i++; continue; }
+      } else {
+        if(c==='"'){ inq=true; i++; continue; }
+        if(c===','){ row.push(field); field=''; i++; continue; }
+        if(c==='
+'){ row.push(field); rows.push(row); row=[]; field=''; i++; continue; }
+        if(c===''){ i++; continue; }
+        field+=c; i++; continue;
+      }
+    }
+    if(field.length || row.length) { row.push(field); rows.push(row); }
+    const header = rows.shift().map(s=> stripBOM(s).trim());
+    return rows.filter(r=>r.length && r.some(x=>stripBOM(x).trim()!=='')).map(r=>{
+      const o={}; header.forEach((h,idx)=> o[h]= (stripBOM(r[idx]||'').trim())); return o;
+    });
+  }
+  async function loadCSV(path){
+    const res = await fetch(path+'?v='+Date.now(), {cache:'no-store'});
+    if(!res.ok) throw new Error('Load fail '+path);
+    const txt = await res.text();
+    return parseCSV(txt);
+  }
+  const state = { lexemeMap:new Map(), examplesMap:new Map(), termIndex:new Map(), dbg:[] };
+  function splitMulti(s){ return (s||'').split('/').map(x=>x.trim()).filter(Boolean); }
+  function idxTermPut(key, val){
+    key = (key||'').toLowerCase();
+    if(!key) return;
+    if(!state.termIndex.has(key)) state.termIndex.set(key, []);
+    state.termIndex.get(key).push(val);
+  }
+  function debug(msg){ state.dbg.push(msg); document.getElementById('dbg').innerHTML = state.dbg.map(x=>`<div class="warn">• ${x}</div>`).join(''); }
+
+  async function boot(){
+    const [lex, ex] = await Promise.all([
+      loadCSV('data/lexeme.csv'),
+      loadCSV('data/examples.csv')
+    ]);
+    for(const r of lex){ if(!r.id){ debug('lexeme.csv 存在空 id 行'); continue; } state.lexemeMap.set(r.id, r); }
+    for(const r of ex){
+      if(!r.lexeme_id){ debug('examples.csv 存在空 lexeme_id 行'); continue; }
+      if(!state.examplesMap.has(r.lexeme_id)) state.examplesMap.set(r.lexeme_id, []);
+      state.examplesMap.get(r.lexeme_id).push(r);
+    }
+    let mp=[];
+    try { mp = await loadCSV('data/crossmap.csv'); } catch(e){ debug('未找到 crossmap.csv，将从 lexeme 自动构建索引'); }
+    if(mp.length){
+      for(const r of mp){ if(r.term) idxTermPut(r.term, {id:r.target_id,kind:r.kind||'alias',lang:r.lang||''}); }
+    } else {
+      for(const [id, r] of state.lexemeMap.entries()){
+        [...splitMulti(r.chs), ...splitMulti(r.en), ...splitMulti(r.zhh),
+         ...splitMulti(r.alias_chs), ...splitMulti(r.alias_en), ...splitMulti(r.alias_zhh)
+        ].forEach(term=> idxTermPut(term, {id,kind:'head'}));
+        (r.note_chs||'').split(/[,;，；、\s]+/).forEach(t=> idxTermPut(t,{id,kind:'note'}));
+        (r.note_en||'').split(/[,;，；、\s]+/).forEach(t=> idxTermPut(t,{id,kind:'note'}));
+      }
+      debug('crossmap 为空：已根据 lexeme 自动生成 termIndex');
+    }
+    wire();
+  }
+
+  function wire(){
+    const q = document.getElementById('q');
+    const btn = document.getElementById('btn');
+    const speak = document.getElementById('speak');
+    q.addEventListener('input', ()=> showSuggest(q.value));
+    btn.addEventListener('click', ()=> search(q.value));
+    q.addEventListener('keydown', e=>{ if(e.key==='Enter') search(q.value); });
+    speak.addEventListener('click', ()=> speakHK(q.value||'揼嘢'));
+  }
+  function speakHK(t){
+    try{ const u = new SpeechSynthesisUtterance(t); u.lang='zh-HK'; speechSynthesis.cancel(); speechSynthesis.speak(u); }catch{}
+  }
+  function showSuggest(input){
+    const box = document.getElementById('suggest'); box.innerHTML='';
+    const q = (input||'').trim().toLowerCase(); if(!q) return;
+    const all = Array.from(state.termIndex.keys());
+    const hit = all.filter(k=>k.startsWith(q)).slice(0,8);
+    if(!hit.length) return;
+    const frag = document.createDocumentFragment();
+    hit.forEach(k=>{ const a=document.createElement('a'); a.textContent=k; a.href='javascript:void(0)'; a.onclick=()=>{ document.getElementById('q').value=k; search(k); }; frag.appendChild(a); });
+    box.appendChild(frag);
+  }
+  function search(input){
+    const q=(input||'').trim().toLowerCase();
+    const resBox=document.getElementById('res');
+    if(!q){ resBox.style.display='none'; return; }
+    let cand = state.termIndex.get(q);
+    if(!cand){
+      const key = Array.from(state.termIndex.keys()).find(k=>k.startsWith(q));
+      if(key) cand = state.termIndex.get(key);
+    }
+    if(!cand){ resBox.style.display='none'; debug('未命中：请确认 crossmap 的 term 列名、UTF-8 编码、以及 id 对齐'); return; }
+    const order = {head:3, alias:2, example:1, note:0};
+    cand.sort((a,b)=> (order[b.kind]||0) - (order[a.kind]||0));
+    renderLexeme(cand[0].id);
+  }
+  function splitMulti(s){ return (s||'').split('/').map(x=>x.trim()).filter(Boolean); }
+  function renderLexeme(id){
+    const r = state.lexemeMap.get(id); if(!r) { debug('命中 id 不存在：'+id); return; }
+    document.getElementById('res').style.display='block';
+    const z=document.getElementById('zhh'); z.innerHTML='';
+    const seg=splitMulti(r.zhh), prn=splitMulti(r.zhh_pron);
+    seg.forEach((s,i)=>{ const pill=document.createElement('span'); pill.className='pill'; pill.textContent=s; const play=document.createElement('span'); play.className='play'; play.textContent='▶'; play.title=(prn[i]||''); play.onclick=()=>speakHK(s); pill.appendChild(play); z.appendChild(pill); });
+    const c=document.getElementById('chs'); c.innerHTML=''; splitMulti(r.chs).forEach(s=>{ const el=document.createElement('span'); el.className='pill'; el.textContent=s; c.appendChild(el); }); const aliasCHS=splitMulti(r.alias_chs); if(aliasCHS.length){ const em=document.createElement('span'); em.className='alt'; em.textContent='建议：'+aliasCHS[0]; c.appendChild(em); }
+    const e=document.getElementById('en'); e.innerHTML=''; splitMulti(r.en).forEach(s=>{ const el=document.createElement('span'); el.className='pill'; el.textContent=s; e.appendChild(el); });
+    document.getElementById('notes').innerHTML=[r.note_chs,r.note_en].filter(Boolean).map(x=>`<div>${x}</div>`).join('');
+    const tbody=document.getElementById('exbody'); tbody.innerHTML=''; const arr=state.examplesMap.get(id)||[]; for(const ex of arr){ const tr=document.createElement('tr'); const td0=document.createElement('td'); td0.innerHTML=`<span class="pill">${ex.ex_zhh}</span>`; const td1=document.createElement('td'); td1.textContent=ex.ex_chs||''; const td2=document.createElement('td'); td2.textContent=ex.ex_en||''; tr.appendChild(td0); tr.appendChild(td1); tr.appendChild(td2); tbody.appendChild(tr); }
+  }
+  boot();
+  </script>
+</body>
+</html>
