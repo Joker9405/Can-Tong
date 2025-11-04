@@ -1,60 +1,175 @@
-<!doctype html><html lang="zh-HK"><head>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Funwa-1101CanTongMVP · v3</title>
-<style>
-:root{--bg:#0b0f14;--panel:#0f1720;--muted:#94a3b8;--bd:#1f2937}
-html,body{margin:0;background:var(--bg);color:#e5e7eb;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'PingFang SC','Noto Sans SC',sans-serif}
-.wrap{max-width:1100px;margin:28px auto;padding:0 14px}
-.panel{background:var(--panel);border:1px solid var(--bd);border-radius:14px;padding:18px}
-h1{margin:0 0 10px;font-size:22px}
-.row{display:flex;gap:10px}
-input{flex:1;background:#111827;border:1px solid #374151;border-radius:10px;color:#e5e7eb;padding:12px 14px;font-size:16px}
-button{background:#0ea5e9;border:0;color:#fff;border-radius:10px;padding:10px 14px;cursor:pointer}
-button.secondary{background:#374151}
-.hint{color:var(--muted);font-size:13px;margin-top:8px}
-.suggest a{display:inline-block;color:#93c5fd;border:1px solid #334155;border-radius:999px;padding:6px 10px;margin:8px 10px 0 0;text-decoration:none}
-.grid{display:grid;grid-template-columns:1.3fr 1fr;gap:12px;margin-top:16px}
-.box{border-radius:12px;padding:12px;border:1px solid #1f2937}
-.box h3{margin:0 0 6px;font-size:13px;color:#94a3b8}
-.y{background:#1b2105;border-color:#3a3f1b}.b{background:#0b1528;border-color:#1f3352}.r{background:#2b0f12;border-color:#4a1e23}.w{background:#141922;border-color:#2c3440}.g{background:#0f131a;border-color:#1f2937}
-.pill{display:inline-flex;align-items:center;background:#1f2937;border:1px solid #374151;border-radius:999px;padding:6px 10px;margin:4px 6px 0 0}
-.play{margin-left:8px;color:#93c5fd;cursor:pointer}
-table{width:100%;border-collapse:collapse;margin-top:6px}
-th,td{border-bottom:1px solid #1f2937;padding:10px 8px;font-size:14px;vertical-align:top}
-th{color:#94a3b8;font-weight:600}
-.footer{color:#94a3b8;font-size:12px;margin-top:14px}
-.ok{background:#14321f;border:1px solid #1c4b2e;padding:8px 10px;border-radius:8px;margin-top:10px}
-.bad{background:#3b1d1d;border:1px solid #5b2d2d;padding:8px 10px;border-radius:8px;margin-top:10px}
-</style></head><body>
-<div class="wrap panel">
-  <h1>Funwa-1101CanTongMVP <span style="font-size:12px;border:1px solid #374151;border-radius:999px;padding:2px 8px;background:#1f2937">v3 CSV</span></h1>
-  <div class="row"><input id="q" placeholder="输入 中文 / English / 粤语（皆可检索）…"><button id="go">查询</button><button id="say" class="secondary">朗读</button></div>
-  <div class="hint">支持按备注、例句、别名搜索；输入一两个字母亦会联想（来自 <code>data/crossmap.csv</code>）。</div>
-  <div id="sg" class="suggest"></div><div id="st"></div>
-  <div class="grid">
-    <div class="box y"><h3>粤语 (zhh)</h3><div id="zhh"></div></div>
-    <div class="box b"><h3>英文 (en)</h3><div id="en"></div></div>
-    <div class="box r"><h3>同义 / 相关</h3><div id="alias"></div></div>
-    <div class="box w"><h3>备注 / Notes</h3><div id="notes"></div></div>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Funwa · Slim v2</title>
+  <style>
+    :root{
+      --bg:#0b0f14; --muted:#9aa5b1; --gray:#1e293b; --border:#334155;
+      --pink:#ff4da6; --pink-bg:#301425; --lime:#c8ff00; --lime-bg:#1b2600;
+      --white:#e6edf3
+    }
+    html,body{margin:0;background:var(--bg);color:var(--white);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,"Helvetica Neue","PingFang SC","Noto Sans SC","Hiragino Sans GB",sans-serif}
+    .wrap{max-width:980px;margin:28px auto;padding:0 16px}
+    .panel{border:1px solid var(--border);border-radius:18px;padding:18px 20px;background:#0f1720;box-shadow:0 12px 28px rgba(0,0,0,.35)}
+    h1{font-size:22px;margin:0 0 12px}
+    .row{display:flex;gap:10px}
+    input[type="search"]{flex:1;background:#161b22;color:var(--white);border:1px solid var(--border);border-radius:12px;padding:12px 14px;font-size:16px;outline:none}
+    .btn{background:#2d3748;border:1px solid var(--border);color:#fff;border-radius:12px;padding:10px 14px;cursor:pointer}
+    .hint{color:var(--muted);font-size:12px;margin:8px 0 6px}
+    .section{margin-top:14px}
+    .cap{font-size:12px;letter-spacing:.1em;color:#9ca3af;margin-bottom:6px}
+    .blk{border:1px solid var(--border);border-radius:16px;padding:12px 14px}
+    .pink{background:var(--pink-bg)}
+    .lime{background:var(--lime-bg)}
+    .gray{background:#0b1119}
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;border:1px solid var(--border);background:rgba(255,255,255,.03);margin:6px 8px 0 0}
+    .pill.pink{background:rgba(255,77,166,.12);border-color:#7a2b56}
+    .chip{display:inline-block;background:#0b1119;border:1px solid var(--border);padding:6px 10px;border-radius:999px;margin:6px 8px 0 0;color:#cbd5e1}
+    .play{cursor:pointer;font-size:12px;opacity:.9}
+    table{width:100%;border-collapse:collapse}
+    th,td{border-bottom:1px solid var(--border);padding:10px 8px;font-size:14px;vertical-align:top}
+    th{color:#9ca3af;font-weight:600}
+    .suggest{margin-top:8px}
+    .suggest a{color:#93c5fd;margin-right:12px;text-decoration:none}
+  </style>
+</head>
+<body>
+  <div class="wrap panel">
+    <h1>Funwa · Slim v2 <span style="font-size:12px;border:1px solid var(--border);padding:2px 8px;border-radius:999px;margin-left:8px">CSV</span></h1>
+    <div class="row">
+      <input id="q" type="search" placeholder="Type Chinese / English / Cantonese…" />
+      <button id="btn" class="btn">Search</button>
+    </div>
+    <div id="suggest" class="suggest"></div>
+
+    <!-- Cantonese headwords -->
+    <div class="section">
+      <div class="cap">CANTONESE · zhh</div>
+      <div id="zhh" class="blk pink"></div>
+    </div>
+
+    <!-- zhh aliases / synonyms (pink) -->
+    <div class="section">
+      <div class="cap">ALIASES · zhh</div>
+      <div id="zhh_alias" class="blk pink"></div>
+    </div>
+
+    <!-- EN chips (gray). No CHS display -->
+    <div class="section">
+      <div class="cap">ENGLISH · en</div>
+      <div id="en" class="blk gray"></div>
+    </div>
+
+    <!-- Notes (lime) -->
+    <div class="section">
+      <div class="cap">NOTES</div>
+      <div id="notes" class="blk lime"></div>
+    </div>
+
+    <!-- Examples (pink rows) -->
+    <div class="section">
+      <div class="cap">EXAMPLES</div>
+      <div class="blk pink">
+        <table>
+          <thead><tr><th>Cantonese</th><th>English</th></tr></thead>
+          <tbody id="exbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="hint">Data: <code>data/lexeme.csv</code> · <code>data/examples.csv</code> · <code>data/crossmap.csv</code>. UTF‑8 or UTF‑8‑SIG.</div>
   </div>
-  <div class="box" style="margin-top:12px;background:#141418;border-color:#2c2c30"><h3>中文 (chs)</h3><div id="chs"></div></div>
-  <div class="box g" style="margin-top:12px"><h3>example</h3><table><thead><tr><th>粵語</th><th>中文</th><th>英文</th></tr></thead><tbody id="ex"></tbody></table></div>
-  <div class="footer">© Funwa-1101CanTongMVP — Code MIT, Lexicon Closed; data/*.csv CC BY-NC-ND.</div>
-</div>
-<script>
-function parseCSV(t){const rows=[],cur=[];let f='',i=0,q=false;while(i<t.length){const c=t[i];if(q){if(c=='"'){if(t[i+1]=='"'){f+='"';i+=2;continue;}q=false;i++;continue;}f+=c;i++;continue;}else{if(c=='"'){q=true;i++;continue;}if(c==','){cur.push(f);f='';i++;continue;}if(c=='\n'){cur.push(f);rows.push(cur.slice());cur.length=0;f='';i++;continue;}if(c=='\r'){i++;continue;}f+=c;i++;continue;}}if(f.length||cur.length){cur.push(f);rows.push(cur);}const head=(rows.shift()||[]).map(s=>s.trim());return rows.filter(r=>r.length&&r.some(x=>String(x).trim()!=='')).map(r=>{const o={};head.forEach((k,j)=>o[k]=(r[j]??'').trim());return o;});}
-async function loadCSV(p){const r=await fetch(p+'?v='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error(p+': '+r.status);return parseCSV(await r.text());}
-const S={lex:new Map(),ex:new Map(),idx:new Map()};const $=id=>document.getElementById(id);
-function seg(s){return(s||'').split('/').map(x=>x.trim()).filter(Boolean);}
-function idxPut(k,v){k=(k||'').toLowerCase().trim();if(!k)return;if(!S.idx.has(k))S.idx.set(k,[]);S.idx.get(k).push(v);}
-function chip(t,play){const e=document.createElement('span');e.className='pill';e.textContent=t;if(play){const p=document.createElement('span');p.className='play';p.textContent='▶';p.onclick=play;e.appendChild(p);}return e;}
-function tts(t){try{const u=new SpeechSynthesisUtterance(t);u.lang='zh-HK';speechSynthesis.cancel();speechSynthesis.speak(u);}catch(e){}}
-function st(ok,msg){const n=$('st');n.className=ok?'ok':'bad';n.textContent=msg;}
-async function boot(){try{const[lx,ex,mp]=await Promise.all([loadCSV('/data/lexeme.csv'),loadCSV('/data/examples.csv'),loadCSV('/data/crossmap.csv')]);for(const r of lx){const id=r.id||r.ID||r.Id;if(!id)continue;S.lex.set(id,{id,zhh:r.zhh||r.cantonese||'',chs:r.chs||r.zh||r.cn||'',en:r.en||r.eng||'',notes:r.notes||r.note||''});}for(const r of ex){const lid=r.lexeme_id||r.lex_id||r.id||r.ID;if(!lid)continue;if(!S.ex.has(lid))S.ex.set(lid,[]);S.ex.get(lid).push({zhh:r.zhh||'',chs:r.chs||'',en:r.en||''});}for(const r of mp){const tid=r.target_id||r.lexeme_id||r.id||r.ID;const term=r.term||r.key||r.word;if(term&&tid)idxPut(term,{id:tid,kind:r.kind||'head'});}for(const r of S.lex.values()){[...seg(r.zhh),...seg(r.chs),...seg(r.en)].forEach(k=>idxPut(k,{id:r.id,kind:'head'}));(r.notes||'').split(/[\s,，。；;、/]+/).forEach(t=>idxPut(t,{id:r.id,kind:'note'}));(S.ex.get(r.id)||[]).forEach(e=>{[e.zhh,e.chs,e.en].forEach(x=>(x||'').split(/[\s,，。；;、/]+/).forEach(t=>idxPut(t,{id:r.id,kind:'example'})));});}bind();st(true,'CSV 加载成功，可开始查询。');}catch(err){console.error(err);st(false,'加载 CSV 失败：'+err.message);}}
-function bind(){const q=$('q');$('go').onclick=()=>search(q.value);$('say').onclick=()=>tts(q.value||'掟嘢');q.onkeydown=e=>{if(e.key==='Enter')search(q.value)};q.oninput=()=>suggest(q.value);}
-function suggest(v){const box=$('sg');box.innerHTML='';const q=(v||'').trim().toLowerCase();if(!q)return;Array.from(S.idx.keys()).filter(k=>k.startsWith(q)).slice(0,10).forEach(k=>{const a=document.createElement('a');a.textContent=k;a.href='javascript:void(0)';a.onclick=()=>{ $('q').value=k; search(k); }; box.appendChild(a);});}
-function search(v){const q=(v||'').trim().toLowerCase();let c=S.idx.get(q);if(!c){const f=Array.from(S.idx.keys()).find(k=>k.startsWith(q));if(f)c=S.idx.get(f);}if(!c){renderNone();st(false,'未命中：'+(v||''));return;}render(c[0].id,q);st(true,'命中 '+(v||''));}
-function renderNone(){['zhh','chs','en','notes','alias'].forEach(id=>$(id).textContent='');$('ex').innerHTML='';}
-function render(id,q){const r=S.lex.get(id);if(!r){renderNone();return;}const z=$('zhh');z.innerHTML='';seg(r.zhh).forEach(s=>z.appendChild(chip(s,()=>tts(s))));const c=$('chs');c.innerHTML='';seg(r.chs).forEach(s=>c.appendChild(chip(s)));const e=$('en');e.innerHTML='';seg(r.en).forEach(s=>e.appendChild(chip(s)));$('notes').textContent=r.notes||'—';const a=$('alias');a.innerHTML='';const set=new Set([...seg(r.chs),...seg(r.zhh),...seg(r.en)]);set.forEach(s=>{if((s||'').toLowerCase()!=q){const sp=document.createElement('span');sp.className='pill';sp.textContent=s;a.appendChild(sp);}});const tb=$('ex');tb.innerHTML='';(S.ex.get(r.id)||[]).forEach(row=>{const tr=document.createElement('tr');['zhh','chs','en'].forEach(k=>{const td=document.createElement('td');td.textContent=row[k]||'';tr.appendChild(td);});tb.appendChild(tr);});}
-boot();
-</script></body></html>
+
+  <script>
+  function stripBOM(s){ return s.replace(/^\uFEFF/,''); }
+  function parseCSV(text){
+    text = stripBOM(text);
+    const lines = text.replace(/\r\n/g,"\n").replace(/\r/g,"\n").split("\n").filter(Boolean);
+    const headers = lines[0].split(",").map(x=>stripBOM(x).trim());
+    return lines.slice(1).map(line=>{
+      const cells = line.split(",");
+      const o={}; headers.forEach((h,i)=> o[h]= (stripBOM(cells[i]||"").trim())); return o;
+    });
+  }
+  async function loadCSV(path){
+    const res = await fetch(path+'?v='+Date.now(), {cache:'no-store'});
+    if(!res.ok) throw new Error('Load fail '+path);
+    return parseCSV(await res.text());
+  }
+  const S = {lex:new Map(), ex:new Map(), idx:new Map()};
+  const split = s => (s||'').split('/').map(x=>x.trim()).filter(Boolean);
+  const putIdx=(k,v)=>{k=(k||'').toLowerCase(); if(!k)return; if(!S.idx.has(k))S.idx.set(k,[]); S.idx.get(k).push(v);};
+
+  async function boot(){
+    const [lex, ex] = await Promise.all([
+      loadCSV('data/lexeme.csv'), loadCSV('data/examples.csv')
+    ]);
+    lex.forEach(r=>{ if(r.id) S.lex.set(r.id,r); });
+    ex.forEach(r=>{ if(r.lexeme_id){ if(!S.ex.has(r.lexeme_id))S.ex.set(r.lexeme_id,[]); S.ex.get(r.lexeme_id).push(r);} });
+    let map=[]; try{ map=await loadCSV('data/crossmap.csv'); }catch{}
+    if(map.length){
+      map.forEach(r=> putIdx(r.term, {id:r.target_id, kind:r.kind||'head', lang:r.lang||''}));
+    }else{
+      for(const [id,r] of S.lex.entries()){
+        [...split(r.zhh), ...split(r.alias_zhh), ...split(r.en)].forEach(t=> putIdx(t,{id,kind:'head'}));
+        (r.note_en||'').split(/[,;，；、\s]+/).forEach(t=> putIdx(t,{id,kind:'note'}));
+      }
+    }
+    wire();
+  }
+
+  function wire(){
+    const q=document.getElementById('q'); const btn=document.getElementById('btn');
+    q.addEventListener('input', ()=> suggest(q.value));
+    btn.addEventListener('click', ()=> search(q.value));
+    q.addEventListener('keydown', e=>{ if(e.key==='Enter') search(q.value); });
+  }
+
+  function suggest(text){
+    const box=document.getElementById('suggest'); box.innerHTML='';
+    const q=(text||'').trim().toLowerCase(); if(!q) return;
+    const all=[...S.idx.keys()]; const hit=all.filter(k=>k.startsWith(q)).slice(0,8);
+    if(!hit.length) return;
+    hit.forEach(k=>{ const a=document.createElement('a'); a.textContent=k; a.href='javascript:'; a.onclick=()=>{ document.getElementById('q').value=k; search(k); }; box.appendChild(a); });
+  }
+
+  function search(text){
+    const q=(text||'').trim().toLowerCase(); if(!q) return;
+    let cand=S.idx.get(q); if(!cand){ const key=[...S.idx.keys()].find(k=>k.startsWith(q)); if(key) cand=S.idx.get(key); }
+    if(!cand) return;
+    const id=cand[0].id; render(id);
+  }
+
+  function render(id){
+    const r=S.lex.get(id); if(!r) return;
+    const z=document.getElementById('zhh'); z.innerHTML='';
+    split(r.zhh).forEach((s,i)=>{
+      const el=document.createElement('span'); el.className='pill pink'; el.textContent=s;
+      const btn=document.createElement('span'); btn.className='play'; btn.textContent='▶';
+      btn.onclick=()=> speakHK(s); el.appendChild(btn); z.appendChild(el);
+    });
+    const za=document.getElementById('zhh_alias'); za.innerHTML='';
+    split(r.alias_zhh).forEach(s=>{ const el=document.createElement('span'); el.className='pill pink'; el.textContent=s; za.appendChild(el); });
+    const e=document.getElementById('en'); e.innerHTML='';
+    split(r.en).forEach(s=>{ const el=document.createElement('span'); el.className='chip'; el.textContent=s; e.appendChild(el); });
+    const nt=document.getElementById('notes'); nt.innerHTML='';
+    const notes=[r.note_en||'', r.note_chs||''].filter(Boolean).map(x=>`<div>${x}</div>`).join('');
+    nt.innerHTML=notes || '<span style="color:#1e293b">—</span>';
+    const tbody=document.getElementById('exbody'); tbody.innerHTML='';
+    (S.ex.get(id)||[]).forEach(ex=>{
+      const tr=document.createElement('tr');
+      const td0=document.createElement('td'); td0.innerHTML=`<span class="pill pink">${ex.ex_zhh || ex.zhh || ''}</span>`;
+      const td1=document.createElement('td'); td1.textContent=ex.ex_en || ex.en || '';
+      tr.appendChild(td0); tr.appendChild(td1); tbody.appendChild(tr);
+    });
+  }
+
+  function speakHK(t){ try{ const u=new SpeechSynthesisUtterance(t); u.lang='zh-HK'; speechSynthesis.cancel(); speechSynthesis.speak(u);}catch{} }
+
+  boot();
+  </script>
+</body>
+</html>
