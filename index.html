@@ -27,8 +27,9 @@
     .lime{background:color-mix(in srgb, var(--lime) 20%, transparent)}
     .gray{background:color-mix(in srgb, #ffffff 8%, transparent)}
     .cap{font-size:12px;letter-spacing:.12em;text-transform:uppercase;opacity:.8;margin:4px 0 8px}
-    .pill{display:inline-flex;align-items:center;gap:8px;background:color-mix(in srgb, var(--pink) 32%, transparent);padding:10px 14px;border-radius:999px;margin:8px 10px 0 0}
-    .pill.lime{background:color-mix(in srgb, var(--lime) 30%, transparent);}
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;margin:8px 10px 0 0}
+    .pill-pink{background:color-mix(in srgb, var(--pink) 32%, transparent)}
+    .pill-lime{background:color-mix(in srgb, var(--lime) 32%, transparent)}
     .chip{display:inline-block;background:var(--chip);padding:8px 12px;border-radius:999px;margin:8px 8px 0 0;color:#dbe3ea}
     .play{cursor:pointer;font-size:12px;opacity:.95}
     table{width:100%;border-collapse:collapse}
@@ -111,7 +112,6 @@ async function boot(){
   if(mp.length){
     mp.forEach(r=> put(r.term,{id:r.target_id,kind:r.kind||'head',lang:r.lang||''}));
   }else{
-    // build from lexeme: zhh + alias_zhh + en + notes keywords
     for(const [id,r] of S.lex.entries()){
       [...split(r.zhh),...split(r.alias_zhh),...split(r.en)].forEach(t=> put(t,{id,kind:'head'}));
       (r.note_en||'').split(/[,;，；、\s]+/).forEach(t=> put(t,{id,kind:'note'}));
@@ -164,34 +164,41 @@ function render(id){
   const z=document.getElementById('zhh'); z.innerHTML='';
   const seg=split(r.zhh), prn=split(r.zhh_pron);
   seg.forEach((s,i)=>{
-    const el=document.createElement('span'); el.className='pill'; el.textContent=s;
+    const el=document.createElement('span'); el.className='pill pill-pink'; el.textContent=s;
     const p=document.createElement('span'); p.className='play'; p.textContent='▶'; p.title=prn[i]||'';
     p.onclick=()=> speakHK(s);
     el.appendChild(p); z.appendChild(el);
   });
 
-  // Aliases (optional) — lime
+  // Aliases (lime + TTS)
   const alias=split(r.alias_zhh);
   const ablk=document.getElementById('aliases_blk'); const az=document.getElementById('zhh_alias'); az.innerHTML='';
-  if(alias.length){ ablk.style.display='block'; alias.forEach(s=>{ const el=document.createElement('span'); el.className='pill lime'; el.textContent=s; az.appendChild(el); }); }
-  else { ablk.style.display='none'; }
+  if(alias.length){
+    ablk.style.display='block';
+    alias.forEach(s=>{
+      const el=document.createElement('span'); el.className='pill pill-lime'; el.textContent=s;
+      const p=document.createElement('span'); p.className='play'; p.textContent='▶'; p.title='';
+      p.onclick=()=> speakHK(s);
+      el.appendChild(p); az.appendChild(el);
+    });
+  } else { ablk.style.display='none'; }
 
   // English chips
   const e=document.getElementById('en'); e.innerHTML='';
   split(r.en).forEach(s=>{ const c=document.createElement('span'); c.className='chip'; c.textContent=s; e.appendChild(c); });
 
-  // Notes (en + chs) — gray block
+  // Notes (gray, en + chs)
   const nt=document.getElementById('notes');
   const notes=[r.note_en||'', r.note_chs||''].filter(Boolean).map(x=>`<div style="margin:4px 0">${x}</div>`).join('');
   nt.innerHTML=notes || '<div style="opacity:.45">—</div>';
 
-  // Examples with TTS
+  // Examples (with TTS)
   const arr=S.ex.get(id)||[];
   const exblk=document.getElementById('ex_blk'); const tbody=document.getElementById('exbody'); tbody.innerHTML='';
   if(arr.length){ exblk.style.display='block'; } else { exblk.style.display='none'; }
   arr.forEach(ex=>{
     const tr=document.createElement('tr');
-    const td0=document.createElement('td'); td0.innerHTML=`<span class="pill">${(ex.ex_zhh||'')}</span> <span class="play" title="${ex.ex_zhh_pron||''}">▶</span>`;
+    const td0=document.createElement('td'); td0.innerHTML=`<span class="pill pill-pink">${(ex.ex_zhh||'')}</span> <span class="play" title="${ex.ex_zhh_pron||''}">▶</span>`;
     td0.querySelector('.play').onclick=()=> speakHK(ex.ex_zhh||'');
     const td1=document.createElement('td'); td1.textContent=ex.ex_chs||'';
     const td2=document.createElement('td'); td2.textContent=ex.ex_en||'';
