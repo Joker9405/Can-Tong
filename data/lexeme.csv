@@ -1,3 +1,2 @@
-﻿Column1,Column2,Column3,Column4,Column5
-id,zhh,zhh,en,notes
-L1,掟嘢/掉嘢/揼嘢/丢嘢,揼嘢,throw/leave/drop,"根据不同动作情况，有不同用法 / Depending on the situation, an action can have different uses."
+﻿id,zhh,zhh_pron,alias_zhh,en,note_en,note_chs
+L1,揼嘢/掉嘢/掟嘢,dam2 je5/diu6 je5/deng3 je5,撇/撇低/擲,throw/throw away/drop/leave,Depending on the situation, an action can have different uses.,根据不同情境，动作可能有不同用法。

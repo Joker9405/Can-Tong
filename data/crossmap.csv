@@ -1,5 +1,5 @@
-term,target_id,kind,lang
-扔,L1,alias,chs
-丢东西,L1,alias,chs
-throw,L1,alias,en
-掟嘢,L1,head,zhh
+﻿term,lang,target_id,kind
+扔东西,chs,L1,head
+丢东西,chs,L1,alias
+throw,en,L1,head
+掟垃圾,zhh,L1,example
