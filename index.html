@@ -1,175 +1,102 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Funwa · Slim v2</title>
-  <style>
-    :root{
-      --bg:#0b0f14; --muted:#9aa5b1; --gray:#1e293b; --border:#334155;
-      --pink:#ff4da6; --pink-bg:#301425; --lime:#c8ff00; --lime-bg:#1b2600;
-      --white:#e6edf3
-    }
-    html,body{margin:0;background:var(--bg);color:var(--white);
-      font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,"Helvetica Neue","PingFang SC","Noto Sans SC","Hiragino Sans GB",sans-serif}
-    .wrap{max-width:980px;margin:28px auto;padding:0 16px}
-    .panel{border:1px solid var(--border);border-radius:18px;padding:18px 20px;background:#0f1720;box-shadow:0 12px 28px rgba(0,0,0,.35)}
-    h1{font-size:22px;margin:0 0 12px}
-    .row{display:flex;gap:10px}
-    input[type="search"]{flex:1;background:#161b22;color:var(--white);border:1px solid var(--border);border-radius:12px;padding:12px 14px;font-size:16px;outline:none}
-    .btn{background:#2d3748;border:1px solid var(--border);color:#fff;border-radius:12px;padding:10px 14px;cursor:pointer}
-    .hint{color:var(--muted);font-size:12px;margin:8px 0 6px}
-    .section{margin-top:14px}
-    .cap{font-size:12px;letter-spacing:.1em;color:#9ca3af;margin-bottom:6px}
-    .blk{border:1px solid var(--border);border-radius:16px;padding:12px 14px}
-    .pink{background:var(--pink-bg)}
-    .lime{background:var(--lime-bg)}
-    .gray{background:#0b1119}
-    .pill{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;border:1px solid var(--border);background:rgba(255,255,255,.03);margin:6px 8px 0 0}
-    .pill.pink{background:rgba(255,77,166,.12);border-color:#7a2b56}
-    .chip{display:inline-block;background:#0b1119;border:1px solid var(--border);padding:6px 10px;border-radius:999px;margin:6px 8px 0 0;color:#cbd5e1}
-    .play{cursor:pointer;font-size:12px;opacity:.9}
-    table{width:100%;border-collapse:collapse}
-    th,td{border-bottom:1px solid var(--border);padding:10px 8px;font-size:14px;vertical-align:top}
-    th{color:#9ca3af;font-weight:600}
-    .suggest{margin-top:8px}
-    .suggest a{color:#93c5fd;margin-right:12px;text-decoration:none}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Funwa · Slim V3</title>
+<style>
+:root{
+  --bg:#070b11; --white:#e6edf3; --gray:#1e293b; --border:#2b3240;
+  --pink:#ff63b2; --lime:#b9ff38; --muted:#94a3b8;
+}
+body{background:var(--bg);color:var(--white);font-family:'Inter','PingFang SC','Noto Sans SC',sans-serif;margin:0;padding:0;}
+.container{max-width:800px;margin:100px auto;padding:0 20px;text-align:center;}
+input[type='search']{
+  width:100%;padding:14px 16px;font-size:18px;border-radius:12px;
+  border:1px solid var(--border);background:#10141c;color:var(--white);
+  outline:none;transition:all .2s;
+}
+input[type='search']:focus{border-color:var(--pink);}
+.suggest{color:var(--muted);font-size:14px;text-align:left;margin-top:6px;}
+.result{margin-top:40px;display:none;animation:fadeIn .3s ease forwards;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.section{margin-top:20px;text-align:left;}
+.cap{font-size:12px;letter-spacing:.1em;color:var(--muted);margin-bottom:6px;}
+.blk{padding:14px;border-radius:16px;border:1px solid var(--border);}
+.pink{background:rgba(255,99,178,0.1);}
+.lime{background:rgba(185,255,56,0.1);}
+.gray{background:#0b1119;}
+.pill{display:inline-flex;align-items:center;padding:8px 12px;margin:4px;border-radius:999px;background:rgba(255,99,178,0.2);}
+.pill span.play{margin-left:8px;cursor:pointer;color:var(--pink);}
+table{width:100%;border-collapse:collapse;margin-top:10px;}
+th,td{padding:10px;border-bottom:1px solid var(--border);font-size:14px;}
+th{color:var(--muted);text-align:left;}
+tr td:first-child{color:var(--pink);}
+tr td:last-child{color:var(--white);}
+footer{margin-top:40px;font-size:12px;color:var(--muted);}
+</style>
 </head>
 <body>
-  <div class="wrap panel">
-    <h1>Funwa · Slim v2 <span style="font-size:12px;border:1px solid var(--border);padding:2px 8px;border-radius:999px;margin-left:8px">CSV</span></h1>
-    <div class="row">
-      <input id="q" type="search" placeholder="Type Chinese / English / Cantonese…" />
-      <button id="btn" class="btn">Search</button>
-    </div>
-    <div id="suggest" class="suggest"></div>
-
-    <!-- Cantonese headwords -->
-    <div class="section">
-      <div class="cap">CANTONESE · zhh</div>
-      <div id="zhh" class="blk pink"></div>
-    </div>
-
-    <!-- zhh aliases / synonyms (pink) -->
-    <div class="section">
-      <div class="cap">ALIASES · zhh</div>
-      <div id="zhh_alias" class="blk pink"></div>
-    </div>
-
-    <!-- EN chips (gray). No CHS display -->
-    <div class="section">
-      <div class="cap">ENGLISH · en</div>
-      <div id="en" class="blk gray"></div>
-    </div>
-
-    <!-- Notes (lime) -->
-    <div class="section">
-      <div class="cap">NOTES</div>
-      <div id="notes" class="blk lime"></div>
-    </div>
-
-    <!-- Examples (pink rows) -->
-    <div class="section">
-      <div class="cap">EXAMPLES</div>
-      <div class="blk pink">
-        <table>
-          <thead><tr><th>Cantonese</th><th>English</th></tr></thead>
-          <tbody id="exbody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="hint">Data: <code>data/lexeme.csv</code> · <code>data/examples.csv</code> · <code>data/crossmap.csv</code>. UTF‑8 or UTF‑8‑SIG.</div>
+<div class="container">
+  <h1 style="font-size:22px;margin-bottom:20px;">Funwa · Slim V3</h1>
+  <input id="q" type="search" placeholder="Type to search Cantonese / English..." autocomplete="off"/>
+  <div id="suggest" class="suggest"></div>
+  <div id="result" class="result">
+    <div class="section"><div class="cap">CANTONESE</div><div id="zhh" class="blk pink"></div></div>
+    <div class="section"><div class="cap">ENGLISH</div><div id="en" class="blk gray"></div></div>
+    <div class="section"><div class="cap">NOTES</div><div id="notes" class="blk lime"></div></div>
+    <div class="section"><div class="cap">EXAMPLES</div><div class="blk pink"><table><thead><tr><th>Cantonese</th><th>English</th></tr></thead><tbody id="exbody"></tbody></table></div></div>
   </div>
-
-  <script>
-  function stripBOM(s){ return s.replace(/^\uFEFF/,''); }
-  function parseCSV(text){
-    text = stripBOM(text);
-    const lines = text.replace(/\r\n/g,"\n").replace(/\r/g,"\n").split("\n").filter(Boolean);
-    const headers = lines[0].split(",").map(x=>stripBOM(x).trim());
-    return lines.slice(1).map(line=>{
-      const cells = line.split(",");
-      const o={}; headers.forEach((h,i)=> o[h]= (stripBOM(cells[i]||"").trim())); return o;
-    });
-  }
-  async function loadCSV(path){
-    const res = await fetch(path+'?v='+Date.now(), {cache:'no-store'});
-    if(!res.ok) throw new Error('Load fail '+path);
-    return parseCSV(await res.text());
-  }
-  const S = {lex:new Map(), ex:new Map(), idx:new Map()};
-  const split = s => (s||'').split('/').map(x=>x.trim()).filter(Boolean);
-  const putIdx=(k,v)=>{k=(k||'').toLowerCase(); if(!k)return; if(!S.idx.has(k))S.idx.set(k,[]); S.idx.get(k).push(v);};
-
-  async function boot(){
-    const [lex, ex] = await Promise.all([
-      loadCSV('data/lexeme.csv'), loadCSV('data/examples.csv')
-    ]);
-    lex.forEach(r=>{ if(r.id) S.lex.set(r.id,r); });
-    ex.forEach(r=>{ if(r.lexeme_id){ if(!S.ex.has(r.lexeme_id))S.ex.set(r.lexeme_id,[]); S.ex.get(r.lexeme_id).push(r);} });
-    let map=[]; try{ map=await loadCSV('data/crossmap.csv'); }catch{}
-    if(map.length){
-      map.forEach(r=> putIdx(r.term, {id:r.target_id, kind:r.kind||'head', lang:r.lang||''}));
-    }else{
-      for(const [id,r] of S.lex.entries()){
-        [...split(r.zhh), ...split(r.alias_zhh), ...split(r.en)].forEach(t=> putIdx(t,{id,kind:'head'}));
-        (r.note_en||'').split(/[,;，；、\s]+/).forEach(t=> putIdx(t,{id,kind:'note'}));
-      }
-    }
-    wire();
-  }
-
-  function wire(){
-    const q=document.getElementById('q'); const btn=document.getElementById('btn');
-    q.addEventListener('input', ()=> suggest(q.value));
-    btn.addEventListener('click', ()=> search(q.value));
-    q.addEventListener('keydown', e=>{ if(e.key==='Enter') search(q.value); });
-  }
-
-  function suggest(text){
-    const box=document.getElementById('suggest'); box.innerHTML='';
-    const q=(text||'').trim().toLowerCase(); if(!q) return;
-    const all=[...S.idx.keys()]; const hit=all.filter(k=>k.startsWith(q)).slice(0,8);
-    if(!hit.length) return;
-    hit.forEach(k=>{ const a=document.createElement('a'); a.textContent=k; a.href='javascript:'; a.onclick=()=>{ document.getElementById('q').value=k; search(k); }; box.appendChild(a); });
-  }
-
-  function search(text){
-    const q=(text||'').trim().toLowerCase(); if(!q) return;
-    let cand=S.idx.get(q); if(!cand){ const key=[...S.idx.keys()].find(k=>k.startsWith(q)); if(key) cand=S.idx.get(key); }
-    if(!cand) return;
-    const id=cand[0].id; render(id);
-  }
-
-  function render(id){
-    const r=S.lex.get(id); if(!r) return;
-    const z=document.getElementById('zhh'); z.innerHTML='';
-    split(r.zhh).forEach((s,i)=>{
-      const el=document.createElement('span'); el.className='pill pink'; el.textContent=s;
-      const btn=document.createElement('span'); btn.className='play'; btn.textContent='▶';
-      btn.onclick=()=> speakHK(s); el.appendChild(btn); z.appendChild(el);
-    });
-    const za=document.getElementById('zhh_alias'); za.innerHTML='';
-    split(r.alias_zhh).forEach(s=>{ const el=document.createElement('span'); el.className='pill pink'; el.textContent=s; za.appendChild(el); });
-    const e=document.getElementById('en'); e.innerHTML='';
-    split(r.en).forEach(s=>{ const el=document.createElement('span'); el.className='chip'; el.textContent=s; e.appendChild(el); });
-    const nt=document.getElementById('notes'); nt.innerHTML='';
-    const notes=[r.note_en||'', r.note_chs||''].filter(Boolean).map(x=>`<div>${x}</div>`).join('');
-    nt.innerHTML=notes || '<span style="color:#1e293b">—</span>';
-    const tbody=document.getElementById('exbody'); tbody.innerHTML='';
-    (S.ex.get(id)||[]).forEach(ex=>{
-      const tr=document.createElement('tr');
-      const td0=document.createElement('td'); td0.innerHTML=`<span class="pill pink">${ex.ex_zhh || ex.zhh || ''}</span>`;
-      const td1=document.createElement('td'); td1.textContent=ex.ex_en || ex.en || '';
-      tr.appendChild(td0); tr.appendChild(td1); tbody.appendChild(tr);
-    });
-  }
-
-  function speakHK(t){ try{ const u=new SpeechSynthesisUtterance(t); u.lang='zh-HK'; speechSynthesis.cancel(); speechSynthesis.speak(u);}catch{} }
-
-  boot();
-  </script>
+  <footer>© Funwa Slim V3 — Lexicon CSV UTF‑8 · zh‑HK voice supported</footer>
+</div>
+<script>
+function stripBOM(s){return s.replace(/^\uFEFF/,'');}
+function parseCSV(text){
+  text = stripBOM(text);
+  const lines = text.split(/\r?\n/).filter(Boolean);
+  const headers = lines[0].split(',').map(x=>x.trim());
+  return lines.slice(1).map(line=>{
+    const cells = line.split(',');
+    const o={};headers.forEach((h,i)=>o[h]=cells[i]?cells[i].trim():'');
+    return o;
+  });
+}
+async function loadCSV(path){const r=await fetch(path+'?v='+Date.now());return parseCSV(await r.text());}
+const S={lex:new Map(),ex:new Map(),idx:new Map()};
+function split(s){return (s||'').split('/').map(x=>x.trim()).filter(Boolean);}
+function putIdx(k,v){k=k.toLowerCase();if(!S.idx.has(k))S.idx.set(k,[]);S.idx.get(k).push(v);}
+async function boot(){
+  const [lex,ex,map]=await Promise.all([loadCSV('data/lexeme.csv'),loadCSV('data/examples.csv'),loadCSV('data/crossmap.csv')]);
+  lex.forEach(r=>S.lex.set(r.id,r));
+  ex.forEach(r=>{if(!S.ex.has(r.lexeme_id))S.ex.set(r.lexeme_id,[]);S.ex.get(r.lexeme_id).push(r);});
+  map.forEach(r=>putIdx(r.term,{id:r.target_id}));
+  wire();
+}
+function wire(){
+  const q=document.getElementById('q');
+  q.addEventListener('input',()=>{
+    const val=q.value.trim().toLowerCase();
+    if(!val){document.getElementById('result').style.display='none';return;}
+    const keys=[...S.idx.keys()].filter(k=>k.includes(val)).slice(0,5);
+    const sug=document.getElementById('suggest');sug.innerHTML=keys.length?("Suggestions: "+keys.join(' / ')):"";
+    if(keys.length){render(S.idx.get(keys[0])[0].id);}
+  });
+}
+function render(id){
+  const r=S.lex.get(id);if(!r)return;
+  document.getElementById('result').style.display='block';
+  const z=document.getElementById('zhh');z.innerHTML='';split(r.zhh).forEach(s=>{
+    const el=document.createElement('div');el.className='pill';el.textContent=s;
+    const btn=document.createElement('span');btn.className='play';btn.textContent='▶';
+    btn.onclick=()=>speakHK(s);el.appendChild(btn);z.appendChild(el);
+  });
+  const e=document.getElementById('en');e.innerHTML=split(r.en).map(x=>'<span class="pill">'+x+'</span>').join('');
+  const n=document.getElementById('notes');n.innerHTML=(r.note_en||'')+'<br>'+(r.note_chs||'');
+  const exb=document.getElementById('exbody');exb.innerHTML='';
+  (S.ex.get(id)||[]).forEach(ex=>{const tr=document.createElement('tr');tr.innerHTML=`<td>${ex.ex_zhh}</td><td>${ex.ex_en}</td>`;exb.appendChild(tr);});
+}
+function speakHK(t){try{const u=new SpeechSynthesisUtterance(t);u.lang='zh-HK';speechSynthesis.cancel();speechSynthesis.speak(u);}catch{}}
+boot();
+</script>
 </body>
 </html>
