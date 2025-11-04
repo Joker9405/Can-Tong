@@ -6,35 +6,35 @@
   <title>Funwa</title>
   <style>
     :root{
-      --bg:#03060a; --muted:#9aa5b1; --ink:#fafcff; --input:#10141c;
-      --pink:#ff0684; --lime:#a5ff00; --chip:#0f1720; --shadow:rgba(0,0,0,.45);
+      --bg:#03060a; --ink:#fafcff; --ink-dark:#071006; --input:#10141c;
+      --pink:#ff0684; --lime:#a5ff00; --chip:#0b1119; --shadow:rgba(0,0,0,.55);
     }
     html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,"Helvetica Neue","PingFang SC","Noto Sans SC","Hiragino Sans GB",sans-serif}
     .wrap{max-width:980px;margin:8vh auto 10vh;padding:0 16px}
-    .hero{display:flex;flex-direction:column;gap:14px;align-items:stretch}
-    .brand{font-weight:800;letter-spacing:.5px;font-size:22px;opacity:.9}
-    .search{display:flex;gap:10px;align-items:center;position:relative}
+    .hero{display:flex;flex-direction:column;gap:14px}
+    .brand{font-weight:800;font-size:22px}
+    .search{display:flex;gap:10px;position:relative}
     .i{flex:1;background:var(--input);color:var(--ink);border:none;border-radius:14px;padding:14px 16px;font-size:18px;outline:none;box-shadow:0 10px 26px var(--shadow)}
     .btn{background:var(--pink);color:#fff;border:none;border-radius:12px;padding:12px 16px;font-weight:700;cursor:pointer}
-    .hint{font-size:12px;color:var(--muted)}
+    .hint{font-size:12px;color:#b6c2cf}
     .drop{position:absolute;left:0;right:120px;top:52px;background:var(--input);border-radius:12px;box-shadow:0 18px 28px var(--shadow);overflow:hidden;z-index:10}
     .opt{padding:10px 14px;cursor:pointer}
-    .opt:hover{background:rgba(255,255,255,.05)}
-    .results{display:none;margin-top:22px;animation:fade .25s ease-out forwards}
+    .opt:hover{background:rgba(255,255,255,.06)}
+    .results{display:none;margin-top:22px;animation:fade .18s ease-out forwards}
     @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-    .blk{border-radius:18px;padding:14px 16px;box-shadow:0 14px 28px var(--shadow);margin-top:12px}
-    .pink{background:color-mix(in srgb, var(--pink) 24%, transparent)}
-    .lime{background:color-mix(in srgb, var(--lime) 20%, transparent)}
-    .gray{background:color-mix(in srgb, #ffffff 8%, transparent)}
-    .cap{font-size:12px;letter-spacing:.12em;text-transform:uppercase;opacity:.8;margin:4px 0 8px}
-    .pill{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;margin:8px 10px 0 0}
-    .pill-pink{background:color-mix(in srgb, var(--pink) 32%, transparent)}
-    .pill-lime{background:color-mix(in srgb, var(--lime) 32%, transparent)}
+    .blk{border-radius:18px;padding:14px 16px;box-shadow:0 18px 36px var(--shadow);margin-top:12px}
+    .pink{background:var(--pink)}
+    .lime{background:var(--lime); color:var(--ink-dark)}
+    .gray{background:#1b2330}
+    .cap{font-size:12px;letter-spacing:.12em;text-transform:uppercase;opacity:.95;margin:0 0 8px}
+    .pill{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:999px;margin:8px 10px 0 0}
+    .pill-pink{background:#b40461}
+    .pill-lime{background:#6bd300;color:#061001}
     .chip{display:inline-block;background:var(--chip);padding:8px 12px;border-radius:999px;margin:8px 8px 0 0;color:#dbe3ea}
-    .play{cursor:pointer;font-size:12px;opacity:.95}
+    .play{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:999px;background:rgba(255,255,255,.18);font-size:11px}
     table{width:100%;border-collapse:collapse}
-    th,td{padding:10px 8px;text-align:left}
-    thead th{opacity:.8}
+    th,td{padding:12px 10px;text-align:left}
+    thead th{opacity:.95}
   </style>
 </head>
 <body>
@@ -73,7 +73,7 @@
       <div id="ex_blk" class="blk pink" style="display:none">
         <div class="cap">EXAMPLES</div>
         <table>
-          <thead><tr><th>Cantonese</th><th>Chinese</th><th>English</th><th>Variant</th></tr></thead>
+          <thead><tr><th>Cantonese</th><th>Chinese</th><th>English</th></tr></thead>
           <tbody id="exbody"></tbody>
         </table>
       </div>
@@ -155,6 +155,12 @@ function wire(){
   btn.addEventListener('click', ()=>{ openBest(q.value); drop.style.display='none'; });
 }
 
+function pillWithPlay(text, cls){
+  const w=document.createElement('span'); w.className='pill '+cls; w.textContent=text;
+  const p=document.createElement('span'); p.className='play'; p.textContent='▶';
+  w.appendChild(p); return w;
+}
+
 function render(id){
   const box=document.getElementById('res');
   const r=S.lex.get(id); if(!r){ box.style.display='none'; return; }
@@ -162,12 +168,10 @@ function render(id){
 
   // Cantonese head
   const z=document.getElementById('zhh'); z.innerHTML='';
-  const seg=split(r.zhh), prn=split(r.zhh_pron);
-  seg.forEach((s,i)=>{
-    const el=document.createElement('span'); el.className='pill pill-pink'; el.textContent=s;
-    const p=document.createElement('span'); p.className='play'; p.textContent='▶'; p.title=prn[i]||'';
-    p.onclick=()=> speakHK(s);
-    el.appendChild(p); z.appendChild(el);
+  split(r.zhh).forEach((s)=>{
+    const el=pillWithPlay(s,'pill-pink');
+    el.querySelector('.play').onclick=()=> speakHK(s);
+    z.appendChild(el);
   });
 
   // Aliases (lime + TTS)
@@ -176,10 +180,9 @@ function render(id){
   if(alias.length){
     ablk.style.display='block';
     alias.forEach(s=>{
-      const el=document.createElement('span'); el.className='pill pill-lime'; el.textContent=s;
-      const p=document.createElement('span'); p.className='play'; p.textContent='▶'; p.title='';
-      p.onclick=()=> speakHK(s);
-      el.appendChild(p); az.appendChild(el);
+      const el=pillWithPlay(s,'pill-lime');
+      el.querySelector('.play').onclick=()=> speakHK(s);
+      az.appendChild(el);
     });
   } else { ablk.style.display='none'; }
 
@@ -192,18 +195,19 @@ function render(id){
   const notes=[r.note_en||'', r.note_chs||''].filter(Boolean).map(x=>`<div style="margin:4px 0">${x}</div>`).join('');
   nt.innerHTML=notes || '<div style="opacity:.45">—</div>';
 
-  // Examples (with TTS)
+  // Examples (3 cols; Cantonese pill + ▶ inside)
   const arr=S.ex.get(id)||[];
   const exblk=document.getElementById('ex_blk'); const tbody=document.getElementById('exbody'); tbody.innerHTML='';
   if(arr.length){ exblk.style.display='block'; } else { exblk.style.display='none'; }
   arr.forEach(ex=>{
     const tr=document.createElement('tr');
-    const td0=document.createElement('td'); td0.innerHTML=`<span class="pill pill-pink">${(ex.ex_zhh||'')}</span> <span class="play" title="${ex.ex_zhh_pron||''}">▶</span>`;
-    td0.querySelector('.play').onclick=()=> speakHK(ex.ex_zhh||'');
+    const pill = pillWithPlay(ex.ex_zhh||'','pill-pink');
+    pill.querySelector('.play').onclick=()=> speakHK(ex.ex_zhh||'');
+    const td0=document.createElement('td'); td0.appendChild(pill);
     const td1=document.createElement('td'); td1.textContent=ex.ex_chs||'';
     const td2=document.createElement('td'); td2.textContent=ex.ex_en||'';
-    const td3=document.createElement('td'); td3.textContent=ex.ex_variant||'';
-    tr.appendChild(td0); tr.appendChild(td1); tr.appendChild(td2); tr.appendChild(td3); tbody.appendChild(tr);
+    tr.appendChild(td0); tr.appendChild(td1); tr.appendChild(td2);
+    tbody.appendChild(tr);
   });
 }
 
