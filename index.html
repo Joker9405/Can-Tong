@@ -1,17 +1,19 @@
 <!doctype html>
 <html lang="zh-HK">
 <head>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Funwa-1101CanTongMVP · v2</title>
-<style>body{font-family:sans-serif;padding:20px}</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Funwa-1101CanTongMVP · v2</title>
+  <style>
+    :root{
+      --bg:#0b0f14;--panel:#0f1720;--muted:#94a3b8;
+      --card:#111827;--border:#1f2937
+    }
+    body{background:var(--bg);color:#e5e7eb;font-family:sans-serif;padding:20px}
+  </style>
 </head>
 <body>
-<h2>Funwa v2 (CSV)</h2>
-<p>这个占位页面会读取 <code>data/lexeme.csv</code>，请发布后在控制台查看。</p>
-<script>
-async function t(p){const r=await fetch(p+'?v='+Date.now());return await r.text();}
-function parseCSV(txt){const lines=txt.trim().split(/\r?\n/);const h=lines.shift().split(',');return lines.map(l=>{const a=l.split(',');const o={};h.forEach((k,i)=>o[k]=a[i]||'');return o;});}
-(async()=>{try{const lx=parseCSV(await t('/data/lexeme.csv'));console.log('lexeme sample',lx.slice(0,3));}catch(e){console.error(e);}})();
-</script>
+<h2>Funwa Full v2 (Functional)</h2>
+<p>此文件应放在根目录和 /web/ 下，连接 data/*.csv 读取显示。</p>
 </body>
 </html>
