@@ -28,6 +28,7 @@
     .gray{background:color-mix(in srgb, #ffffff 8%, transparent)}
     .cap{font-size:12px;letter-spacing:.12em;text-transform:uppercase;opacity:.8;margin:4px 0 8px}
     .pill{display:inline-flex;align-items:center;gap:8px;background:color-mix(in srgb, var(--pink) 32%, transparent);padding:10px 14px;border-radius:999px;margin:8px 10px 0 0}
+    .pill.lime{background:color-mix(in srgb, var(--lime) 30%, transparent);}
     .chip{display:inline-block;background:var(--chip);padding:8px 12px;border-radius:999px;margin:8px 8px 0 0;color:#dbe3ea}
     .play{cursor:pointer;font-size:12px;opacity:.95}
     table{width:100%;border-collapse:collapse}
@@ -53,7 +54,7 @@
         <div id="zhh"></div>
       </div>
 
-      <div id="aliases_blk" class="blk pink" style="display:none">
+      <div id="aliases_blk" class="blk lime" style="display:none">
         <div class="cap">ALIASES · zhh</div>
         <div id="zhh_alias"></div>
       </div>
@@ -63,7 +64,7 @@
         <div id="en"></div>
       </div>
 
-      <div class="blk lime">
+      <div class="blk gray">
         <div class="cap">NOTES</div>
         <div id="notes"></div>
       </div>
@@ -169,22 +170,22 @@ function render(id){
     el.appendChild(p); z.appendChild(el);
   });
 
-  // Aliases (optional)
+  // Aliases (optional) — lime
   const alias=split(r.alias_zhh);
   const ablk=document.getElementById('aliases_blk'); const az=document.getElementById('zhh_alias'); az.innerHTML='';
-  if(alias.length){ ablk.style.display='block'; alias.forEach(s=>{ const el=document.createElement('span'); el.className='pill'; el.textContent=s; az.appendChild(el); }); }
+  if(alias.length){ ablk.style.display='block'; alias.forEach(s=>{ const el=document.createElement('span'); el.className='pill lime'; el.textContent=s; az.appendChild(el); }); }
   else { ablk.style.display='none'; }
 
   // English chips
   const e=document.getElementById('en'); e.innerHTML='';
   split(r.en).forEach(s=>{ const c=document.createElement('span'); c.className='chip'; c.textContent=s; e.appendChild(c); });
 
-  // Notes (en + chs)
+  // Notes (en + chs) — gray block
   const nt=document.getElementById('notes');
   const notes=[r.note_en||'', r.note_chs||''].filter(Boolean).map(x=>`<div style="margin:4px 0">${x}</div>`).join('');
   nt.innerHTML=notes || '<div style="opacity:.45">—</div>';
 
-  // Examples
+  // Examples with TTS
   const arr=S.ex.get(id)||[];
   const exblk=document.getElementById('ex_blk'); const tbody=document.getElementById('exbody'); tbody.innerHTML='';
   if(arr.length){ exblk.style.display='block'; } else { exblk.style.display='none'; }

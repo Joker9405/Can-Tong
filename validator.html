@@ -1,0 +1,11 @@
+<!doctype html><meta charset="utf-8"><title>CSV Validator</title>
+<body style="font-family:ui-sans-serif;max-width:900px;margin:40px auto;padding:0 16px">
+<h2>Funwa CSV Validator</h2>
+<p>Put this file next to your <code>index.html</code>. Visit <code>/validator.html</code>, drop your CSVs to check headers/columns.</p>
+<input id="files" type="file" multiple accept=".csv"/><pre id="out" style="background:#111;color:#eee;padding:10px;border-radius:8px"></pre>
+<script>
+function stripBOM(s){return s.replace(/^\uFEFF/,'');}
+function parse(t){t=stripBOM(t);const L=t.split(/\r?\n/).filter(x=>x.length);const H=L[0].split(',');return {H,L};}
+const need={'lexeme.csv':['id','zhh','zhh_pron','alias_zhh','en','note_en','note_chs'],'examples.csv':['lexeme_id','ex_zhh','ex_zhh_pron','ex_chs','ex_en','ex_variant'],'crossmap.csv':['term','lang','target_id','kind']};
+files.onchange=async e=>{const out=document.getElementById('out');out.textContent='';for(const f of e.target.files){const t=await f.text();const {H,L}=parse(t);const want=need[f.name];out.textContent+=`\n=== ${f.name} ===\n`;if(!want){out.textContent+='(skip)\n';continue;}out.textContent+=`headers: ${H.join(' | ')}\n`;const miss=want.filter(h=>!H.includes(h));if(miss.length)out.textContent+=`❌ missing: ${miss.join(', ')}\n`;else out.textContent+='✅ headers ok\n';const cols=(L[1]||'').split(',').length;if(cols!==H.length)out.textContent+=`⚠ line2 has ${cols} cells, expected ${H.length}\n`;}};
+</script>
