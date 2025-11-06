@@ -1,74 +1,25 @@
-:root{
-  --bg:#0b0e12;
-  --panel:#181c22;
-  --text:#e9eef5;
-  --muted:#9aa3ad;
-  --brand:#b9ff39;
-  --accent:#ff1188;
-  --chip:#242a33;
-  --chipText:#dbe5f3;
-  --radius:28px;
-}
-*{box-sizing:border-box}
-html,body{height:100%}
-body{margin:0;background:var(--bg);color:var(--text);font:16px/1.4 system-ui,-apple-system,Segoe UI,Roboto,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif}
-a{color:inherit}
-.wrap{max-width:1200px;margin:24px auto;padding:0 20px}
-
-/* header */
-.header{display:flex;justify-content:space-between;align-items:center;margin:6px 0 16px}
-.logo{display:inline-flex;align-items:center;gap:10px;background:var(--brand);color:#0b0e12;font-weight:800;padding:8px 14px;border-radius:999px}
-.logo .dot{width:8px;height:8px;border-radius:999px;background:#0b0e12;display:inline-block;margin-left:4px}
-.locale{color:#a9ff3b;opacity:.9;font-size:14px}
-
-/* search */
-.search{display:flex;gap:12px;margin:10px 0 22px}
-.inp{flex:1;background:#2a2f36;border:none;border-radius:26px;padding:22px 22px;font-size:46px;color:var(--text);outline:none}
-.btn{background:var(--accent);border:none;color:#fff;padding:0 18px;border-radius:16px;font-weight:800;cursor:pointer;min-width:88px}
-
-/* grid */
-.grid{display:grid;grid-template-columns:1.2fr 0.8fr;gap:18px}
-@media (max-width:980px){.grid{grid-template-columns:1fr;}}
-
-.panel{background:var(--panel);border-radius:var(--radius);padding:16px}
-
-/* left big lime */
-.cantonese{background:var(--brand);color:#0b0e12;display:flex;flex-direction:column;gap:12px}
-.tag{font-size:14px;opacity:.8;margin-bottom:4px}
-.term-main{display:flex;align-items:center;justify-content:space-between;gap:16px}
-.term-text{font-size:88px;font-weight:900;letter-spacing:1px}
-.tts{background:rgba(0,0,0,.08);border:none;border-radius:999px;width:48px;height:48px;display:flex;align-items:center;justify-content:center;cursor:pointer}
-.tts svg{width:24px;height:24px}
-.variants{display:flex;flex-direction:column;gap:10px}
-.variant-row{display:flex;align-items:center;justify-content:space-between;border-radius:16px;padding:8px 10px;background:rgba(0,0,0,.06)}
-.variant-text{font-size:34px;font-weight:800}
-
-/* right hot pink usage */
-.usages{background:var(--accent)}
-.usages .tag{color:#300418}
-#usageList{display:flex;flex-direction:column;gap:10px}
-.usage-badge{display:block;background:rgba(0,0,0,.16);color:#fff;font-weight:800;border-radius:16px;padding:12px 14px}
-
-/* notes */
-.notes{border-radius:28px}
-.notes .note-en{font-weight:800;margin-bottom:6px}
-.notes .note-zh{color:var(--muted)}
-
-/* examples list */
-.examples{position:relative}
-.examples-toggle{position:fixed;right:24px;bottom:24px;background:var(--accent);border:none;color:#fff;border-radius:18px;font-weight:800;padding:12px 16px;cursor:pointer}
-.examples-list{display:none;margin-top:12px}
-.examples.open .examples-list{display:block}
-.example-item{display:grid;grid-template-columns:1fr 1.4fr 56px;gap:12px;align-items:center;background:var(--accent);border-radius:18px;padding:14px 14px;margin-bottom:10px}
-.ex-zhh{font-weight:900;font-size:20px}
-.ex-expl{background:#2a2f36;color:var(--text);border-radius:14px;padding:10px}
-.ex-expl .en{font-weight:800;margin-bottom:4px}
-.ex-expl .zh{color:var(--muted)}
-.ex-audio .tts{background:#ffd0ea}
-
-/* chips */
-.chips{display:flex;flex-wrap:wrap;gap:10px}
-.chip{background:var(--chip);color:var(--chipText);padding:8px 12px;border-radius:999px;font-weight:600}
-
-.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-footer{opacity:.6;margin:40px 0 20px;text-align:center;font-size:12px}
+*{box-sizing:border-box}html,body{height:100%}body{margin:0;background:#111;color:#eee;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans SC','PingFang SC','Microsoft YaHei UI','Microsoft YaHei',sans-serif}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:18px 22px}
+.brand{font-size:28px;font-weight:700;color:#b8ff2b}
+.brand .dot{color:#7dff00}
+.lang{opacity:.7}
+.container{max-width:1080px;margin:0 auto;padding:0 18px 64px}
+.search input{width:100%;padding:26px 28px;border-radius:18px;border:none;background:#2c2c2c;color:#eee;font-size:42px;outline:none}
+.result{margin-top:22px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.card{border-radius:18px;padding:20px}
+.card.yellow{background:#c8ff2b;color:#111}
+.card.pink{background:#ff4aa6;color:#fff}
+.card.gray{background:#333}
+.title{font-size:76px;line-height:1.06;margin:0 0 10px 0;font-weight:800}
+.alias{font-size:28px;padding:10px 0;border-top:1px solid rgba(0,0,0,.15)}
+.tts{float:right;border:none;border-radius:40px;width:44px;height:44px;background:rgba(0,0,0,.1);cursor:pointer}
+.vars{font-size:32px;line-height:1.8;font-weight:700}
+.note{margin-top:8px;opacity:.9}
+.examples{margin-top:12px}
+.example-row{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-radius:14px;background:#ff4aa6;color:#fff;margin-top:10px}
+.example-row .txt{max-width:90%}
+.fab{position:fixed;right:28px;bottom:120px;background:#ff4aa6;color:#fff;border:none;border-radius:999px;padding:16px 18px;line-height:1.2;width:98px;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.foot{position:fixed;left:0;right:0;bottom:0;padding:10px 16px;text-align:center;color:#aaa;font-size:12px;background:transparent}
+.empty{background:#222;border:1px dashed #444;color:#bbb}
+@media(max-width:900px){.grid{grid-template-columns:1fr}.title{font-size:56px}.search input{font-size:32px}}

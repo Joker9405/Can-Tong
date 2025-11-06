@@ -1,111 +1,118 @@
-const $ = (q,root=document)=>root.querySelector(q);
+// CanTongMVP front — minimal search & render
+const SEED_URL = '/data/seed.csv';
+let LEX = [];
+let READY = false;
 
-function playTTS(text, voiceHint){
-  const url = `/api/tts?text=${encodeURIComponent(text)}&voice=${encodeURIComponent(voiceHint||'yue-HK')}`;
-  fetch(url).then(r=>{
-    if(r.ok && (r.headers.get('content-type')||'').includes('audio')){
-      return r.blob();
-    }
-    throw new Error('fallback');
-  }).then(blob=>{
-    const audio = new Audio(URL.createObjectURL(blob));
-    audio.play();
-  }).catch(()=>{
-    try{
-      const u = new SpeechSynthesisUtterance(text);
-      u.lang = 'yue-HK';
-      speechSynthesis.speak(u);
-    }catch{}
+// CSV parse (naive, comma only; for demo keep simple)
+function parseCSV(text){
+  const lines = text.split(/\r?\n/).filter(Boolean);
+  const header = lines.shift().split(',');
+  return lines.map(line=>{
+    const cells = line.split(',').map(s=>s.trim());
+    const obj = {}; header.forEach((h,i)=>obj[h]=cells[i]||'');
+    return obj;
   });
 }
 
-document.addEventListener('click', (e)=>{
-  const btn = e.target.closest('.tts');
-  if(!btn) return;
-  const targetId = btn.getAttribute('data-tts-target');
-  if(targetId){
-    const text = document.getElementById(targetId)?.textContent?.trim();
-    if(text) playTTS(text, 'yue-HK');
+function norm(s){return (s||'').toLowerCase().replace(/\s+/g,'');}
+function fuzzyIncludes(t,q){t=norm(t);q=norm(q);if(!q)return false;let i=0;for(const ch of t){if(ch===q[i]) i++;}return i===q.length || t.includes(q);}
+
+async function boot(){
+  try{
+    const res = await fetch(SEED_URL,{cache:'no-store'});
+    if(!res.ok) throw new Error('seed.csv not found');
+    const text = await res.text();
+    LEX = parseCSV(text).map(x=>({
+      ...x,
+      _alias: (x.alias_zhh||'').split(';').map(s=>s.trim()).filter(Boolean),
+      _examples: (x.examples||'').split('||').map(s=>s.trim()).filter(Boolean),
+      _hay: [x.chs,x.zhh,x.en,x.alias_zhh].join(' || ')
+    }));
+    READY = true;
+  }catch(e){
+    console.error(e); READY=false;
+  }
+}
+
+function search(q){
+  if(!READY || !q) return [];
+  return LEX.filter(x=>fuzzyIncludes(x._hay,q)).slice(0,20);
+}
+
+function speak(text,langHint='yue-HK'){
+  if(!window.speechSynthesis){return}
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = (langHint==='yue-HK'?'yue-HK':'zh-HK');
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(u);
+}
+
+function render(list,q){
+  const el = document.getElementById('result');
+  el.innerHTML='';
+  if(!q) return;
+
+  if(!list.length){
+    el.innerHTML = `<div class="card empty">未找到：<b>${q}</b><br>欢迎点击右下角「example 扩展」补充词条。</div>`;
     return;
   }
-  const text = btn.getAttribute('data-tts');
-  if(text) playTTS(text, 'yue-HK');
-});
 
-const examples = $('#examples');
-const toggle = $('#examplesToggle');
-toggle?.addEventListener('click', ()=>examples.classList.toggle('open'));
+  // 只展示首条为主卡，其余以 examples 扩展
+  const item = list[0];
+  const alias = item._alias;
+  const vars  = item.variants_zhh || '';
+  const note  = (item.note_en||'') + (item.note_chs? ('<br>'+item.note_chs):'');
 
-function renderResult(data){
-  $('#resultRoot').hidden = false;
-  toggle.hidden = false;
+  const grid = document.createElement('div');
+  grid.className='grid';
 
-  $('#termMain').textContent = data.main_zhh || '—';
+  // 左黄卡
+  const left = document.createElement('div');
+  left.className='card yellow';
+  left.innerHTML = `
+    <div class="title">${item.zhh||'—'}</div>
+    ${alias.length? `<div class="alias">${alias.join('</div><div class="alias">')}</div>` : ''}
+    <button class="tts" aria-label="speak"></button>
+  `;
+  left.querySelector('.tts').addEventListener('click',()=>speak(item.zhh,'yue-HK'));
 
-  const vWrap = $('#variants');
-  vWrap.innerHTML = '';
-  (data.variants_zhh||[]).forEach(v=>{
-    vWrap.insertAdjacentHTML('beforeend', `
-      <div class="variant-row">
-        <div class="variant-text">${v}</div>
-        <button class="tts" data-tts="${v}" aria-label="播放讀音">
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 10v4h4l5 4V6l-5 4H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 010 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        </button>
-      </div>`);
+  // 右粉卡（变体）
+  const right = document.createElement('div');
+  right.className='card pink';
+  right.innerHTML = `<div class="vars">${vars}</div>`;
+
+  // 右下灰卡（备注）
+  const noteBox = document.createElement('div');
+  noteBox.className='card gray';
+  noteBox.innerHTML = `<div class="note">${note||''}</div>`;
+
+  grid.appendChild(left);
+  grid.appendChild(right);
+  grid.appendChild(document.createElement('div'));
+  grid.appendChild(noteBox);
+  el.appendChild(grid);
+
+  // 扩展示例
+  const listWrap = document.createElement('div');
+  listWrap.className='examples';
+  (item._examples||[]).forEach(line=>{
+    const row = document.createElement('div');
+    row.className='example-row';
+    row.innerHTML = `<div class="txt">${line}</div><button class="tts" aria-label="speak"></button>`;
+    row.querySelector('.tts').addEventListener('click',()=>speak(line,'yue-HK'));
+    listWrap.appendChild(row);
   });
-
-  const u = $('#usageList');
-  u.innerHTML = (data.usages||[]).map(t=>`<span class="usage-badge">${t}</span>`).join('');
-
-  $('#noteEn').textContent = data.note_en || '';
-  $('#noteZh').textContent = data.note_zh || '';
-
-  const aliasWrap = $('#aliasChips');
-  aliasWrap.innerHTML = (data.aliases_zhh||[]).map(a=>`<span class="chip">${a}</span>`).join('');
-
-  const exWrap = $('#examplesList');
-  exWrap.innerHTML = '';
-  (data.examples || []).forEach(ex=>{
-    exWrap.insertAdjacentHTML('beforeend', `
-      <div class="example-item">
-        <div class="ex-zhh">${ex.zhh || ''}</div>
-        <div class="ex-expl">
-          <div class="en">${ex.en || ''}</div>
-          <div class="zh">${ex.chs || ''}</div>
-        </div>
-        <div class="ex-audio" style="display:flex;justify-content:center">
-          <button class="tts" data-tts="${ex.zhh || ''}" aria-label="播放例句讀音">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 10v4h4l5 4V6l-5 4H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 010 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-          </button>
-        </div>
-      </div>`);
-  });
+  el.appendChild(listWrap);
 }
 
-document.getElementById('searchForm').addEventListener('submit', async (e)=>{
-  e.preventDefault();
-  const q = document.getElementById('q').value.trim();
-  if(!q) return;
-  try{
-    const r = await fetch(`/api/translate?q=${encodeURIComponent(q)}`);
-    const data = await r.json();
-    const shaped = {
-      main_zhh: data?.zhh?.[0] || data?.main_zhh,
-      variants_zhh: data?.zhh?.slice(1) || data?.variants_zhh || [],
-      usages: data?.usage || data?.usages || [],
-      note_en: data?.notes?.en || data?.note_en || '',
-      note_zh: data?.notes?.zh || data?.note_zh || '',
-      aliases_zhh: data?.aliases_zhh || data?.alias || [],
-      examples: (data?.examples||[]).map(x=>({zhh:x.zhh||x.cantonese||'', chs:x.chs||x.cn||x.zh||'', en:x.en||x.english||''}))
-    };
-    renderResult(shaped);
-  }catch(err){
-    console.error(err);
-  }
+document.getElementById('q').addEventListener('input', e=>{
+  const q = e.target.value;
+  const matches = search(q);
+  render(matches,q);
 });
 
-const initQ = new URLSearchParams(location.search).get('q');
-if(initQ){
-  document.getElementById('q').value = initQ;
-  document.getElementById('searchForm').dispatchEvent(new Event('submit'));
-}
+document.getElementById('expand').addEventListener('click',()=>{
+  alert('「扩展」提交入口尚未接入后端表单。请在 GitHub issues 或表单提交。');
+});
+
+boot();

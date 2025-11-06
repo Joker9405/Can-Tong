@@ -1,64 +1,30 @@
 <!doctype html>
-<html lang="zh-HK">
+<html lang="zh-Hans">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Can‑Tong · 粵語查詢</title>
-  <style>
-    :root{
-      --bg:#0b0e12;--panel:#181c22;--text:#e9eef5;--muted:#9aa3ad;--brand:#b9ff39;--accent:#ff1188;--error:#ff4d4d;--radius:24px;
-    }
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif}
-    .wrap{max-width:1080px;margin:30px auto;padding:0 24px}
-    .topbar{display:flex;justify-content:space-between;align-items:center}
-    .brand{display:flex;align-items:center;gap:8px}
-    .brand .wordmark{font-family:"方正黄草简体",KaiTi,cursive;font-size:28px;color:var(--brand)}
-    .brand .dot{width:8px;height:8px;background:var(--brand);border-radius:50%}
-    .lang{color:#7e8692;font-size:14px}
-    .search{margin:28px 0}
-    .q{width:100%;padding:24px;border:none;border-radius:28px;background:#272c33;color:#fff;font-size:38px;outline:none}
-    .err{display:none;margin-top:10px;background:#2a2f36;border-left:4px solid var(--error);color:#ffdede;border-radius:12px;padding:10px 14px;font-size:13px}
-    .err.show{display:block}
-    .grid{display:grid;grid-template-columns:1.1fr .9fr;gap:20px}@media(max-width:920px){.grid{grid-template-columns:1fr}}
-    .panel{background:var(--panel);border-radius:var(--radius);padding:18px}
-    .titleCard{background:#2a2f36;border-radius:var(--radius);padding:22px 24px;font-size:52px;font-weight:800;color:#dfe7f3;margin-bottom:20px}
-    .cantonese{background:var(--brand);color:#0b0e12;display:flex;flex-direction:column;gap:12px}
-    .term-main{display:flex;justify-content:space-between;align-items:center}
-    .term-text{font-size:64px;font-weight:900}
-    .tts{background:rgba(0,0,0,.1);border:none;border-radius:999px;width:42px;height:42px;display:flex;align-items:center;justify-content:center;cursor:pointer}
-    .tts svg{width:22px;height:22px}
-    .variant-row{display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(0,0,0,.18);padding:8px 6px}.variant-text{font-size:28px;font-weight:700}
-    .usages{background:var(--accent)}.usage-badge{display:block;background:rgba(0,0,0,.16);color:#fff;font-weight:800;border-radius:14px;padding:12px 14px;margin:8px 0}
-    .notes .note-en{font-weight:700;margin-bottom:4px}.notes .note-zh{color:var(--muted)}
-    .examples{position:relative;padding:0}.examples-toggle{position:fixed;right:24px;bottom:24px;background:var(--accent);border:none;color:#fff;border-radius:18px;font-weight:800;padding:10px 14px;cursor:pointer}.examples.open .examples-toggle{opacity:.95}.examples-list{display:none}.examples.open .examples-list{display:block}.example-item{display:grid;grid-template-columns:1.2fr 1.6fr 56px;gap:12px;align-items:center;background:var(--accent);border-radius:14px;padding:14px 12px;margin:10px 0}.ex-zhh{font-weight:900}.ex-expl{background:#2a2f36;color:var(--text);border-radius:12px;padding:10px}.ex-expl .en{font-weight:700;margin-bottom:4px}.ex-expl .zh{color:var(--muted)}.ex-audio .tts{background:#ffd0ea}
-    footer{opacity:.55;margin:40px 0 20px;text-align:center;font-size:12px}
-  </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>CanTongMVP — 粤语查询</title>
+  <link rel="stylesheet" href="/assets/style.css">
 </head>
 <body>
-<div class="wrap">
-<header class="topbar"><div class="brand"><span class="wordmark">Can‑Tong</span><span class="dot"></span></div><div class="lang">chs‑zhh‑en</div></header>
-<div class="search"><input id="q" class="q" autocomplete="off" /><div id="err" class="err"></div></div>
-<section id="result" hidden><div id="titleCard" class="titleCard" hidden></div><div class="grid" id="grid"></div><section id="examples" class="examples" hidden><button id="examplesToggle" class="examples-toggle">example 扩展</button><div id="examplesList" class="examples-list"></div></section></section>
-<footer>Funwa‑1101CanTongMVP — Code MIT, Lexicon Closed; data/seed.csv CC BY‑NC‑ND.</footer></div>
-<script>
-const $=(q,root=document)=>root.querySelector(q);
-class NonJSONError extends Error{constructor(m,s,c,b){super(m);this.name='NonJSONError';this.status=s;this.contentType=c;this.body=b}}
-async function fetchJSON(u){const r=await fetch(u,{headers:{'Accept':'application/json'}});const ct=r.headers.get('content-type')||'';if(!r.ok){const tx=await r.text().catch(()=>'' );throw new NonJSONError(`HTTP ${r.status} from ${u}`,r.status,ct,tx.slice(0,200));}if(ct.includes('application/json'))return r.json();const tx=await r.text();try{return JSON.parse(tx);}catch{throw new NonJSONError('Response is not valid JSON',r.status,ct,tx.slice(0,200));}}
-async function translateRequest(q){const urls=[`/api/translate?q=${encodeURIComponent(q)}`,`/api/search?q=${encodeURIComponent(q)}`,`/api/route?translate&q=${encodeURIComponent(q)}`];for(const u of urls){try{const d=await fetchJSON(u);if(d&&Object.keys(d).length)return d;}catch(e){if(e.status===404)continue;console.warn('API fail',u,e);} }return {error:true,message:`未找到與 “${q}” 相符的詞條`};}
-function showError(m,d){const b=$('#err');b.textContent=d?`${m} · ${d}`:m;b.classList.add('show');clearTimeout(showError._t);showError._t=setTimeout(()=>b.classList.remove('show'),5000);}
-function playTTS(t){const u=`/api/tts?text=${encodeURIComponent(t)}&voice=yue-HK`;fetch(u).then(r=>{if(r.ok&&r.headers.get('content-type')?.includes('audio'))return r.blob();throw 0;}).then(b=>new Audio(URL.createObjectURL(b)).play()).catch(()=>{const s=new SpeechSynthesisUtterance(t);s.lang='yue-HK';speechSynthesis.speak(s)});}
-function el(h){const t=document.createElement('template');t.innerHTML=h.trim();return t.content.firstChild;}
-function render(d,q){const r=$('#result');const g=$('#grid');const t=$('#titleCard');g.innerHTML='';r.hidden=false;if(q){t.textContent=q;t.hidden=false;}else{t.hidden=true;}
-if(d.error){showError('未找到',d.message);return;}
-if(d.main_zhh){const l=el(`<section class='panel cantonese'><div class='term-main'><div id='termMain' class='term-text'>${d.main_zhh}</div><button class='tts' data-tts='${d.main_zhh}'><svg viewBox='0 0 24 24'><path d='M4 10v4h4l5 4V6l-5 4H4z' fill='currentColor'/><path d='M16.5 8.5a5 5 0 010 7' stroke='currentColor' stroke-width='2' stroke-linecap='round'/></svg></button></div><div class='variants' id='variants'></div></section>`);g.appendChild(l);const vW=l.querySelector('#variants');(d.variants_zhh||[]).forEach(v=>{vW.appendChild(el(`<div class='variant-row'><div class='variant-text'>${v}</div><button class='tts' data-tts='${v}'><svg viewBox='0 0 24 24'><path d='M4 10v4h4l5 4V6l-5 4H4z' fill='currentColor'/><path d='M16.5 8.5a5 5 0 010 7' stroke='currentColor' stroke-width='2' stroke-linecap='round'/></svg></button></div>`));});}
-if((d.usages||[]).length){g.appendChild(el(`<section class='panel usages'>${(d.usages||[]).map(s=>`<span class='usage-badge'>${s}</span>`).join('')}</section>`));}
-if(d.note_en||d.note_zh){g.appendChild(el(`<section class='panel notes'><div class='note-en'>${d.note_en||''}</div><div class='note-zh'>${d.note_zh||''}</div></section>`));}
-g.addEventListener('click',e=>{const b=e.target.closest('.tts');if(b)playTTS(b.dataset.tts||'');});
-const exS=$('#examples');const exB=$('#examplesToggle');const exL=$('#examplesList');if((d.examples||[]).length){exS.hidden=false;exL.innerHTML='';(d.examples||[]).forEach(x=>{exL.appendChild(el(`<div class='example-item'><div class='ex-zhh'>${x.zhh||''}</div><div class='ex-expl'><div class='en'>${x.en||''}</div><div class='zh'>${x.chs||''}</div></div><div class='ex-audio'><button class='tts' data-tts='${x.zhh||''}'><svg viewBox='0 0 24 24'><path d='M4 10v4h4l5 4V6l-5 4H4z' fill='currentColor'/><path d='M16.5 8.5a5 5 0 010 7' stroke='currentColor' stroke-width='2' stroke-linecap='round'/></svg></button></div></div>`));});exB.onclick=()=>exS.classList.toggle('open');}else exS.hidden=true;}
-function debounce(f,m){let t;return(...a)=>{clearTimeout(t);t=setTimeout(()=>f(...a),m)}}
-const onInput=debounce(async v=>{const q=v.trim();if(!q){$('#result').hidden=true;return;}try{const d=await translateRequest(q);const s={main_zhh:d?.zhh?.[0]||d?.main_zhh,variants_zhh:d?.zhh?.slice(1)||d?.variants_zhh||[],usages:d?.usage||d?.usages||[],note_en:d?.notes?.en||d?.note_en||'',note_zh:d?.notes?.zh||d?.note_zh||'',examples:(d?.examples||[]).map(x=>({zhh:x.zhh||x.cantonese||'',chs:x.chs||x.cn||x.zh||'',en:x.en||x.english||''}))};$('#err').classList.remove('show');render(s,q);}catch(e){console.error(e);showError('接口錯誤',e.message||String(e));}},320);
-$('#q').addEventListener('input',e=>onInput(e.target.value));
-</script>
+  <header class="topbar">
+    <div class="brand">Can‑Tong <span class="dot">•</span></div>
+    <div class="lang">chs‑zhh‑en</div>
+  </header>
+
+  <main class="container">
+    <div class="search">
+      <input id="q" type="text" placeholder="搜索（中文 / 粤语 / English）" autocomplete="off" />
+    </div>
+    <div id="result" class="result"></div>
+    <button id="expand" class="fab">example<br>扩展</button>
+  </main>
+
+  <footer class="foot">
+    CanTongMVP — Code MIT, Lexicon Closed; data/seed.csv CC BY‑NC‑ND.<br/>
+    接口：/api/route?tn=translate / tts（后端可替换为真实 TTS，前端仅占位）
+  </footer>
+
+  <script src="/js/app.js"></script>
 </body>
 </html>
