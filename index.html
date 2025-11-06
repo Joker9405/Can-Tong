@@ -29,12 +29,10 @@
     .cap{font-size:12px;letter-spacing:.12em;text-transform:uppercase;opacity:.8;margin:4px 0 8px}
     .pill{display:inline-flex;align-items:center;gap:8px;background:color-mix(in srgb, var(--pink) 32%, transparent);padding:10px 14px;border-radius:999px;margin:8px 10px 0 0}
     .chip{display:inline-block;background:var(--chip);padding:8px 12px;border-radius:999px;margin:8px 8px 0 0;color:#dbe3ea}
-    .tag{display:inline-block;background:rgba(255,255,255,.08);padding:2px 8px;border-radius:999px;margin-left:8px;font-size:12px}
     .play{cursor:pointer;font-size:12px;opacity:.95}
     table{width:100%;border-collapse:collapse}
     th,td{padding:10px 8px;text-align:left}
     thead th{opacity:.8}
-    .src{font-size:12px;opacity:.8;margin-top:8px}
   </style>
 </head>
 <body>
@@ -46,12 +44,12 @@
         <button id="btn" class="btn">Search</button>
         <div id="drop" class="drop" style="display:none"></div>
       </div>
-      <div class="hint">Type to see live suggestions (internal CSV + open-source seed). Your CSV overrides seed.</div>
+      <div class="hint">Type to see live suggestions. Press Enter to open the best match.</div>
     </div>
 
     <div id="res" class="results">
       <div class="blk pink">
-        <div class="cap">CANTONESE · zhh <span id="badge" class="tag" style="display:none">open</span></div>
+        <div class="cap">CANTONESE · zhh</div>
         <div id="zhh"></div>
       </div>
 
@@ -76,7 +74,6 @@
           <thead><tr><th>Cantonese</th><th>Chinese</th><th>English</th><th>Variant</th></tr></thead>
           <tbody id="exbody"></tbody>
         </table>
-        <div id="src" class="src"></div>
       </div>
     </div>
   </div>
@@ -84,56 +81,40 @@
 <script>
 function stripBOM(s){ return s.replace(/^\uFEFF/,''); }
 function parseCSV(text){
-  text = stripBOM(text).replace(/\r\n/g,"\n").replace(/\r/g,"\n");
-  const rows=[]; let row=[], field='', inQ=false;
-  for(let i=0;i<text.length;i++){
-    const ch=text[i], next=text[i+1];
-    if(ch==='"'){
-      if(inQ && next==='"'){ field+='"'; i++; }
-      else inQ=!inQ;
-    } else if(ch===',' && !inQ){ row.push(field); field=''; }
-    else if(ch==='\n' && !inQ){ row.push(field); rows.push(row); row=[]; field=''; }
-    else { field+=ch; }
-  }
-  if(field.length||row.length){ row.push(field); rows.push(row); }
-  if(!rows.length) return [];
-  const H=rows[0].map(s=>s.trim());
-  return rows.slice(1).filter(r=>r.some(x=>x!=='')).map(r=>{
-    const o={}; H.forEach((h,i)=> o[h]= (r[i]||'').trim()); return o;
+  text = stripBOM(text);
+  const lines = text.replace(/\r\n/g,"\n").replace(/\r/g,"\n").split("\n").filter(x=>x.length);
+  const H = lines[0].split(",").map(s=>stripBOM(s).trim());
+  return lines.slice(1).map(line=>{
+    const C = line.split(",");
+    const o={}; H.forEach((h,i)=> o[h]= stripBOM((C[i]||"").trim())); return o;
   });
 }
 async function loadCSV(path){
   const r = await fetch(path+'?v='+Date.now(), {cache:'no-store'});
-  if(!r.ok) return [];
+  if(!r.ok) throw new Error('Load fail '+path);
   return parseCSV(await r.text());
 }
-const S={lex:new Map(), ex:new Map(), idx:new Map(), open:new Map(), xmap:[]};
+const S={lex:new Map(), ex:new Map(), idx:new Map()};
 const split=s=>(s||'').split('/').map(x=>x.trim()).filter(Boolean);
 const put=(k,v)=>{k=(k||'').toLowerCase(); if(!k) return; if(!S.idx.has(k)) S.idx.set(k,[]); S.idx.get(k).push(v);};
 
 async function boot(){
-  const [lex, ex, seed, xmap] = await Promise.all([
+  const [lex, ex] = await Promise.all([
     loadCSV('data/lexeme.csv'),
-    loadCSV('data/examples.csv'),
-    loadCSV('data/external_seed.csv'),
-    loadCSV('data/crossmap.csv')
+    loadCSV('data/examples.csv')
   ]);
-  lex.forEach(r=>{ if(r.id) S.lex.set(r.id,{...r,source:'internal'}); });
+  lex.forEach(r=>{ if(r.id) S.lex.set(r.id,r); });
   ex.forEach(r=>{ if(r.lexeme_id){ if(!S.ex.has(r.lexeme_id)) S.ex.set(r.lexeme_id,[]); S.ex.get(r.lexeme_id).push(r);} });
-  seed.forEach(r=>{ if(r.id){ S.open.set(r.id,r); }});
-  S.xmap = xmap;
-
-  for(const [id,r] of S.lex.entries()){
-    [...split(r.zhh),...split(r.alias_zhh),...split(r.en)].forEach(t=> put(t,{id,kind:'head',who:'internal'}));
-    (r.note_en||'').split(/[,;，；、\s]+/).forEach(t=> put(t,{id,kind:'note',who:'internal'}));
-    (r.note_chs||'').split(/[,;，；、\s]+/).forEach(t=> put(t,{id,kind:'note',who:'internal'}));
-  }
-  for(const [id,r] of S.open.entries()){
-    [...split(r.zhh),...split(r.en)].forEach(t=> put(t,{id,kind:'head',who:'open'}));
-  }
-  for(const r of S.xmap){
-    if(r.term && r.target_id){
-      put(r.term, {id:r.target_id, kind:r.kind||'map', who:'internal'});
+  // crossmap optional
+  let mp=[]; try{ mp=await loadCSV('data/crossmap.csv'); }catch{}
+  if(mp.length){
+    mp.forEach(r=> put(r.term,{id:r.target_id,kind:r.kind||'head',lang:r.lang||''}));
+  }else{
+    // build from lexeme: zhh + alias_zhh + en + notes keywords
+    for(const [id,r] of S.lex.entries()){
+      [...split(r.zhh),...split(r.alias_zhh),...split(r.en)].forEach(t=> put(t,{id,kind:'head'}));
+      (r.note_en||'').split(/[,;，；、\s]+/).forEach(t=> put(t,{id,kind:'note'}));
+      (r.note_chs||'').split(/[,;，；、\s]+/).forEach(t=> put(t,{id,kind:'note'}));
     }
   }
   wire();
@@ -143,14 +124,12 @@ function wire(){
   const q = document.getElementById('q');
   const btn = document.getElementById('btn');
   const drop = document.getElementById('drop');
+
   function showSuggest(v){
     const s=(v||'').trim().toLowerCase();
     if(!s){ drop.style.display='none'; drop.innerHTML=''; return; }
-    const keys=[...S.idx.keys()];
-    const seen=new Set(); const hit=[];
-    for(const k of keys){
-      if(k.startsWith(s) && !seen.has(k)){ hit.push(k); seen.add(k); if(hit.length>=8) break; }
-    }
+    const all=[...S.idx.keys()];
+    const hit = all.filter(k=>k.startsWith(s)).slice(0,8);
     if(!hit.length){ drop.style.display='none'; drop.innerHTML=''; return; }
     drop.style.display='block'; drop.innerHTML='';
     hit.forEach(k=>{
@@ -159,29 +138,30 @@ function wire(){
       drop.appendChild(d);
     });
   }
+
   function openBest(text){
     const s=(text||'').trim().toLowerCase(); if(!s) return;
     let cand = S.idx.get(s);
     if(!cand){ const key=[...S.idx.keys()].find(k=>k.startsWith(s)); if(key) cand=S.idx.get(key); }
     if(!cand) return;
-    const inx=cand.find(x=>x.who==='internal')||cand[0];
-    render(inx.id, inx.who);
+    const order={head:3,alias:2,example:1,note:0};
+    cand.sort((a,b)=>(order[b.kind]||0)-(order[a.kind]||0));
+    render(cand[0].id);
   }
+
   q.addEventListener('input', e=> showSuggest(e.target.value));
   q.addEventListener('keydown', e=>{ if(e.key==='Enter'){ openBest(q.value); drop.style.display='none'; } });
   btn.addEventListener('click', ()=>{ openBest(q.value); drop.style.display='none'; });
 }
 
-function render(id, who){
+function render(id){
   const box=document.getElementById('res');
-  const badge=document.getElementById('badge');
-  let r = (who==='internal') ? S.lex.get(id) : S.open.get(id);
-  if(!r){ box.style.display='none'; return; }
+  const r=S.lex.get(id); if(!r){ box.style.display='none'; return; }
   box.style.display='block';
-  badge.style.display = (who==='open') ? 'inline-block' : 'none';
 
+  // Cantonese head
   const z=document.getElementById('zhh'); z.innerHTML='';
-  const seg=(r.zhh||'').split('/').filter(Boolean), prn=(r.zhh_pron||'').split('/');
+  const seg=split(r.zhh), prn=split(r.zhh_pron);
   seg.forEach((s,i)=>{
     const el=document.createElement('span'); el.className='pill'; el.textContent=s;
     const p=document.createElement('span'); p.className='play'; p.textContent='▶'; p.title=prn[i]||'';
@@ -189,17 +169,22 @@ function render(id, who){
     el.appendChild(p); z.appendChild(el);
   });
 
+  // Aliases (optional)
+  const alias=split(r.alias_zhh);
   const ablk=document.getElementById('aliases_blk'); const az=document.getElementById('zhh_alias'); az.innerHTML='';
-  if(r.alias_zhh && who==='internal'){ const alias=(r.alias_zhh||'').split('/').filter(Boolean); if(alias.length){ ablk.style.display='block'; alias.forEach(s=>{ const el=document.createElement('span'); el.className='pill'; el.textContent=s; az.appendChild(el); }); } else{ ablk.style.display='none'; } }
-  else{ ablk.style.display='none'; }
+  if(alias.length){ ablk.style.display='block'; alias.forEach(s=>{ const el=document.createElement('span'); el.className='pill'; el.textContent=s; az.appendChild(el); }); }
+  else { ablk.style.display='none'; }
 
+  // English chips
   const e=document.getElementById('en'); e.innerHTML='';
-  (r.en||'').split('/').filter(Boolean).forEach(s=>{ const c=document.createElement('span'); c.className='chip'; c.textContent=s; e.appendChild(c); });
+  split(r.en).forEach(s=>{ const c=document.createElement('span'); c.className='chip'; c.textContent=s; e.appendChild(c); });
 
+  // Notes (en + chs)
   const nt=document.getElementById('notes');
-  const note_en=r.note_en||''; const note_chs=r.note_chs||'';
-  nt.innerHTML=[note_en,note_chs].filter(Boolean).map(x=>`<div style="margin:4px 0">${x}</div>`).join('') || '<div style="opacity:.45">—</div>';
+  const notes=[r.note_en||'', r.note_chs||''].filter(Boolean).map(x=>`<div style="margin:4px 0">${x}</div>`).join('');
+  nt.innerHTML=notes || '<div style="opacity:.45">—</div>';
 
+  // Examples
   const arr=S.ex.get(id)||[];
   const exblk=document.getElementById('ex_blk'); const tbody=document.getElementById('exbody'); tbody.innerHTML='';
   if(arr.length){ exblk.style.display='block'; } else { exblk.style.display='none'; }
@@ -212,8 +197,6 @@ function render(id, who){
     const td3=document.createElement('td'); td3.textContent=ex.ex_variant||'';
     tr.appendChild(td0); tr.appendChild(td1); tr.appendChild(td2); tr.appendChild(td3); tbody.appendChild(tr);
   });
-  const src=document.getElementById('src');
-  src.innerHTML = (who==='open' && (r.source||r.license)) ? `Source: ${r.source||''} · ${r.license||''}` : '';
 }
 
 function speakHK(t){ try{ const u=new SpeechSynthesisUtterance(t); u.lang='zh-HK'; speechSynthesis.cancel(); speechSynthesis.speak(u);}catch{} }
