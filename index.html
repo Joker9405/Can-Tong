@@ -4,16 +4,17 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Can‑Tong · 粤语查询</title>
-  <link rel="stylesheet" href="./assets/style.css"/>
+  <link rel="stylesheet" href="/assets/style.css"/>
 </head>
 <body>
   <div class="wrap">
-    <!-- BRAND -->
-    <div class="brand">
+    <!-- HEADER -->
+    <div class="header">
       <span class="logo">Can‑Tong <span class="dot"></span></span>
+      <span class="locale">chs‑zhh‑en</span>
     </div>
 
-    <!-- SEARCH BAR -->
+    <!-- SEARCH BAR (big rounded, dark) -->
     <form id="searchForm" class="search" autocomplete="off">
       <label for="q" class="sr-only">查询</label>
       <input id="q" class="inp" placeholder="输入中文 / 英文 / 粤语 例如：不要推 / Don't push" />
@@ -54,7 +55,7 @@
 
       <!-- EXAMPLES (expandable) -->
       <section class="panel examples" id="examples">
-        <div class="tag">例句 Examples（點右下角展開/收起）</div>
+        <div class="tag">例句 Examples</div>
         <div class="examples-list" id="examplesList"></div>
       </section>
     </div>
@@ -66,6 +67,6 @@
     </footer>
   </div>
 
-  <script src="./js/app.js"></script>
+  <script src="/js/app.js"></script>
 </body>
 </html>

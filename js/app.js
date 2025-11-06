@@ -1,6 +1,4 @@
-// Minimal front-end logic for Can‑Tong integrated UI
 const $ = (q,root=document)=>root.querySelector(q);
-const $$ = (q,root=document)=>Array.from(root.querySelectorAll(q));
 
 function playTTS(text, voiceHint){
   const url = `/api/tts?text=${encodeURIComponent(text)}&voice=${encodeURIComponent(voiceHint||'yue-HK')}`;
@@ -21,28 +19,23 @@ function playTTS(text, voiceHint){
   });
 }
 
-function bindTTSButtons(root=document){
-  root.addEventListener('click', (e)=>{
-    const btn = e.target.closest('.tts');
-    if(!btn) return;
-    const targetId = btn.getAttribute('data-tts-target');
-    if(targetId){
-      const text = document.getElementById(targetId)?.textContent?.trim();
-      if(text) playTTS(text, 'yue-HK');
-      return;
-    }
-    const text = btn.getAttribute('data-tts');
+document.addEventListener('click', (e)=>{
+  const btn = e.target.closest('.tts');
+  if(!btn) return;
+  const targetId = btn.getAttribute('data-tts-target');
+  if(targetId){
+    const text = document.getElementById(targetId)?.textContent?.trim();
     if(text) playTTS(text, 'yue-HK');
-  });
-}
-bindTTSButtons(document);
+    return;
+  }
+  const text = btn.getAttribute('data-tts');
+  if(text) playTTS(text, 'yue-HK');
+});
 
-// examples toggle
 const examples = $('#examples');
 const toggle = $('#examplesToggle');
 toggle?.addEventListener('click', ()=>examples.classList.toggle('open'));
 
-// renderer
 function renderResult(data){
   $('#resultRoot').hidden = false;
   toggle.hidden = false;
@@ -52,13 +45,13 @@ function renderResult(data){
   const vWrap = $('#variants');
   vWrap.innerHTML = '';
   (data.variants_zhh||[]).forEach(v=>{
-    const row = document.createElement('div');
-    row.className = 'variant-row';
-    row.innerHTML = `<div class="variant-text">${v}</div>
-                     <button class="tts" data-tts="${v}" aria-label="播放讀音">
-                       <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 10v4h4l5 4V6l-5 4H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 010 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                     </button>`;
-    vWrap.appendChild(row);
+    vWrap.insertAdjacentHTML('beforeend', `
+      <div class="variant-row">
+        <div class="variant-text">${v}</div>
+        <button class="tts" data-tts="${v}" aria-label="播放讀音">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 10v4h4l5 4V6l-5 4H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 010 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>`);
   });
 
   const u = $('#usageList');
@@ -67,33 +60,31 @@ function renderResult(data){
   $('#noteEn').textContent = data.note_en || '';
   $('#noteZh').textContent = data.note_zh || '';
 
-  const aliases = data.aliases_zhh || [];
-  $('#aliasChips').innerHTML = aliases.map(a=>`<span class="chip">${a}</span>`).join('');
+  const aliasWrap = $('#aliasChips');
+  aliasWrap.innerHTML = (data.aliases_zhh||[]).map(a=>`<span class="chip">${a}</span>`).join('');
 
   const exWrap = $('#examplesList');
   exWrap.innerHTML = '';
   (data.examples || []).forEach(ex=>{
-    const item = document.createElement('div');
-    item.className = 'example-item';
-    item.innerHTML = `
-      <div class="ex-zhh">${ex.zhh || ''}</div>
-      <div class="ex-expl">
-        <div class="en">${ex.en || ''}</div>
-        <div class="zh">${ex.chs || ''}</div>
-      </div>
-      <div class="ex-audio" style="display:flex;justify-content:center">
-        <button class="tts" data-tts="${ex.zhh || ''}" aria-label="播放例句讀音">
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 10v4h4l5 4V6l-5 4H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 010 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        </button>
-      </div>`;
-    exWrap.appendChild(item);
+    exWrap.insertAdjacentHTML('beforeend', `
+      <div class="example-item">
+        <div class="ex-zhh">${ex.zhh || ''}</div>
+        <div class="ex-expl">
+          <div class="en">${ex.en || ''}</div>
+          <div class="zh">${ex.chs || ''}</div>
+        </div>
+        <div class="ex-audio" style="display:flex;justify-content:center">
+          <button class="tts" data-tts="${ex.zhh || ''}" aria-label="播放例句讀音">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 10v4h4l5 4V6l-5 4H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 010 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+      </div>`);
   });
 }
 
-// search submit
-$('#searchForm').addEventListener('submit', async (e)=>{
+document.getElementById('searchForm').addEventListener('submit', async (e)=>{
   e.preventDefault();
-  const q = $('#q').value.trim();
+  const q = document.getElementById('q').value.trim();
   if(!q) return;
   try{
     const r = await fetch(`/api/translate?q=${encodeURIComponent(q)}`);
@@ -113,9 +104,8 @@ $('#searchForm').addEventListener('submit', async (e)=>{
   }
 });
 
-// auto init by ?q=
 const initQ = new URLSearchParams(location.search).get('q');
 if(initQ){
-  $('#q').value = initQ;
-  $('#searchForm').dispatchEvent(new Event('submit'));
+  document.getElementById('q').value = initQ;
+  document.getElementById('searchForm').dispatchEvent(new Event('submit'));
 }
