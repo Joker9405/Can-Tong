@@ -8,22 +8,18 @@
 </head>
 <body>
   <div class="wrap">
-    <!-- HEADER -->
     <div class="header">
       <span class="logo">Can‑Tong <span class="dot"></span></span>
       <span class="locale">chs‑zhh‑en</span>
     </div>
 
-    <!-- SEARCH BAR (big rounded, dark) -->
     <form id="searchForm" class="search" autocomplete="off">
       <label for="q" class="sr-only">查询</label>
       <input id="q" class="inp" placeholder="输入中文 / 英文 / 粤语 例如：不要推 / Don't push" />
       <button id="searchBtn" class="btn" type="submit">Search</button>
     </form>
 
-    <!-- RESULT GRID -->
     <div class="grid" id="resultRoot" hidden>
-      <!-- LEFT: Cantonese (zhh) -->
       <section class="panel cantonese" aria-label="粤语zhh">
         <div class="tag">粵語：zhh</div>
         <div class="term-main">
@@ -35,25 +31,21 @@
         <div class="variants" id="variants"></div>
       </section>
 
-      <!-- RIGHT: Usage tips (hot pink) -->
       <section class="panel usages" aria-label="用法提示">
         <div class="tag">用法 / pattern</div>
         <div id="usageList"></div>
       </section>
 
-      <!-- NOTES: EN(top) + ZH(bottom) -->
       <section class="panel notes" aria-label="備註Notes">
         <div class="note-en" id="noteEn"></div>
         <div class="note-zh" id="noteZh"></div>
       </section>
 
-      <!-- Aliases chips -->
       <section class="panel" aria-label="別名/同義">
         <div class="tag">別名 · zhh</div>
         <div class="chips" id="aliasChips"></div>
       </section>
 
-      <!-- EXAMPLES (expandable) -->
       <section class="panel examples" id="examples">
         <div class="tag">例句 Examples</div>
         <div class="examples-list" id="examplesList"></div>
