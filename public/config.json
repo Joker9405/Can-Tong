@@ -1,0 +1,4 @@
+{
+  "ttsUrl": "https://your-tts-service.example.com/api/tts",
+  "translateUrl": "https://your-backend.example.com/api/translate"
+}

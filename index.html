@@ -1,219 +1,56 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-Hans">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Funwa</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Funwa · Can‑Tong MVP</title>
+  <meta name="description" content="Cantonese expression quick lookup with TTS">
+  <link rel="icon" href="/favicon.ico">
   <style>
-    :root{
-      --bg:#03060a; --ink:#fafcff; --ink-dark:#071006; --input:#10141c;
-      --pink:#ff0684; --lime:#a5ff00; --chip:#0b1119; --shadow:rgba(0,0,0,.55);
-    }
-    html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,"Helvetica Neue","PingFang SC","Noto Sans SC","Hiragino Sans GB",sans-serif}
-    .wrap{max-width:980px;margin:8vh auto 10vh;padding:0 16px}
-    .hero{display:flex;flex-direction:column;gap:14px}
-    .brand{font-weight:800;font-size:22px}
-    .search{display:flex;gap:10px;position:relative}
-    .i{flex:1;background:var(--input);color:var(--ink);border:none;border-radius:14px;padding:14px 16px;font-size:18px;outline:none;box-shadow:0 10px 26px var(--shadow)}
-    .btn{background:var(--pink);color:#fff;border:none;border-radius:12px;padding:12px 16px;font-weight:700;cursor:pointer}
-    .hint{font-size:12px;color:#b6c2cf}
-    .drop{position:absolute;left:0;right:120px;top:52px;background:var(--input);border-radius:12px;box-shadow:0 18px 28px var(--shadow);overflow:hidden;z-index:10}
-    .opt{padding:10px 14px;cursor:pointer}
-    .opt:hover{background:rgba(255,255,255,.06)}
-    .results{display:none;margin-top:22px;animation:fade .18s ease-out forwards}
-    @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-    .blk{border-radius:18px;padding:14px 16px;box-shadow:0 18px 36px var(--shadow);margin-top:12px}
-    .pink{background:var(--pink)}
-    .lime{background:var(--lime); color:var(--ink-dark)}
-    .gray{background:#1b2330}
-    .cap{font-size:12px;letter-spacing:.12em;text-transform:uppercase;opacity:.95;margin:0 0 8px}
-    .pill{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:999px;margin:8px 10px 0 0}
-    .pill-pink{background:#b40461}
-    .pill-lime{background:#6bd300;color:#061001}
-    .chip{display:inline-block;background:var(--chip);padding:8px 12px;border-radius:999px;margin:8px 8px 0 0;color:#dbe3ea}
-    .play{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:999px;background:rgba(255,255,255,.18);font-size:11px}
-    table{width:100%;border-collapse:collapse}
-    th,td{padding:12px 10px;text-align:left}
-    thead th{opacity:.95}
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,'Apple Color Emoji','Segoe UI Emoji';margin:0;padding:24px;line-height:1.5;}
+    .wrap{max-width:900px;margin:0 auto;}
+    h1{font-size:24px;margin:0 0 16px;}
+    .card{border:1px solid #e5e7eb;border-radius:16px;padding:16px;margin:12px 0;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+    input,textarea,button{font:inherit}
+    input[type=text]{width:100%;padding:12px;border:1px solid #d1d5db;border-radius:12px;outline:none}
+    .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:12px}
+    button{padding:10px 14px;border-radius:12px;border:1px solid #cbd5e1;background:#f8fafc;cursor:pointer}
+    button.primary{background:#111827;color:#fff;border-color:#111827}
+    .muted{color:#6b7280}
+    .badge{display:inline-block;padding:2px 8px;border-radius:999px;border:1px solid #e5e7eb;font-size:12px}
+    audio{width:100%;margin-top:8px}
+    .result{white-space:pre-wrap}
   </style>
 </head>
 <body>
   <div class="wrap">
-    <div class="hero">
-      <div class="brand">Funwa</div>
-      <div class="search">
-        <input id="q" class="i" type="search" placeholder="Type Chinese / English / Cantonese…" autocomplete="off" />
-        <button id="btn" class="btn">Search</button>
-        <div id="drop" class="drop" style="display:none"></div>
+    <h1>Funwa · Can‑Tong MVP（纯静态版，无 /api）</h1>
+    <div class="card">
+      <div class="muted">输入中文 / English / 粤语（繁体）</div>
+      <input id="q" type="text" placeholder="例如：不要推我 / Don’t push me / 唔好掂我">
+      <div class="row">
+        <button id="btnTranslate" class="primary">Translate / 查询</button>
+        <span class="badge" id="cfgStatus">载入配置...</span>
       </div>
-      <div class="hint">Type to see live suggestions. Press Enter to open the best match.</div>
     </div>
 
-    <div id="res" class="results">
-      <div class="blk pink">
-        <div class="cap">CANTONESE · zhh</div>
-        <div id="zhh"></div>
+    <div id="out" class="card" style="display:none">
+      <div class="muted">结果 / Result</div>
+      <div id="result" class="result"></div>
+      <div class="row">
+        <button id="btnTTS">播放粤语发音</button>
       </div>
+      <audio id="player" controls></audio>
+    </div>
 
-      <div id="aliases_blk" class="blk lime" style="display:none">
-        <div class="cap">ALIASES · zhh</div>
-        <div id="zhh_alias"></div>
-      </div>
-
-      <div class="blk gray">
-        <div class="cap">ENGLISH · en</div>
-        <div id="en"></div>
-      </div>
-
-      <div class="blk gray">
-        <div class="cap">NOTES</div>
-        <div id="notes"></div>
-      </div>
-
-      <div id="ex_blk" class="blk pink" style="display:none">
-        <div class="cap">EXAMPLES</div>
-        <table>
-          <thead><tr><th>Cantonese</th><th>Chinese</th><th>English</th></tr></thead>
-          <tbody id="exbody"></tbody>
-        </table>
-      </div>
+    <div class="card">
+      <div class="muted">说明</div>
+      <ul>
+        <li>本版本不使用 Vercel Serverless Functions，不会触发 Hobby 12 个函数限制。</li>
+        <li>后台地址统一放在 <code>/public/config.json</code>，请在部署前填写实际的 <code>ttsUrl</code> 与（可选）<code>translateUrl</code>。</li>
+      </ul>
     </div>
   </div>
-
-<script>
-function stripBOM(s){ return s.replace(/^\uFEFF/,''); }
-function parseCSV(text){
-  text = stripBOM(text);
-  const lines = text.replace(/\r\n/g,"\n").replace(/\r/g,"\n").split("\n").filter(x=>x.length);
-  const H = lines[0].split(",").map(s=>stripBOM(s).trim());
-  return lines.slice(1).map(line=>{
-    const C = line.split(",");
-    const o={}; H.forEach((h,i)=> o[h]= stripBOM((C[i]||"").trim())); return o;
-  });
-}
-async function loadCSV(path){
-  const r = await fetch(path+'?v='+Date.now(), {cache:'no-store'});
-  if(!r.ok) throw new Error('Load fail '+path);
-  return parseCSV(await r.text());
-}
-const S={lex:new Map(), ex:new Map(), idx:new Map()};
-const split=s=>(s||'').split('/').map(x=>x.trim()).filter(Boolean);
-const put=(k,v)=>{k=(k||'').toLowerCase(); if(!k) return; if(!S.idx.has(k)) S.idx.set(k,[]); S.idx.get(k).push(v);};
-
-async function boot(){
-  const [lex, ex] = await Promise.all([
-    loadCSV('data/lexeme.csv'),
-    loadCSV('data/examples.csv')
-  ]);
-  lex.forEach(r=>{ if(r.id) S.lex.set(r.id,r); });
-  ex.forEach(r=>{ if(r.lexeme_id){ if(!S.ex.has(r.lexeme_id)) S.ex.set(r.lexeme_id,[]); S.ex.get(r.lexeme_id).push(r);} });
-  // crossmap optional
-  let mp=[]; try{ mp=await loadCSV('data/crossmap.csv'); }catch{}
-  if(mp.length){
-    mp.forEach(r=> put(r.term,{id:r.target_id,kind:r.kind||'head',lang:r.lang||''}));
-  }else{
-    for(const [id,r] of S.lex.entries()){
-      [...split(r.zhh),...split(r.alias_zhh),...split(r.en)].forEach(t=> put(t,{id,kind:'head'}));
-      (r.note_en||'').split(/[,;，；、\s]+/).forEach(t=> put(t,{id,kind:'note'}));
-      (r.note_chs||'').split(/[,;，；、\s]+/).forEach(t=> put(t,{id,kind:'note'}));
-    }
-  }
-  wire();
-}
-
-function wire(){
-  const q = document.getElementById('q');
-  const btn = document.getElementById('btn');
-  const drop = document.getElementById('drop');
-
-  function showSuggest(v){
-    const s=(v||'').trim().toLowerCase();
-    if(!s){ drop.style.display='none'; drop.innerHTML=''; return; }
-    const all=[...S.idx.keys()];
-    const hit = all.filter(k=>k.startsWith(s)).slice(0,8);
-    if(!hit.length){ drop.style.display='none'; drop.innerHTML=''; return; }
-    drop.style.display='block'; drop.innerHTML='';
-    hit.forEach(k=>{
-      const d=document.createElement('div'); d.className='opt'; d.textContent=k;
-      d.onclick=()=>{ q.value=k; drop.style.display='none'; openBest(k); };
-      drop.appendChild(d);
-    });
-  }
-
-  function openBest(text){
-    const s=(text||'').trim().toLowerCase(); if(!s) return;
-    let cand = S.idx.get(s);
-    if(!cand){ const key=[...S.idx.keys()].find(k=>k.startsWith(s)); if(key) cand=S.idx.get(key); }
-    if(!cand) return;
-    const order={head:3,alias:2,example:1,note:0};
-    cand.sort((a,b)=>(order[b.kind]||0)-(order[a.kind]||0));
-    render(cand[0].id);
-  }
-
-  q.addEventListener('input', e=> showSuggest(e.target.value));
-  q.addEventListener('keydown', e=>{ if(e.key==='Enter'){ openBest(q.value); drop.style.display='none'; } });
-  btn.addEventListener('click', ()=>{ openBest(q.value); drop.style.display='none'; });
-}
-
-function pillWithPlay(text, cls){
-  const w=document.createElement('span'); w.className='pill '+cls; w.textContent=text;
-  const p=document.createElement('span'); p.className='play'; p.textContent='▶';
-  w.appendChild(p); return w;
-}
-
-function render(id){
-  const box=document.getElementById('res');
-  const r=S.lex.get(id); if(!r){ box.style.display='none'; return; }
-  box.style.display='block';
-
-  // Cantonese head
-  const z=document.getElementById('zhh'); z.innerHTML='';
-  split(r.zhh).forEach((s)=>{
-    const el=pillWithPlay(s,'pill-pink');
-    el.querySelector('.play').onclick=()=> speakHK(s);
-    z.appendChild(el);
-  });
-
-  // Aliases (lime + TTS)
-  const alias=split(r.alias_zhh);
-  const ablk=document.getElementById('aliases_blk'); const az=document.getElementById('zhh_alias'); az.innerHTML='';
-  if(alias.length){
-    ablk.style.display='block';
-    alias.forEach(s=>{
-      const el=pillWithPlay(s,'pill-lime');
-      el.querySelector('.play').onclick=()=> speakHK(s);
-      az.appendChild(el);
-    });
-  } else { ablk.style.display='none'; }
-
-  // English chips
-  const e=document.getElementById('en'); e.innerHTML='';
-  split(r.en).forEach(s=>{ const c=document.createElement('span'); c.className='chip'; c.textContent=s; e.appendChild(c); });
-
-  // Notes (gray, en + chs)
-  const nt=document.getElementById('notes');
-  const notes=[r.note_en||'', r.note_chs||''].filter(Boolean).map(x=>`<div style="margin:4px 0">${x}</div>`).join('');
-  nt.innerHTML=notes || '<div style="opacity:.45">—</div>';
-
-  // Examples (3 cols; Cantonese pill + ▶ inside)
-  const arr=S.ex.get(id)||[];
-  const exblk=document.getElementById('ex_blk'); const tbody=document.getElementById('exbody'); tbody.innerHTML='';
-  if(arr.length){ exblk.style.display='block'; } else { exblk.style.display='none'; }
-  arr.forEach(ex=>{
-    const tr=document.createElement('tr');
-    const pill = pillWithPlay(ex.ex_zhh||'','pill-pink');
-    pill.querySelector('.play').onclick=()=> speakHK(ex.ex_zhh||'');
-    const td0=document.createElement('td'); td0.appendChild(pill);
-    const td1=document.createElement('td'); td1.textContent=ex.ex_chs||'';
-    const td2=document.createElement('td'); td2.textContent=ex.ex_en||'';
-    tr.appendChild(td0); tr.appendChild(td1); tr.appendChild(td2);
-    tbody.appendChild(tr);
-  });
-}
-
-function speakHK(t){ try{ const u=new SpeechSynthesisUtterance(t); u.lang='zh-HK'; speechSynthesis.cancel(); speechSynthesis.speak(u);}catch{} }
-
-boot();
-</script>
+  <script src="./app.js" type="module"></script>
 </body>
 </html>
