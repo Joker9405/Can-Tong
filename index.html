@@ -1,22 +1,23 @@
 <!doctype html>
-<html lang="zh-Hans">
+<html lang="zh-HK">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Can-Tong — 粤语查询</title>
-  <link rel="stylesheet" href="/assets/style.css">
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Can-Tong</title>
+  <link rel="stylesheet" href="/assets/style.css"/>
 </head>
 <body>
   <header class="topbar">
-    <div class="brand">Can-Tong <span class="dot">•</span></div>
-    <div class="lang">chs-zhh-en</div>
+    <div class="brand">Can‑Tong <span class="dot">•</span></div>
+    <div class="locale">chs‑zhh‑en</div>
   </header>
+
   <main class="container">
-    <div class="search"><input id="q" type="text" placeholder="" autocomplete="off" /></div>
-    <section id="grid" class="grid"></section>
-    <section id="examples" class="examples" hidden><div class="examples-inner" id="examples-list"></div></section>
+    <input id="q" class="q" placeholder="" autocomplete="off"/>
+    <section id="cards" class="cards"></section>
   </main>
-  <footer class="foot">CanTongMVP — Code MIT, Lexicon Closed; data/* CSVs CC BY‑NC‑ND.</footer>
+
+  <footer class="foot">CanTongMVP — Code MIT, Lexicon Closed; data/* CSVs: CC BY‑NC‑ND.</footer>
   <script src="/js/app.js"></script>
 </body>
 </html>
