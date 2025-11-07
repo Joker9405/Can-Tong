@@ -1,4 +1,5 @@
 *{box-sizing:border-box}html,body{height:100%}
+/* 中文字体 */
 body{margin:0;background:#0f0f10;color:#eee;
   font-family:"Adobe Fan Heiti Std","Adobe 繁黑體 Std","PingFang TC","Microsoft JhengHei","Noto Sans TC","PingFang SC","Microsoft YaHei",Arial,sans-serif;}
 .topbar{display:flex;justify-content:space-between;align-items:center;padding:18px 22px}
@@ -26,10 +27,13 @@ body{margin:0;background:#0f0f10;color:#eee;
 .note{opacity:.95;font-size:18px;line-height:1.6}
 .tts{border:none;border-radius:22px;width:42px;height:42px;background:rgba(0,0,0,.12);cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
 .tts svg{width:22px;height:22px;fill:#111}
-/* Expand block (single container, list rows with hairline separators) */
-.expand-wrap{margin-top:14px}
+
+/* === Expand：默认不占空间，展开时自然撑高；一体粉色容器，每行仅一个喇叭 === */
+.expand-wrap{margin-top:16px}
 .expand-toggle{float:right;border:none;border-radius:999px;background:#ff4aa6;color:#fff;padding:10px 14px}
-.expand-box{clear:both;background:#ff4aa6;border-radius:18px;padding:10px 12px;margin-top:10px}
+.expand-box{display:none; /* 关键：默认完全不占空间 */ 
+  background:#ff4aa6;border-radius:18px;padding:10px 12px;margin-top:10px}
+.expand-wrap.open .expand-box{display:block} /* 展开时再显示 */
 .expand-list{display:block}
 .ex-row{display:grid;grid-template-columns:1fr 1fr auto;align-items:center;column-gap:18px;padding:12px 8px}
 .ex-row+.ex-row{border-top:1px solid rgba(255,255,255,.35)}
@@ -37,6 +41,7 @@ body{margin:0;background:#0f0f10;color:#eee;
 .ex-en{font-weight:800;margin-bottom:3px}
 .ex-chs{opacity:.95;font-size:14px}
 .ex-tts .tts{background:rgba(255,255,255,.28)}
+
 .foot{position:fixed;left:0;right:0;bottom:0;padding:10px 16px;text-align:center;color:#aaa;font-size:12px;background:transparent}
 .empty{background:#222;border:1px dashed #444;color:#bbb;padding:16px;border-radius:12px}
 @media(max-width:900px){.grid{grid-template-columns:1fr;grid-template-rows:auto auto}.left{grid-row:auto}.h-title{font-size:56px}.row{font-size:30px}.search input{font-size:32px}}

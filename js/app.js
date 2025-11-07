@@ -8,8 +8,8 @@ if('speechSynthesis'in window){speechSynthesis.onvoiceschanged=pickVoice;pickVoi
 function speak(t){if(!('speechSynthesis'in window)||!t)return;const u=new SpeechSynthesisUtterance(t);if(VOICE)u.voice=VOICE;u.lang=VOICE?.lang||'zh-HK';speechSynthesis.cancel();speechSynthesis.speak(u)}
 async function boot(){const[cm,lx,ex]=await Promise.all([loadCSV('crossmap.csv'),loadCSV('lexeme.csv'),loadCSV('examples.csv')]);CROSS=cm;lx.forEach(r=>LEX[r.id]=r);EXMAP=ex.reduce((m,r)=>{(m[r.lexeme_id]||(m[r.lexeme_id]=[])).push(r);return m},{})}
 function findLexemeIds(q){const nq=norm(q);const set=new Set();CROSS.forEach(r=>{if(fuzzy(r.term,nq))set.add(r.target_id)});Object.values(LEX).forEach(r=>{if(fuzzy(r.zhh,nq)||fuzzy(r.en,nq)||fuzzy(r.alias_zhh||'',nq))set.add(r.id)});return Array.from(set)}
-function clearUI(){document.getElementById('cards').innerHTML='';document.getElementById('expand-toggle').hidden=true;document.getElementById('expand-box').hidden=true}
-function renderEmpty(q){document.getElementById('cards').innerHTML=`<div class="empty">未找到：<b>${q}</b>。请补充到词库。</div>`;document.getElementById('expand-toggle').hidden=true;document.getElementById('expand-box').hidden=true}
+function clearUI(){document.getElementById('cards').innerHTML='';document.getElementById('expand-toggle').hidden=true;document.getElementById('expand-wrap').classList.remove('open')}
+function renderEmpty(q){document.getElementById('cards').innerHTML=`<div class="empty">未找到：<b>${q}</b>。请补充到词库。</div>`;document.getElementById('expand-toggle').hidden=true;document.getElementById('expand-wrap').classList.remove('open')}
 function render(lex){const cards=document.getElementById('cards');cards.innerHTML='';
   const aliases=(lex.alias_zhh||'').split(/[;；]/).map(s=>s.trim()).filter(Boolean);
   const left=document.createElement('div');left.className='card yellow left';left.innerHTML=`
@@ -32,15 +32,15 @@ function render(lex){const cards=document.getElementById('cards');cards.innerHTM
 
   cards.appendChild(left);cards.appendChild(rightTop);cards.appendChild(rightBottom);
 
-  const toggle=document.getElementById('expand-toggle');const box=document.getElementById('expand-box');const list=document.getElementById('expand-list');const exs=EXMAP[lex.id]||[];
-  if(exs.length){toggle.hidden=false;box.hidden=true;list.innerHTML='';toggle.textContent='example 扩展';
-    toggle.onclick=()=>{box.hidden=!box.hidden;toggle.textContent=box.hidden?'example 扩展':'收起扩展'};
-    if(!box.hidden){
-      // render when already visible
-    }
-    // Always (re)build list when toggled
-    toggle.addEventListener('click',()=>{
-      if(!box.hidden){
+  const wrap=document.getElementById('expand-wrap');const toggle=document.getElementById('expand-toggle');const list=document.getElementById('expand-list');
+  const exs=EXMAP[lex.id]||[];
+  if(exs.length){
+    toggle.hidden=false; wrap.classList.remove('open'); list.innerHTML=''; toggle.textContent='example 扩展';
+    // 用 class 控制显示，确保未展开时不占高度；展开后自然撑高至内容
+    toggle.onclick=()=>{
+      const open = wrap.classList.toggle('open');
+      toggle.textContent = open ? '收起扩展' : 'example 扩展';
+      if(open){
         list.innerHTML='';
         exs.forEach(e=>{
           const row=document.createElement('div');row.className='ex-row';
@@ -55,8 +55,10 @@ function render(lex){const cards=document.getElementById('cards');cards.innerHTM
           list.appendChild(row);
         });
       }
-    },{once:true});
-  }else{toggle.hidden=true;box.hidden=true;list.innerHTML='';}
+    };
+  }else{
+    toggle.hidden=true; wrap.classList.remove('open'); list.innerHTML='';
+  }
 }
 document.getElementById('q').addEventListener('input',e=>{
   const q=e.target.value;
