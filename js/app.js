@@ -5,21 +5,51 @@ async function loadCSV(n){const r=await fetch(PATH+n,{cache:'no-store'});if(!r.o
 function norm(s){return (s||'').toLowerCase().replace(/\s+/g,'')}function fuzzy(t,q){t=norm(t);q=norm(q);if(!q)return false;let i=0;for(const c of t){if(c===q[i])i++}return i===q.length||t.includes(q)}
 let VOICE=null;function pickVoice(){const L=speechSynthesis.getVoices();VOICE=L.find(v=>/yue|Cantonese|zh[-_]HK/i.test(v.lang+v.name))||L.find(v=>/zh[-_]HK/i.test(v.lang))||L.find(v=>/zh/i.test(v.lang))||null}
 if('speechSynthesis'in window){speechSynthesis.onvoiceschanged=pickVoice;pickVoice()}
-function speak(t){if(!('speechSynthesis'in window))return;const u=new SpeechSynthesisUtterance(t);if(VOICE)u.voice=VOICE;u.lang=VOICE?.lang||'zh-HK';speechSynthesis.cancel();speechSynthesis.speak(u)}
+function speak(t){if(!('speechSynthesis'in window)||!t)return;const u=new SpeechSynthesisUtterance(t);if(VOICE)u.voice=VOICE;u.lang=VOICE?.lang||'zh-HK';speechSynthesis.cancel();speechSynthesis.speak(u)}
 async function boot(){const[cm,lx,ex]=await Promise.all([loadCSV('crossmap.csv'),loadCSV('lexeme.csv'),loadCSV('examples.csv')]);CROSS=cm;lx.forEach(r=>LEX[r.id]=r);EXMAP=ex.reduce((m,r)=>{(m[r.lexeme_id]||(m[r.lexeme_id]=[])).push(r);return m},{})}
 function findLexemeIds(q){const nq=norm(q);const set=new Set();CROSS.forEach(r=>{if(fuzzy(r.term,nq))set.add(r.target_id)});Object.values(LEX).forEach(r=>{if(fuzzy(r.zhh,nq)||fuzzy(r.en,nq)||fuzzy(r.alias_zhh||'',nq))set.add(r.id)});return Array.from(set)}
+function clearUI(){document.getElementById('cards').innerHTML='';document.getElementById('expand-toggle').hidden=true;document.getElementById('expand-box').hidden=true}
 function renderEmpty(q){document.getElementById('cards').innerHTML=`<div class="empty">未找到：<b>${q}</b>。请补充到词库。</div>`;document.getElementById('expand-toggle').hidden=true;document.getElementById('expand-box').hidden=true}
-function render(lex){const cards=document.getElementById('cards');cards.innerHTML='';const aliases=(lex.alias_zhh||'').split(/[;；]/).map(s=>s.trim()).filter(Boolean);const left=document.createElement('div');left.className='card yellow left';left.innerHTML=`
-  <div class="badge">粤语zhh：</div>
-  <div class="h-title">${lex.zhh||'—'}</div>
-  ${aliases.map(a=>`<div class="row"><div class="alias">${a}</div><button class="tts" title="发音">${ICON_SPK}</button></div>`).join('')}
-`;left.querySelectorAll('.row .tts').forEach((b,i)=>{const t=aliases[i];b.addEventListener('click',()=>speak(t))});const rightTop=document.createElement('div');rightTop.className='card pink right-top';const variants=(lex.variants_zhh||'').split(/[;；]/).map(s=>s.trim()).filter(Boolean);rightTop.innerHTML=`<div class="vars">${variants.map(v=>`<div class="var-row"><div>${v}</div><button class="tts" title="发音">${ICON_SPK}</button></div>`).join('')}</div>`;rightTop.querySelectorAll('.var-row .tts').forEach((b,i)=>{const t=variants[i];b.addEventListener('click',()=>speak(t))});const rightBottom=document.createElement('div');rightBottom.className='card gray right-bottom';const note=(lex.note_en||'')+(lex.note_chs?('<br>'+lex.note_chs):'');rightBottom.innerHTML=`<div class="note">${note}</div>`;cards.appendChild(left);cards.appendChild(rightTop);cards.appendChild(rightBottom);
-const toggle=document.getElementById('expand-toggle');const box=document.getElementById('expand-box');const list=document.getElementById('expand-list');const exs=EXMAP[lex.id]||[];if(exs.length){toggle.hidden=false;box.hidden=true;list.innerHTML='';toggle.textContent='example 扩展';toggle.onclick=()=>{box.hidden=!box.hidden;toggle.textContent=box.hidden?'example 扩展':'收起扩展'};exs.forEach(e=>{const row=document.createElement('div');row.className='example';row.innerHTML=`
-  <div class="yue">${e.ex_zhh||''}</div>
-  <div class="right"><div class="en">${e.ex_en||''}</div><div class="chs">${e.ex_chs||''}</div></div>
-  <div class="btns">
-    <button class="tts t1" title="粤语">${ICON_SPK}</button>
-    <button class="tts t2" title="English">${ICON_SPK}</button>
-    <button class="tts t3" title="中文">${ICON_SPK}</button>
-  </div>`;row.querySelector('.t1').addEventListener('click',()=>speak(e.ex_zhh||''));row.querySelector('.t2').addEventListener('click',()=>speak(e.ex_en||''));row.querySelector('.t3').addEventListener('click',()=>speak(e.ex_chs||''));list.appendChild(row)})}else{toggle.hidden=true;box.hidden=true;list.innerHTML=''}}
-document.getElementById('q').addEventListener('input',e=>{const q=e.target.value;const ids=findLexemeIds(q);if(!q){document.getElementById('cards').innerHTML='';document.getElementById('expand-toggle').hidden=true;document.getElementById('expand-box').hidden=true;return}if(!ids.length){renderEmpty(q);return}render(LEX[ids[0]])});boot()
+function render(lex){const cards=document.getElementById('cards');cards.innerHTML='';
+  const aliases=(lex.alias_zhh||'').split(/[;；]/).map(s=>s.trim()).filter(Boolean);
+  const left=document.createElement('div');left.className='card yellow left';left.innerHTML=`
+    <div class="badge">粤语zhh：</div>
+    <div class="h-head">
+      <div class="h-title">${lex.zhh||'—'}</div>
+      <button class="tts t-head" title="发音">${ICON_SPK}</button>
+    </div>
+    ${aliases.map(a=>`<div class="row"><div class="alias">${a}</div><button class="tts" title="发音">${ICON_SPK}</button></div>`).join('')}
+  `;
+  left.querySelector('.t-head').addEventListener('click',()=>speak(lex.zhh||''));
+  left.querySelectorAll('.row .tts').forEach((b,i)=>{const t=aliases[i];b.addEventListener('click',()=>speak(t))});
+
+  const rightTop=document.createElement('div');rightTop.className='card pink right-top';
+  const variants=(lex.variants_zhh||'').split(/[;；]/).map(s=>s.trim()).filter(Boolean);
+  rightTop.innerHTML = `<div class="vars">${variants.map(v=>`<div class="var-row">${v}</div>`).join('')}</div>`; // 解释模块不需要喇叭
+
+  const rightBottom=document.createElement('div');rightBottom.className='card gray right-bottom';
+  const note=(lex.note_en||'')+(lex.note_chs?('<br>'+lex.note_chs):'');rightBottom.innerHTML=`<div class="note">${note}</div>`;
+
+  cards.appendChild(left);cards.appendChild(rightTop);cards.appendChild(rightBottom);
+
+  const toggle=document.getElementById('expand-toggle');const box=document.getElementById('expand-box');const list=document.getElementById('expand-list');const exs=EXMAP[lex.id]||[];
+  if(exs.length){toggle.hidden=false;box.hidden=true;list.innerHTML='';toggle.textContent='example 扩展';
+    toggle.onclick=()=>{box.hidden=!box.hidden;toggle.textContent=box.hidden?'example 扩展':'收起扩展'};
+    exs.forEach(e=>{const row=document.createElement('div');row.className='example';
+      row.innerHTML=`
+        <div class="yue">${e.ex_zhh||''}</div>
+        <div class="right"><div class="en">${e.ex_en||''}</div><div class="chs">${e.ex_chs||''}</div></div>
+        <div class="btns"><button class="tts t1" title="粤语">${ICON_SPK}</button></div>`;
+      row.querySelector('.t1').addEventListener('click',()=>speak(e.ex_zhh||''));
+      list.appendChild(row);
+    });
+  }else{toggle.hidden=true;box.hidden=true;list.innerHTML='';}
+}
+document.getElementById('q').addEventListener('input',e=>{
+  const q=e.target.value;
+  if(!q){clearUI();return;}
+  const ids=findLexemeIds(q);
+  if(!ids.length){renderEmpty(q);return;}
+  render(LEX[ids[0]]);
+});
+boot();
