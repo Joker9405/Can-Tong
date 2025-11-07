@@ -17,10 +17,15 @@
       <input id="q" type="text" placeholder="" autocomplete="off" />
     </div>
 
-    <!-- grid 2xN: 左卡、右上、右下 -->
+    <!-- 2xN grid -->
     <section id="grid" class="grid"></section>
 
-    <!-- 例句容器：默认隐藏；展开后显示，位于 grid 下方，与 grid 间隙等同 -->
+    <!-- 与 grid 间距完全一致的一行，仅放置“example 扩展”控制按钮；展开后隐藏 -->
+    <section id="expCtl" class="expctl" hidden>
+      <button class="expand-btn" id="expBtn">example 扩展</button>
+    </section>
+
+    <!-- 展开后的例句整块（粉色），位于 expCtl 之后；展开时显示，收起时隐藏 -->
     <section id="examples" class="examples-wrap" hidden>
       <div class="examples-box">
         <div id="examples-list"></div>
