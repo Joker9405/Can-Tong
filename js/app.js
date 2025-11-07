@@ -1,144 +1,46 @@
-
-async function loadCSV(path){
-  const res = await fetch(path, {cache:'no-store'});
-  if(!res.ok) throw new Error('load fail: '+path);
-  const txt = await res.text();
-  return parseCSV(txt);
+const PATH='/data/'; let CROSS=[], LEX={}, EXMAP={};
+function parseCSV(t){const lines=t.split(/\r?\n/).filter(Boolean);const head=lines.shift().split(',').map(s=>s.trim());return lines.map(line=>{const cells=[];let cur='',inQ=false;for(let i=0;i<line.length;i++){const ch=line[i];if(ch=='"'){inQ=!inQ;continue}if(ch==','&&!inQ){cells.push(cur);cur=''}else{cur+=ch}}cells.push(cur);const obj={};head.forEach((k,i)=>obj[k]=(cells[i]||'').trim());return obj})}
+async function loadCSV(name){const r=await fetch(PATH+name,{cache:'no-store'});if(!r.ok) throw new Error('load '+name+' failed');return parseCSV(await r.text())}
+function norm(s){return (s||'').toLowerCase().replace(/\s+/g,'')}
+function fuzzy(text,q){text=norm(text);q=norm(q);if(!q)return false;let i=0;for(const c of text){if(c===q[i])i++}return i===q.length||text.includes(q)}
+let VOICE=null;function pickVoice(){const L=speechSynthesis.getVoices();VOICE=L.find(v=>/yue|Cantonese|zh[-_]HK/i.test(v.lang+v.name))||L.find(v=>/zh[-_]HK/i.test(v.lang))||L.find(v=>/zh/i.test(v.lang))||null}if('speechSynthesis'in window){speechSynthesis.onvoiceschanged=pickVoice;pickVoice()}
+function speak(t){if(!('speechSynthesis'in window)||!t)return;const u=new SpeechSynthesisUtterance(t);if(VOICE)u.voice=VOICE;u.lang=VOICE?.lang||'zh-HK';speechSynthesis.cancel();speechSynthesis.speak(u)}
+const ICON=`<svg viewBox="0 0 24 24"><path d="M3 10v4h4l5 4V6L7 10H3zm13.5 2a3.5 3.5 0 0 0-2.5-3.34v6.68A3.5 3.5 0 0 0 16.5 12zm0-7a9.5 9.5 0 0 1 0 14l1.5 1.5A11.5 11.5 0 0 0 18 3.5L16.5 5z"/></svg>`;
+async function boot(){const[cm,lx,ex]=await Promise.all([loadCSV('crossmap.csv'),loadCSV('lexeme.csv'),loadCSV('examples.csv')]);CROSS=cm;lx.forEach(r=>LEX[r.id]=r);EXMAP=ex.reduce((m,r)=>{(m[r.lexeme_id]||(m[r.lexeme_id]=[])).push(r);return m},{})}
+function findLexemeIds(q){const nq=norm(q);if(!nq)return[];const set=new Set();CROSS.forEach(r=>{if(fuzzy(r.term,nq))set.add(r.target_id)});Object.values(LEX).forEach(r=>{if(fuzzy(r.zhh,nq)||fuzzy(r.en,nq)||fuzzy(r.alias_zhh||'',nq))set.add(r.id)});return Array.from(set)}
+const grid=document.getElementById('grid');const examples=document.getElementById('examples');const examplesList=document.getElementById('examples-list');
+function resetUI(){grid.innerHTML='';examples.hidden=true;examplesList.innerHTML=''}
+function renderEmpty(){resetUI()}
+function pairedVariants(chs,en){const A=(chs||'').split(/[;；]/).map(s=>s.trim()).filter(Boolean);const B=(en||'').split(/[;；]/).map(s=>s.trim()).filter(Boolean);const n=Math.max(A.length,B.length);const out=[];for(let i=0;i<n;i++){out.push({zh:A[i]||'',en:B[i]||''})}return out}
+function renderPhased(lex){resetUI();
+  const aliases=(lex.alias_zhh||'').split(/[;；]/).map(s=>s.trim()).filter(Boolean);
+  const variants=pairedVariants(lex.variants_chs, lex.variants_en);
+  const note=(lex.note_en||'')+(lex.note_chs?('<br>'+lex.note_chs):'');
+  const left=document.createElement('div');left.className='card yellow left';
+  left.innerHTML=`<div class="badge">粤语zhh：</div>
+    <div class="h-head"><div class="h-title">${lex.zhh||'—'}</div><button class="tts t-head" title="发音">${ICON}</button></div>
+    ${aliases.map(a=>`<div class="row"><div class="alias">${a}</div><button class="tts">${ICON}</button></div>`).join('')}`;
+  grid.appendChild(left);requestAnimationFrame(()=>left.classList.add('show'));
+  left.querySelector('.t-head').onclick=()=>speak(lex.zhh||''); left.querySelectorAll('.row .tts').forEach((b,i)=>b.onclick=()=>speak(aliases[i]));
+  setTimeout(()=>{
+    const rt=document.createElement('div');rt.className='card pink right-top';
+    rt.innerHTML=`<div class="vars">${variants.map(v=>`<div class="var-row"><div class="var-zh">${v.zh}</div>${v.en?`<div class="var-en">${v.en}</div>`:''}</div>`).join('')}</div>`;
+    grid.appendChild(rt);requestAnimationFrame(()=>rt.classList.add('show'));
+    const rb=document.createElement('div');rb.className='card gray right-bottom';
+    rb.innerHTML=`<div class="note">${note||''}</div><button id="example-btn">example 扩展</button>`;grid.appendChild(rb);requestAnimationFrame(()=>rb.classList.add('show'));
+    rb.querySelector('#example-btn').onclick=()=>toggleExamples(lex, rb.querySelector('#example-btn'));
+  },120);
 }
-function parseCSV(txt){
-  const lines = txt.trim().split(/\r?\n/);
-  const head = lines.shift().split(',').map(h=>h.trim());
-  return lines.filter(Boolean).map(line=>{
-    const cols = []; let cur='', inQ=false;
-    for(let i=0;i<line.length;i++){
-      const c=line[i];
-      if(c==='"' ){ inQ=!inQ; continue; }
-      if(c===',' && !inQ){ cols.push(cur); cur=''; } else { cur+=c; }
-    }
-    cols.push(cur);
-    const o={}; head.forEach((h,i)=> o[h]= (cols[i]??'').trim() );
-    return o;
-  });
+function toggleExamples(lex, btn){const exs=EXMAP[lex.id]||[];if(!exs.length)return;
+  if(examples.hidden){
+    examplesList.innerHTML='';
+    exs.forEach(e=>{const row=document.createElement('div');row.className='example';
+      row.innerHTML=`<div class="yue">${e.ex_zhh||''}</div>
+        <div class="right"><div class="en">${e.ex_en||''}</div><div class="chs">${e.ex_chs||''}</div></div>
+        <div class="btns"><button class="tts" title="粤语">${ICON}</button></div>`;
+      row.querySelector('.tts').onclick=()=>speak(e.ex_zhh||'');examplesList.appendChild(row)});
+    examples.hidden=false; btn.remove();
+  }else{examples.hidden=true;}
 }
-function byId(id){return document.getElementById(id)}
-function el(tag, cls, txt){const n=document.createElement(tag); if(cls) n.className=cls; if(txt!=null) n.textContent=txt; return n}
-
-function splitList(v){ 
-  if(!v) return [];
-  return v.split(/[;；]/).map(s=>s.trim()).filter(Boolean);
-}
-
-function match(term, entry){
-  const t = term.trim().toLowerCase();
-  if(!t) return false;
-  const hay = [
-    entry.zhh||'',
-    (entry.alias_zhh||'').replace(/[\/|]/g,' '),
-    entry.en||'',
-  ].join(' ').toLowerCase();
-  return hay.includes(t);
-}
-
-async function boot(){
-  const q = byId('q');
-  const cards = byId('cards');
-  const [lexemes, examples, xmap] = await Promise.all([
-    loadCSV('/data/lexeme.csv'),
-    loadCSV('/data/examples.csv').catch(()=>[]),
-    loadCSV('/data/crossmap.csv').catch(()=>[]),
-  ]);
-
-  function search(term){
-    cards.innerHTML='';
-    const t = term.trim();
-    if(!t){ return; }
-
-    const ids = xmap.filter(r=> (r.term||'').toLowerCase()===t.toLowerCase()).map(r=>r.target_id);
-    let hits = lexemes.filter(e=> ids.includes(e.id));
-    if(hits.length===0){
-      hits = lexemes.filter(e=> match(t,e));
-    }
-    if(hits.length===0) return;
-
-    const e = hits[0];
-
-    const left = el('div','card lime');
-    const h1 = el('div','h1', e.zhh||'');
-    left.appendChild(h1);
-    left.appendChild(rowWithAudio(e.zhh||'', (e.zhh_pron||'')) );
-    const aliases = (e.alias_zhh||'').split(/[\/、\|]/).map(s=>s.trim()).filter(Boolean);
-    aliases.forEach(a=> left.appendChild(rowWithAudio(a,'')) );
-    cards.appendChild(left);
-
-    const pink = el('div','card pink');
-    const chs = splitList(e.variants_chs||'');
-    const en = splitList(e.variants_en||'');
-    const n = Math.max(chs.length, en.length);
-    for(let i=0;i<n;i++){
-      const line = el('div','row');
-      const txt = el('div','txt', chs[i]||'');
-      line.appendChild(txt);
-      const enSmall = el('div','note enSmall'); enSmall.style.opacity='.85'; enSmall.style.fontSize='14px'; enSmall.textContent = en[i]||'';
-      line.appendChild(enSmall);
-      pink.appendChild(line);
-    }
-    cards.appendChild(pink);
-
-    const note = el('div','card slate note');
-    const enNote = el('div','en', (e.note_en||'').trim());
-    const chsNote = el('div','chs', (e.note_chs||'').trim());
-    note.appendChild(enNote);
-    note.appendChild(chsNote);
-    cards.appendChild(note);
-
-    const btn = el('button','btn-mini fixed','example 扩展');
-    btn.addEventListener('click', ()=>toggleExamples(e.id, btn));
-    document.body.appendChild(btn);
-  }
-
-  function rowWithAudio(text, pron){
-    const r = el('div','row');
-    r.appendChild( el('div','txt', text) );
-    const b = el('button','iconbtn'); 
-    b.addEventListener('click', ()=> playYue(text, pron));
-    r.appendChild(b);
-    return r;
-  }
-  function playYue(text, pron){
-    const u = `/api/route?tts=zhh&q=${encodeURIComponent(text)}`;
-    const a = new Audio(u); a.play();
-  }
-
-  let exNode=null;
-  function toggleExamples(lexemeId, btn){
-    if(exNode){ exNode.remove(); exNode=null; btn.classList.remove('hide'); return; }
-    const rows = examples.filter(r=> (r.lexeme_id||'')===lexemeId);
-    if(rows.length===0){ btn.classList.add('hide'); return; }
-
-    exNode = el('div','card pink examples');
-    rows.forEach(r=>{
-      const line = el('div','line');
-      const yue = el('div','yue', r.ex_zhh||'');
-      const right = el('div','right');
-      const en = el('div','en', r.ex_en||'');
-      const chs = el('div','chs', r.ex_chs||'');
-      const spk = el('button','iconbtn');
-      spk.addEventListener('click', ()=> playYue(r.ex_zhh||'', r.ex_zhh_pron||''));
-      right.appendChild(en);
-      right.appendChild(chs);
-      right.appendChild(spk);
-      line.appendChild(yue);
-      line.appendChild(right);
-      exNode.appendChild(line);
-    });
-    const grid = byId('cards');
-    grid.appendChild(exNode);
-    btn.classList.add('hide');
-  }
-
-  q.addEventListener('keydown', (e)=>{
-    if(e.key==='Enter'){ search(q.value||''); }
-  });
-}
-
-window.addEventListener('DOMContentLoaded', boot);
+document.getElementById('q').addEventListener('input',e=>{const q=e.target.value; if(!q){renderEmpty();return} const ids=findLexemeIds(q); if(!ids.length){renderEmpty();return} renderPhased(LEX[ids[0]])});
+boot();
