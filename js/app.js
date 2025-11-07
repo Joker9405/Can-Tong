@@ -10,11 +10,15 @@ function speak(t){if(!('speechSynthesis'in window)||!t)return;const u=new Speech
 async function boot(){const[cm,lx,ex]=await Promise.all([loadCSV('crossmap.csv'),loadCSV('lexeme.csv'),loadCSV('examples.csv')]);CROSS=cm;lx.forEach(r=>LEX[r.id]=r);EXMAP=ex.reduce((m,r)=>{(m[r.lexeme_id]||(m[r.lexeme_id]=[])).push(r);return m},{})}
 function findLexemeIds(q){const nq=norm(q);const set=new Set();CROSS.forEach(r=>{if(fuzzy(r.term,nq))set.add(r.target_id)});Object.values(LEX).forEach(r=>{if(fuzzy(r.zhh,nq)||fuzzy(r.en,nq)||fuzzy(r.alias_zhh||'',nq))set.add(r.id)});return Array.from(set)}
 
-function clearUI(){document.getElementById('grid').innerHTML='';document.getElementById('examples').hidden=true;document.getElementById('examples-list').innerHTML='';document.getElementById('expCtl').hidden=true}
-function renderEmpty(){clearUI()}
+function resetUI(){document.getElementById('cards').querySelectorAll('.card').forEach(n=>n.remove());
+  const el=document.getElementById('expand-left');el.hidden=true;
+  document.getElementById('expand-box').hidden=true;document.getElementById('expand-list').innerHTML='';}
+
+function renderEmpty(){resetUI();/* 初始空白，不显示任何默认词 */}
 
 function renderPhased(lex){
-  clearUI(); const grid=document.getElementById('grid');
+  resetUI();
+  const grid=document.getElementById('cards');
   const aliases=(lex.alias_zhh||'').split(/[;；]/).map(s=>s.trim()).filter(Boolean);
 
   // 左卡
@@ -27,52 +31,41 @@ function renderPhased(lex){
     </div>
     ${aliases.map(a=>`<div class="row"><div class="alias">${a}</div><button class="tts" title="发音">${ICON_SPK}</button></div>`).join('')}
   `;
-  grid.appendChild(left); requestAnimationFrame(()=>left.classList.add('show'));
+  grid.prepend(left); requestAnimationFrame(()=>left.classList.add('show'));
   left.querySelector('.t-head').addEventListener('click',()=>speak(lex.zhh||''));
   left.querySelectorAll('.row .tts').forEach((b,i)=>{const t=aliases[i];b.addEventListener('click',()=>speak(t))});
 
-  // 右上/右下
+  // 再渲染右上/右下
   setTimeout(()=>{
-    const rt=document.createElement('div');rt.className='card pink right-top';
+    const rightTop=document.createElement('div');rightTop.className='card pink right-top';
     const variants=(lex.variants_zhh||'').split(/[;；]/).map(s=>s.trim()).filter(Boolean);
-    rt.innerHTML = `<div class="vars">${variants.map(v=>`<div class="var-row">${v}</div>`).join('')}</div>`;
-    grid.appendChild(rt); requestAnimationFrame(()=>rt.classList.add('show'));
+    rightTop.innerHTML = `<div class="vars">${variants.map(v=>`<div class="var-row">${v}</div>`).join('')}</div>`;
+    grid.appendChild(rightTop); requestAnimationFrame(()=>rightTop.classList.add('show'));
 
-    const rb=document.createElement('div');rb.className='card gray right-bottom';
-    const note=(lex.note_en||'')+(lex.note_chs?('<br>'+lex.note_chs):'');
-    rb.innerHTML=`<div class="note">${note}</div>`;
-    grid.appendChild(rb); requestAnimationFrame(()=>rb.classList.add('show'));
+    const rightBottom=document.createElement('div');rightBottom.className='card gray right-bottom';
+    const note=(lex.note_en||'')+(lex.note_chs?('<br>'+lex.note_chs):'');rightBottom.innerHTML=`<div class="note">${note}</div>`;
+    grid.appendChild(rightBottom); requestAnimationFrame(()=>rightBottom.classList.add('show'));
 
-    // 独立控制行：显示按钮（与 grid 对齐）
-    const ctl=document.getElementById('expCtl');
-    ctl.hidden=false;
-    document.getElementById('expBtn').onclick=()=>toggleExamples(lex);
-  },120);
+    // 绑定展开按钮（位于 grid 第一列第三行）
+    mountExamples(lex);
+  }, 120);
 }
 
-function toggleExamples(lex){
-  const wrap=document.getElementById('examples');
-  const list=document.getElementById('examples-list');
-  const ctl=document.getElementById('expCtl');
-  const exs=EXMAP[lex.id]||[];
-  if(wrap.hidden){
-    // 展开：隐藏按钮行
-    ctl.hidden=true;
-    list.innerHTML='';
-    exs.forEach(e=>{
-      const row=document.createElement('div');row.className='example';
-      row.innerHTML=`
-        <div class="yue">${e.ex_zhh||''}</div>
-        <div class="right"><div class="en">${e.ex_en||''}</div><div class="chs">${e.ex_chs||''}</div></div>
-        <div class="btns"><button class="tts t1" title="粤语">${ICON_SPK}</button></div>`;
-      row.querySelector('.t1').addEventListener('click',()=>speak(e.ex_zhh||''));
-      list.appendChild(row);
-    });
-    wrap.hidden=false;
-  }else{
-    // 收起：清空并恢复按钮行
-    wrap.hidden=true; list.innerHTML=''; ctl.hidden=false;
-  }
+function mountExamples(lex){
+  const el=document.getElementById('expand-left');const toggle=document.getElementById('expand-toggle');
+  const box=document.getElementById('expand-box');const list=document.getElementById('expand-list');const exs=EXMAP[lex.id]||[];
+  if(!exs.length){el.hidden=true;box.hidden=true;list.innerHTML='';return;}
+  el.hidden=false;box.hidden=true;list.innerHTML='';toggle.textContent='example 扩展';
+  toggle.onclick=()=>{box.hidden=!box.hidden;toggle.textContent=box.hidden?'example 扩展':'收起扩展'};
+  exs.forEach(e=>{
+    const row=document.createElement('div');row.className='example';
+    row.innerHTML=`
+      <div class="yue">${e.ex_zhh||''}</div>
+      <div class="right"><div class="en">${e.ex_en||''}</div><div class="chs">${e.ex_chs||''}</div></div>
+      <div class="btns"><button class="tts t1" title="粤语">${ICON_SPK}</button></div>`;
+    row.querySelector('.t1').addEventListener('click',()=>speak(e.ex_zhh||''));
+    list.appendChild(row);
+  });
 }
 
 document.getElementById('q').addEventListener('input',e=>{

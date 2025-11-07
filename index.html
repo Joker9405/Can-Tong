@@ -17,18 +17,14 @@
       <input id="q" type="text" placeholder="" autocomplete="off" />
     </div>
 
-    <!-- 2xN grid -->
-    <section id="grid" class="grid"></section>
-
-    <!-- 与 grid 间距完全一致的一行，仅放置“example 扩展”控制按钮；展开后隐藏 -->
-    <section id="expCtl" class="expctl" hidden>
-      <button class="expand-btn" id="expBtn">example 扩展</button>
-    </section>
-
-    <!-- 展开后的例句整块（粉色），位于 expCtl 之后；展开时显示，收起时隐藏 -->
-    <section id="examples" class="examples-wrap" hidden>
-      <div class="examples-box">
-        <div id="examples-list"></div>
+    <section id="cards" class="cards grid">
+      <!-- 左卡、右上、右下会被注入 -->
+      <!-- 展开区放在 grid 的第一列（与左卡同宽），位于第三行 -->
+      <div id="expand-left" class="expand-left" hidden>
+        <button id="expand-toggle" class="expand-toggle">example 扩展</button>
+        <div id="expand-box" class="expand-box" hidden>
+          <div id="expand-list" class="expand-list"></div>
+        </div>
       </div>
     </section>
   </main>
