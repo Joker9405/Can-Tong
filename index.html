@@ -3,30 +3,35 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Can‑Tong — 粤语查询</title>
-  <link rel="stylesheet" href="/assets/style.css"/>
+  <title>Can-Tong — 粤语查询</title>
+  <link rel="stylesheet" href="assets/style.css"/>
 </head>
 <body>
   <header class="topbar">
-    <div class="brand">Can‑Tong •</div>
-    <div class="lang">chs‑zhh‑en</div>
+    <div class="brand">Can–Tong <span class="dot">•</span></div>
+    <div class="lang">chs-zhh-en</div>
   </header>
 
   <main class="container">
     <section class="search">
-      <input id="q" placeholder="" autocomplete="off"/>
+      <input id="q" type="text" placeholder="搜索（中文 / 粤语 / English）" autofocus/>
     </section>
 
-    <section id="grid" class="grid"></section>
-
-    <section id="expCtl" class="expctl" hidden>
-      <button id="btnExpand">example 扩展</button>
+    <section id="grid" class="grid" hidden>
+      <!-- left card -->
     </section>
 
-    <section id="examples" class="exampleswrap" hidden></section>
+    <!-- note + expand -->
+    <section id="noteWrap" hidden>
+      <div id="noteCard" class="card gray"></div>
+      <button id="expCtl" class="pill">example 扩展</button>
+    </section>
+
+    <!-- examples: appears only after expand -->
+    <section id="examples" class="examplesWrap" hidden></section>
   </main>
 
   <footer class="foot">CanTongMVP — Code MIT, Lexicon Closed; data/* CSVs: CC BY‑NC‑ND.</footer>
-  <script defer src="/js/app.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>

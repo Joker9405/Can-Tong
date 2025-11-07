@@ -1,27 +1,54 @@
-
+/* —— Global —— */
+:root{
+  --bg:#0f0f10; --ink:#e9e9e9; --mut:#b7b7b7;
+  --lime:#c8ff1a; --hot:#ff4fb3; --coal:#2b2b2b;
+  --card:#1a1a1a;
+  font-family: "Adobe Fan Heiti Std", "Adobe 繁黑體 Std", "Noto Sans CJK HK", "PingFang HK", "Microsoft JhengHei", system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+}
 *{box-sizing:border-box}
-:root{--bg:#0e0e0e;--card:#2a2a2a;--pink:#ff4da0;--lime:#c8ff1a;--ink:#eaeaea}
-html,body{background:var(--bg);color:var(--ink);font-family:"Adobe Fan Heiti Std","PingFang HK","Microsoft JhengHei",system-ui,Arial,Helvetica,sans-serif;margin:0}
-.topbar{display:flex;justify-content:space-between;align-items:center;padding:16px 18px}
-.brand{font-family:"FZHanZhenGuangCaoS-R-GB","FangZheng HuangCao",cursive;font-size:28px;color:#b5ff26}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink)}
+
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:18px 16px 0 16px}
+.brand{font-family:"FZ HuangCao","方正黄草简体","DFHuangCaoStd-W5","HanziPen SC","Pacifico", cursive;font-weight:400;font-size:28px;color:#b6ff44}
+.brand .dot{color:#96ff2a}
+.lang{color:#9a9a9a}
+
 .container{max-width:1080px;margin:0 auto;padding:0 18px 120px}
-.search{margin:8px 0 18px}
-.search input{width:100%;height:72px;border-radius:12px;border:0;background:#2c2c2c;color:#eee;font-size:36px;padding:0 18px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.card{border-radius:16px;padding:18px;background:var(--card)}
-.yellow{background:var(--lime);color:#111}
-.pink{background:var(--pink);color:#111}
-.gray{background:#333}
-.h-badge{opacity:.7;margin-bottom:6px}
-.h-title{font-size:72px;font-weight:900;margin:8px 0 14px}
-.row{display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(0,0,0,.1);padding:12px 0}
-.alias{font-size:28px}
-.tts{background:rgba(0,0,0,.15);border:0;border-radius:999px;width:44px;height:44px}
-.expctl{display:flex;justify-content:flex-end;margin-top:12px}
-.expctl button{background:var(--pink);border:0;color:#111;padding:10px 16px;border-radius:999px;font-weight:700}
-.exampleswrap{margin-top:12px}
-.ex-item{display:flex;align-items:center;gap:14px;background:var(--pink);color:#111;border-radius:14px;padding:16px;margin:8px 0}
-.ex-left{flex:1 1 auto}
-.ex-en{font-weight:800}
-.ex-chs{opacity:.8;font-size:14px}
-@media(max-width:900px){.grid{grid-template-columns:1fr}}
+
+.search input{
+  width:100%; background:#232323; border:none; border-radius:14px; padding:18px 20px; 
+  color:var(--ink); font-size:28px; outline:none;
+}
+
+/* cards */
+.grid{display:grid;grid-template-columns:1fr 1fr; gap:18px; margin-top:18px}
+.card{border-radius:14px;padding:18px}
+.card.yellow{background:var(--lime); color:#122}
+.card.pink{background:var(--hot); color:#121}
+.card.gray{background:#333; color:#eaeaea}
+
+/* left card contents */
+.badge{font-size:14px;margin-bottom:10px;color:#264}
+.h-title{font-size:72px; font-weight:900; line-height:1; margin:10px 0 12px 0}
+.row{display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(0,0,0,.1);padding:14px 6px}
+.tts{all:unset;cursor:pointer;background:rgba(0,0,0,.12);border-radius:999px;width:42px;height:42px;display:inline-flex;align-items:center;justify-content:center}
+.tts svg{opacity:.9}
+
+/* variants pink (text only) */
+.variant{padding:10px 8px;font-size:28px;font-weight:800}
+
+/* note wrap & exp button */
+#noteWrap{display:grid;grid-template-columns:1fr auto; gap:18px; align-items:center; margin-top:18px}
+.pill{all:unset;background:var(--hot);color:#111;border-radius:999px;padding:10px 16px;cursor:pointer}
+
+/* examples */
+.examplesWrap{margin-top:18px}
+.exampleRow{display:grid;grid-template-columns:1fr auto;align-items:center;background:var(--hot); color:#111;border-radius:14px;padding:14px 16px;margin:10px 0}
+.ex-l{font-size:24px;margin-bottom:4px}
+.ex-r b{font-weight:900}
+.ex-r small{display:block;opacity:.8}
+.exampleRow .tts{background:rgba(0,0,0,.2)}
+
+/* footer */
+.foot{position:fixed;left:0;right:0;bottom:0;color:#8a8a8a;font-size:12px;text-align:center;padding:10px 8px;background:linear-gradient(180deg,transparent,rgba(0,0,0,.25))}
