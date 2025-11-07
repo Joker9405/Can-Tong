@@ -1,13 +1,8 @@
+
+/* === Base === */
 *{box-sizing:border-box}html,body{height:100%}
-/* 全站中文字：Adobe 繁黑體 Std（优先） */
 body{margin:0;background:#0f0f10;color:#eee;
   font-family:"Adobe Fan Heiti Std","Adobe 繁黑體 Std","PingFang TC","Microsoft JhengHei","Noto Sans TC","PingFang SC","Microsoft YaHei",Arial,sans-serif;}
-.topbar{display:flex;justify-content:space-between;align-items:center;padding:18px 22px}
-/* 品牌仍用方正黄草简体 */
-.brand{font-size:30px;font-weight:800;color:#b8ff2b;
-  font-family:'FZHuangCao-S-Gb','FZ HuangCao Simplified','FZ HuangCaoJianTi','HanziPen SC','DFKai-SB',cursive}
-.brand .dot{color:#7dff00}
-.lang{opacity:.7}
 .container{max-width:1080px;margin:0 auto;padding:0 18px 120px}
 .search input{width:100%;padding:26px 28px;border-radius:18px;border:none;background:#2b2b2c;color:#eee;font-size:42px;outline:none}
 .grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto;gap:16px;margin-top:16px;align-items:stretch}
@@ -22,22 +17,24 @@ body{margin:0;background:#0f0f10;color:#eee;
 .h-head{display:flex;align-items:center;justify-content:space-between;margin:0 0 8px 0}
 .h-title{font-size:78px;line-height:1.06;margin:0;font-weight:900}
 .row{display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-top:1px solid rgba(0,0,0,.12);font-size:38px;line-height:1.2}
-.row:first-of-type{border-top:1px solid rgba(0,0,0,.12)}
 .vars{display:flex;flex-direction:column;gap:12px}
 .var-row{font-size:26px;line-height:1.5;font-weight:800}
 .note{opacity:.95;font-size:18px;line-height:1.6}
 .tts{border:none;border-radius:22px;width:42px;height:42px;background:rgba(0,0,0,.12);cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
 .tts svg{width:22px;height:22px;fill:#111}
-/* 扩展：按钮靠右，展开后为整块粉色外框；行距统一；每行右侧一个喇叭 */
-.expand-wrap{margin-top:14px}
-.expand-toggle{float:right;border:none;border-radius:999px;background:#ff4aa6;color:#fff;padding:10px 14px}
-.expand-box{clear:both;background:#ff4aa6;border-radius:18px;padding:14px 14px;margin-top:10px}
-.expand-list{display:flex;flex-direction:column;gap:12px}
-.example{display:grid;grid-template-columns:1fr 0.9fr auto;gap:16px;align-items:center;background:#ff4aa6;color:#fff;border-radius:12px;padding:4px 4px}
-.example .yue{font-size:18px}
-.example .en{font-weight:800;margin-bottom:3px}
-.example .chs{opacity:.95;font-size:14px}
-.example .tts{background:rgba(255,255,255,.25)}
-.foot{position:fixed;left:0;right:0;bottom:0;padding:10px 16px;text-align:center;color:#aaa;font-size:12px;background:transparent}
-.empty{background:#222;border:1px dashed #444;color:#bbb;padding:16px;border-radius:12px}
+
+/* === Expand block (match Fig.2) === */
+.expand-toolbar{display:flex;justify-content:flex-end;margin-top:10px}
+.expand-toggle{border:none;border-radius:999px;background:#ff4aa6;color:#fff;padding:10px 14px;cursor:pointer}
+.examples-card{background:#ff4aa6;border-radius:18px;margin-top:10px;padding:14px 14px}
+.examples-list{display:flex;flex-direction:column;gap:12px;margin:0;padding:0;list-style:none}
+.example-row{display:grid;grid-template-columns:1fr 0.9fr auto;gap:16px;align-items:center}
+.example-row .yue{color:#fff;font-size:18px}
+.example-row .right{color:#fff}
+.example-row .right .en{font-weight:800;margin-bottom:3px}
+.example-row .right .chs{opacity:.95;font-size:14px}
+.example-row .tts{background:rgba(255,255,255,.25)}
+.hidden{display:none !important}
+
+.empty{background:#222;border:1px dashed #444;color:#bbb;padding:16px;border-radius:12px;margin-top:14px}
 @media(max-width:900px){.grid{grid-template-columns:1fr;grid-template-rows:auto auto}.left{grid-row:auto}.h-title{font-size:56px}.row{font-size:30px}.search input{font-size:32px}}
