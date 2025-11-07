@@ -11,17 +11,17 @@ async function boot(){const[cm,lx,ex]=await Promise.all([loadCSV('crossmap.csv')
 function findLexemeIds(q){const nq=norm(q);const set=new Set();CROSS.forEach(r=>{if(fuzzy(r.term,nq))set.add(r.target_id)});Object.values(LEX).forEach(r=>{if(fuzzy(r.zhh,nq)||fuzzy(r.en,nq)||fuzzy(r.alias_zhh||'',nq))set.add(r.id)});return Array.from(set)}
 
 function resetUI(){document.getElementById('cards').querySelectorAll('.card').forEach(n=>n.remove());
-  const el=document.getElementById('expand-left');el.hidden=true;
+  const el=document.getElementById('expand-full');el.hidden=true;
   document.getElementById('expand-box').hidden=true;document.getElementById('expand-list').innerHTML='';}
 
-function renderEmpty(){resetUI();/* 初始空白，不显示任何默认词 */}
+function renderEmpty(){resetUI();}
 
 function renderPhased(lex){
   resetUI();
   const grid=document.getElementById('cards');
   const aliases=(lex.alias_zhh||'').split(/[;；]/).map(s=>s.trim()).filter(Boolean);
 
-  // 左卡
+  // 左卡先出现
   const left=document.createElement('div');left.className='card yellow left';
   left.innerHTML=`
     <div class="badge">粤语zhh：</div>
@@ -35,7 +35,7 @@ function renderPhased(lex){
   left.querySelector('.t-head').addEventListener('click',()=>speak(lex.zhh||''));
   left.querySelectorAll('.row .tts').forEach((b,i)=>{const t=aliases[i];b.addEventListener('click',()=>speak(t))});
 
-  // 再渲染右上/右下
+  // 再出现右上/右下
   setTimeout(()=>{
     const rightTop=document.createElement('div');rightTop.className='card pink right-top';
     const variants=(lex.variants_zhh||'').split(/[;；]/).map(s=>s.trim()).filter(Boolean);
@@ -46,13 +46,13 @@ function renderPhased(lex){
     const note=(lex.note_en||'')+(lex.note_chs?('<br>'+lex.note_chs):'');rightBottom.innerHTML=`<div class="note">${note}</div>`;
     grid.appendChild(rightBottom); requestAnimationFrame(()=>rightBottom.classList.add('show'));
 
-    // 绑定展开按钮（位于 grid 第一列第三行）
+    // 绑定展开：跨两列
     mountExamples(lex);
   }, 120);
 }
 
 function mountExamples(lex){
-  const el=document.getElementById('expand-left');const toggle=document.getElementById('expand-toggle');
+  const el=document.getElementById('expand-full');const toggle=document.getElementById('expand-toggle');
   const box=document.getElementById('expand-box');const list=document.getElementById('expand-list');const exs=EXMAP[lex.id]||[];
   if(!exs.length){el.hidden=true;box.hidden=true;list.innerHTML='';return;}
   el.hidden=false;box.hidden=true;list.innerHTML='';toggle.textContent='example 扩展';
