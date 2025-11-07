@@ -1,5 +1,8 @@
+
 *{box-sizing:border-box}html,body{height:100%}
-/* 中文统一 Adobe 繁黑體 Std；品牌用方正黄草简体（含 fallback） */
+/* —— 字体 ——
+   全中文：Adobe 繁黑體 Std（含回退）
+   品牌：方正黄草简体（多别名 fallback） */
 body{margin:0;background:#0f0f10;color:#eee;
   font-family:"Adobe Fan Heiti Std","Adobe 繁黑體 Std","PingFang TC","Microsoft JhengHei","Noto Sans TC","PingFang SC","Microsoft YaHei",Arial,sans-serif;}
 .topbar{display:flex;justify-content:space-between;align-items:center;padding:18px 22px}
@@ -7,9 +10,10 @@ body{margin:0;background:#0f0f10;color:#eee;
   font-family:'FZ HuangCaoS_GB','FZ HuangCao Simplified','方正黄草简体','HanziPen SC','DFKai-SB',cursive}
 .brand .dot{color:#7dff00}
 .lang{opacity:.7}
-.container{max-width:1080px;margin:0 auto;padding:0 18px 140px}
+.container{max-width:1080px;margin:0 auto;padding:0 18px 120px}
 .search input{width:100%;padding:26px 28px;border-radius:18px;border:none;background:#2b2b2c;color:#eee;font-size:42px;outline:none}
 
+/* 网格：两列三行（左卡跨两行） */
 .grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto;gap:16px;margin-top:16px;align-items:stretch}
 .card{border-radius:18px;padding:20px;opacity:0;transform:translateY(6px);transition:.18s ease}
 .card.show{opacity:1;transform:none}
@@ -18,8 +22,7 @@ body{margin:0;background:#0f0f10;color:#eee;
 .card.gray{background:#333}
 .left{grid-column:1;grid-row:1 / span 2}
 .right-top{grid-column:2;grid-row:1}
-.right-bottom{grid-column:2;grid-row:2;position:relative}
-
+.right-bottom{grid-column:2;grid-row:2;position:relative;overflow:hidden}
 .badge{font-size:16px;opacity:.7;margin-bottom:6px}
 .h-head{display:flex;align-items:center;justify-content:space-between;margin:0 0 8px 0}
 .h-title{font-size:78px;line-height:1.06;margin:0;font-weight:900}
@@ -32,11 +35,12 @@ body{margin:0;background:#0f0f10;color:#eee;
 .tts svg{width:22px;height:22px;fill:#111}
 
 /* 灰卡右下角固定“example 扩展”按钮 */
-.example-btn{position:absolute;right:12px;bottom:12px;border:none;border-radius:999px;background:#ff4aa6;color:#fff;padding:8px 12px;cursor:pointer}
+.expand-btn{position:absolute;right:12px;bottom:12px;border:none;border-radius:999px;background:#ff4aa6;color:#fff;padding:8px 12px;cursor:pointer}
 
-/* 展开块：整块粉色容器，位于 grid 之后，跨两列 */
-.examples-block{margin-top:12px}
-.examples-list{background:#ff4aa6;border-radius:18px;padding:6px 10px}
+/* 展开区：整块粉色容器，位于 grid 之后（占满容器宽度），每行仅一个喇叭 */
+.expand-wide{margin-top:10px}
+.expand-box{background:#ff4aa6;border-radius:18px;padding:6px 10px}
+.expand-list{display:flex;flex-direction:column}
 .example{display:grid;grid-template-columns:1fr 0.95fr auto;gap:18px;align-items:center;padding:12px 8px;background:transparent}
 .example + .example{border-top:1px solid rgba(255,255,255,.18)}
 .example .yue{font-size:20px}
@@ -46,4 +50,4 @@ body{margin:0;background:#0f0f10;color:#eee;
 .example .tts{background:rgba(255,255,255,.28)}
 
 .foot{position:fixed;left:0;right:0;bottom:0;padding:10px 16px;text-align:center;color:#aaa;font-size:12px;background:transparent}
-@media(max-width:900px){.grid{grid-template-columns:1fr}.h-title{font-size:56px}.row{font-size:30px}.search input{font-size:32px}}
+@media(max-width:900px){.grid{grid-template-columns:1fr;grid-template-rows:auto auto}.left{grid-row:auto}.h-title{font-size:56px}.row{font-size:30px}.search input{font-size:32px}}

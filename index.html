@@ -13,18 +13,19 @@
   </header>
 
   <main class="container">
-    <!-- 初始：只显示搜索框，其余留白 -->
     <div class="search">
       <input id="q" type="text" placeholder="" autocomplete="off" />
     </div>
 
-    <section id="cards" class="cards grid">
-      <!-- 搜索后按顺序注入：左黄卡 -> 右上粉卡 -> 右下灰卡(含按钮) -->
+    <section id="grid" class="grid">
+      <!-- 动态注入：左卡、右上、右下 -->
     </section>
 
-    <!-- 展开后：整块粉色容器，位于 grid 下方，横跨两列，取代灰卡上的按钮 -->
-    <section id="examples-block" class="examples-block" hidden>
-      <div id="examples-list" class="examples-list"></div>
+    <!-- 展开区（点击灰卡内按钮后出现），位于 grid 之后，整块粉色 -->
+    <section id="expand" class="expand-wide" hidden>
+      <div id="expand-box" class="expand-box">
+        <div id="expand-list" class="expand-list"></div>
+      </div>
     </section>
   </main>
 
