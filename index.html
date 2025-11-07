@@ -13,18 +13,20 @@
   </header>
 
   <main class="container">
+    <!-- 初始页：只有搜索框，其余留白 -->
     <div class="search">
       <input id="q" type="text" placeholder="" autocomplete="off" />
     </div>
 
+    <!-- 结果 2xN 栅格：左黄卡(主词+别名)、右上粉卡(变体-纯文本)、右下灰卡(备注) -->
     <section id="grid" class="grid"></section>
 
-    <!-- 控制行：初始隐藏，搜索后显示，展开后隐藏 -->
+    <!-- 控制行：与 grid 的 gap 完全一致，右对齐；展开后隐藏 -->
     <section id="expCtl" class="expctl" hidden>
       <button class="expand-btn" id="expBtn">example 扩展</button>
     </section>
 
-    <!-- 例句模块 -->
+    <!-- 展开后的例句整块（粉色）。仅行右侧一个粤语喇叭；无“收起扩展”按钮 -->
     <section id="examples" class="examples-wrap" hidden>
       <div class="examples-box">
         <div id="examples-list"></div>
