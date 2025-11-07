@@ -1,7 +1,8 @@
-﻿id,zhh,zhh_pron,alias_zhh,en,note_en,note_chs,variants_zhh
-L1,揼嘢,dam1 je5,掉嘢;掟嘢;丢嘢,Throw / leave / throw,"Depending on the situation, an action can have different uses.",根据不同动作情况，有不同用法,扔/丢+sth,把东西扔掉,Throw/drop + something, throw something away
-
-
-
-
-
+﻿Column1,Column2,Column3,Column4,Column5,Column6,Column7,Column8,Column9
+id,zhh,zhh_pron,alias_zhh,en,note_en,note_chs,variants_chs,variants_en
+L1,揼嘢,dam1 je5,掉嘢;掟嘢;丢嘢,Throw / leave / throw,"Depending on the situation, an action can have different uses.",根据不同动作情况，有不同用法,扔/丢+sth，把东西扔掉,"Throw/drop + something, throw something away"
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
