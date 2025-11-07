@@ -25,7 +25,7 @@ function render(lex){const cards=document.getElementById('cards');cards.innerHTM
 
   const rightTop=document.createElement('div');rightTop.className='card pink right-top';
   const variants=(lex.variants_zhh||'').split(/[;；]/).map(s=>s.trim()).filter(Boolean);
-  rightTop.innerHTML = `<div class="vars">${variants.map(v=>`<div class="var-row">${v}</div>`).join('')}</div>`; // 解释模块不需要喇叭
+  rightTop.innerHTML = `<div class="vars">${variants.map(v=>`<div class="var-row">${v}</div>`).join('')}</div>`;
 
   const rightBottom=document.createElement('div');rightBottom.className='card gray right-bottom';
   const note=(lex.note_en||'')+(lex.note_chs?('<br>'+lex.note_chs):'');rightBottom.innerHTML=`<div class="note">${note}</div>`;
