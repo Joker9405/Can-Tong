@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Can-Tong — 粤语查询</title>
-  <link rel="stylesheet" href="/assets/style.css">
+  <link rel="stylesheet" href="/assets/style.css?v=6.2">
 </head>
 <body>
   <header class="topbar">
@@ -17,13 +17,12 @@
       <input id="q" type="text" placeholder="" autocomplete="off" />
     </div>
 
-    <section id="cards" class="cards grid">
-      <!-- example 扩展：位于第三行且跨两列 -->
-      <div id="expand-full" class="expand-full" hidden>
-        <button id="expand-toggle" class="expand-toggle">example 扩展</button>
-        <div id="expand-box" class="expand-box" hidden>
-          <div id="expand-list" class="expand-list"></div>
-        </div>
+    <section id="cards" class="cards grid"></section>
+
+    <section id="expand-wrap" class="expand-wrap">
+      <button id="expand-toggle" class="expand-toggle" hidden>example 扩展</button>
+      <div id="expand-box" class="expand-box" hidden>
+        <div id="expand-list" class="expand-list"></div>
       </div>
     </section>
   </main>
@@ -32,6 +31,6 @@
     CanTongMVP — Code MIT, Lexicon Closed; data/* CSVs CC BY-NC-ND.
   </footer>
 
-  <script src="/js/app.js"></script>
+  <script src="/js/app.js?v=6.2"></script>
 </body>
 </html>
