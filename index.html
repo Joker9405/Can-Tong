@@ -8,30 +8,28 @@
 </head>
 <body>
   <header class="topbar">
-    <div class="brand">Can–Tong <span class="dot">•</span></div>
+    <div class="brand"><span class="brand-title">Can–Tong</span><span class="dot">•</span></div>
     <div class="lang">chs-zhh-en</div>
   </header>
 
   <main class="container">
     <section class="search">
-      <input id="q" type="text" placeholder="搜索（中文 / 粤语 / English）" autofocus/>
+      <input id="q" class="q" type="search" placeholder="搜索（中文 / 粤语 / English）" autocomplete="off"/>
     </section>
 
-    <section id="grid" class="grid" hidden>
-      <!-- left card -->
+    <section id="grid" class="grid" hidden></section>
+
+    <section id="notes" class="notes" hidden>
+      <div class="card note">
+        <div class="note-body" id="noteText"></div>
+      </div>
+      <button id="expandBtn" class="pill" hidden>example 扩展</button>
     </section>
 
-    <!-- note + expand -->
-    <section id="noteWrap" hidden>
-      <div id="noteCard" class="card gray"></div>
-      <button id="expCtl" class="pill">example 扩展</button>
-    </section>
-
-    <!-- examples: appears only after expand -->
-    <section id="examples" class="examplesWrap" hidden></section>
+    <section id="examples" class="examples" hidden></section>
   </main>
 
-  <footer class="foot">CanTongMVP — Code MIT, Lexicon Closed; data/* CSVs: CC BY‑NC‑ND.</footer>
+  <footer class="foot" id="foot">CanTongMVP — Code MIT, Lexicon Closed; data/* CSVs: CC BY‑NC‑ND.</footer>
   <script src="js/app.js"></script>
 </body>
 </html>

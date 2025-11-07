@@ -1,54 +1,53 @@
-/* —— Global —— */
+
 :root{
-  --bg:#0f0f10; --ink:#e9e9e9; --mut:#b7b7b7;
-  --lime:#c8ff1a; --hot:#ff4fb3; --coal:#2b2b2b;
-  --card:#1a1a1a;
-  font-family: "Adobe Fan Heiti Std", "Adobe 繁黑體 Std", "Noto Sans CJK HK", "PingFang HK", "Microsoft JhengHei", system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --bg:#0f0f10;
+  --card:#1f1f21;
+  --y:#C9FF2F;
+  --p:#FF4DA1;
+  --t:#e8e8ea;
+  --mut:#bdbdc2;
+  --dot:#8DFF20;
+  --radius:18px;
 }
 *{box-sizing:border-box}
 html,body{height:100%}
-body{margin:0;background:var(--bg);color:var(--ink)}
-
-.topbar{display:flex;justify-content:space-between;align-items:center;padding:18px 16px 0 16px}
-.brand{font-family:"FZ HuangCao","方正黄草简体","DFHuangCaoStd-W5","HanziPen SC","Pacifico", cursive;font-weight:400;font-size:28px;color:#b6ff44}
-.brand .dot{color:#96ff2a}
-.lang{color:#9a9a9a}
-
-.container{max-width:1080px;margin:0 auto;padding:0 18px 120px}
-
-.search input{
-  width:100%; background:#232323; border:none; border-radius:14px; padding:18px 20px; 
-  color:var(--ink); font-size:28px; outline:none;
+body{
+  margin:0; background:var(--bg); color:var(--t);
+  font-family: "Adobe 繁黑體 Std", "PingFang TC", "Noto Sans CJK TC", "Microsoft JhengHei", "Heiti TC", "Noto Sans SC", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 }
-
-/* cards */
-.grid{display:grid;grid-template-columns:1fr 1fr; gap:18px; margin-top:18px}
-.card{border-radius:14px;padding:18px}
-.card.yellow{background:var(--lime); color:#122}
-.card.pink{background:var(--hot); color:#121}
-.card.gray{background:#333; color:#eaeaea}
-
-/* left card contents */
-.badge{font-size:14px;margin-bottom:10px;color:#264}
-.h-title{font-size:72px; font-weight:900; line-height:1; margin:10px 0 12px 0}
-.row{display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(0,0,0,.1);padding:14px 6px}
-.tts{all:unset;cursor:pointer;background:rgba(0,0,0,.12);border-radius:999px;width:42px;height:42px;display:inline-flex;align-items:center;justify-content:center}
-.tts svg{opacity:.9}
-
-/* variants pink (text only) */
-.variant{padding:10px 8px;font-size:28px;font-weight:800}
-
-/* note wrap & exp button */
-#noteWrap{display:grid;grid-template-columns:1fr auto; gap:18px; align-items:center; margin-top:18px}
-.pill{all:unset;background:var(--hot);color:#111;border-radius:999px;padding:10px 16px;cursor:pointer}
-
-/* examples */
-.examplesWrap{margin-top:18px}
-.exampleRow{display:grid;grid-template-columns:1fr auto;align-items:center;background:var(--hot); color:#111;border-radius:14px;padding:14px 16px;margin:10px 0}
-.ex-l{font-size:24px;margin-bottom:4px}
-.ex-r b{font-weight:900}
-.ex-r small{display:block;opacity:.8}
-.exampleRow .tts{background:rgba(0,0,0,.2)}
-
-/* footer */
-.foot{position:fixed;left:0;right:0;bottom:0;color:#8a8a8a;font-size:12px;text-align:center;padding:10px 8px;background:linear-gradient(180deg,transparent,rgba(0,0,0,.25))}
+.topbar{display:flex;align-items:center;justify-content:space-between;max-width:1080px;margin:8px auto 0;padding:0 18px}
+.brand-title{font-family:"方正黄草简体","FZHuangCao-S04","HYShangWeiShouShuW","KaiTi","DFKai-SB","STKaiti",cursive;font-size:28px;color:var(--y)}
+.dot{color:var(--dot);margin-left:6px}
+.lang{opacity:.85;color:#b6b6bb}
+.container{max-width:1080px;margin:0 auto;padding:0 18px 120px}
+.search{margin:10px 0 16px}
+.q{width:100%;height:64px;background:#2a2a2d;border:none;border-radius:16px;padding:0 20px;font-size:28px;color:var(--t);outline:none}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:6px}
+.card{background:var(--y);color:#111;border-radius:22px;padding:18px;box-shadow:0 1px 0 rgba(0,0,0,.25)}
+.card.yellow{background:var(--y)}
+.card.pink{background:var(--p);color:#fff}
+.card.gray{background:#33363a;color:#e9e9ee}
+.badge{font-size:14px;opacity:.8;margin-bottom:6px}
+.h-title{font-size:64px;font-weight:900;letter-spacing:2px;margin:6px 0 10px}
+.alias-row{display:flex;align-items:center;gap:10px;padding:12px 0;border-top:1px solid rgba(0,0,0,.08)}
+.tts{border:none;background:rgba(0,0,0,.1);width:40px;height:40px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
+.tts svg{width:22px;height:22px;fill:#111}
+/* variants (no speaker icons) */
+.var-list .v{padding:10px 0;border-top:1px solid rgba(255,255,255,.15);font-size:28px}
+/* gray note */
+.note{background:#33363a;color:#e9e9ee;border-radius:22px;padding:16px}
+.note-body{line-height:1.8}
+/* pill button */
+.pill{position:relative;margin-top:10px;align-self:flex-end;background:var(--p);color:#fff;border:none;border-radius:999px;padding:10px 16px;cursor:pointer}
+/* examples expanded */
+.examples{margin-top:14px}
+.examples .row{background:var(--p);color:#fff;border-radius:18px;padding:16px 18px;margin-top:12px;display:grid;grid-template-columns:1fr auto;gap:14px}
+.examples .yue{font-size:20px}
+.examples .desc{font-size:14px;opacity:.9}
+.examples .en{font-weight:800}
+.examples .tts{background:rgba(255,255,255,.18)}
+.foot{position:fixed;left:0;right:0;bottom:10px;text-align:center;color:#9a9aa2;font-size:12px}
+@media (max-width:840px){
+  .grid{grid-template-columns:1fr}
+  .h-title{font-size:48px}
+}
