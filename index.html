@@ -1,41 +1,50 @@
-<!doctype html>
-<html lang="zh-Hans">
+<!DOCTYPE html>
+<html lang="zh-HK">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Can-Tong — 粤语查询</title>
-  <link rel="stylesheet" href="/assets/style.css?v=6.5">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Can‑Tong — 粤语查询</title>
+  <link rel="stylesheet" href="assets/style.css" />
 </head>
 <body>
   <header class="topbar">
-    <div class="brand">Can-Tong <span class="dot">•</span></div>
-    <div class="lang">chs-zhh-en</div>
+    <div class="brand" title="Can‑Tong">Can‑Tong <span class="live"></span></div>
+    <div class="lang">chs‑zhh‑en</div>
   </header>
 
-  <main class="container">
-    <div class="search">
-      <input id="q" type="text" placeholder="" autocomplete="off" />
-    </div>
+  <main id="app">
+    <section class="search-row">
+      <input id="q" class="search" placeholder="" autocomplete="off" />
+      <button id="btnExample" class="pill pill-right" aria-expanded="false">example 扩展</button>
+    </section>
 
-    <section id="cards" class="cards grid"></section>
-
-    <!-- 示例 CTA（默认显示为按钮；点击后渲染并常驻，不再收起） -->
-    <div id="expand-cta" class="expand-cta" hidden>
-      <button id="expand-btn" class="pill">example 扩展</button>
-    </div>
-
-    <!-- 示例列表（点击 CTA 后显示） -->
-    <section id="expand-wrap" class="expand-wrap" hidden>
-      <div id="expand-box" class="expand-box">
-        <div id="expand-list" class="expand-list"></div>
+    <!-- result grid -->
+    <section id="resultGrid" class="grid hidden">
+      <div class="card card-green" id="cardHead">
+        <div class="tiny">粤语zhh：</div>
+        <div id="headWord" class="headword"></div>
+        <ul id="aliases" class="alias-list"></ul>
       </div>
+
+      <div class="card card-pink" id="cardVariants">
+        <ul id="variants" class="variants"></ul>
+      </div>
+
+      <div class="card card-note" id="cardNote">
+        <div id="noteLines" class="note"></div>
+      </div>
+    </section>
+
+    <!-- examples area: default collapsed (empty) -->
+    <section id="examplesWrap" class="examples-wrap hidden">
+      <div id="examplesPanel" class="examples-panel"></div>
     </section>
   </main>
 
   <footer class="foot">
-    CanTongMVP — Code MIT, Lexicon Closed; data/* CSVs CC BY-NC-ND.
+    CanTongMVP — Code MIT, Lexicon Closed; data/* CSVs: CC BY‑NC‑ND.
   </footer>
 
-  <script src="/js/app.js?v=6.5"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>
