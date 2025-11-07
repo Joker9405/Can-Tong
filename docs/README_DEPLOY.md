@@ -1,1 +1,1 @@
-Upload to Vercel static. CSVs in /data.
+Vercel 静态站点部署：直接导入仓库，自动部署。

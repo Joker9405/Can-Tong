@@ -1,1 +1,1 @@
-CLA placeholder.
+贡献者许可协议（草案）

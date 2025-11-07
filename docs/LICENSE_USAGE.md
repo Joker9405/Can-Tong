@@ -1,1 +1,1 @@
-Code MIT; data CSVs CC BY-NC-ND.
+代码 MIT；词库闭源（/data/*）。

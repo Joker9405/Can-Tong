@@ -1,5 +1,3 @@
-﻿term,lang,target_id,kind
+term,lang,target_id,kind
 扔东西,chs,L1,head
-丢东西,chs,L1,alias
 throw,en,L1,head
-掟垃圾,zhh,L1,example
