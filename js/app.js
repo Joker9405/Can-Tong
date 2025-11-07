@@ -6,13 +6,24 @@ function norm(s){return (s||'').toLowerCase().replace(/\s+/g,'')}function fuzzy(
 let VOICE=null;function pickVoice(){const L=speechSynthesis.getVoices();VOICE=L.find(v=>/yue|Cantonese|zh[-_]HK/i.test(v.lang+v.name))||L.find(v=>/zh[-_]HK/i.test(v.lang))||L.find(v=>/zh/i.test(v.lang))||null}
 if('speechSynthesis'in window){speechSynthesis.onvoiceschanged=pickVoice;pickVoice()}
 function speak(t){if(!('speechSynthesis'in window)||!t)return;const u=new SpeechSynthesisUtterance(t);if(VOICE)u.voice=VOICE;u.lang=VOICE?.lang||'zh-HK';speechSynthesis.cancel();speechSynthesis.speak(u)}
+
 async function boot(){const[cm,lx,ex]=await Promise.all([loadCSV('crossmap.csv'),loadCSV('lexeme.csv'),loadCSV('examples.csv')]);CROSS=cm;lx.forEach(r=>LEX[r.id]=r);EXMAP=ex.reduce((m,r)=>{(m[r.lexeme_id]||(m[r.lexeme_id]=[])).push(r);return m},{})}
 function findLexemeIds(q){const nq=norm(q);const set=new Set();CROSS.forEach(r=>{if(fuzzy(r.term,nq))set.add(r.target_id)});Object.values(LEX).forEach(r=>{if(fuzzy(r.zhh,nq)||fuzzy(r.en,nq)||fuzzy(r.alias_zhh||'',nq))set.add(r.id)});return Array.from(set)}
-function clearUI(){document.getElementById('cards').innerHTML='';document.getElementById('expand-toggle').hidden=true;document.getElementById('expand-box').hidden=true}
-function renderEmpty(q){document.getElementById('cards').innerHTML=`<div class="empty">未找到：<b>${q}</b>。请补充到词库。</div>`;document.getElementById('expand-toggle').hidden=true;document.getElementById('expand-box').hidden=true}
-function render(lex){const cards=document.getElementById('cards');cards.innerHTML='';
+
+function resetUI(){document.getElementById('cards').querySelectorAll('.card').forEach(n=>n.remove());
+  const el=document.getElementById('expand-left');el.hidden=true;
+  document.getElementById('expand-box').hidden=true;document.getElementById('expand-list').innerHTML='';}
+
+function renderEmpty(){resetUI();/* 初始空白，不显示任何默认词 */}
+
+function renderPhased(lex){
+  resetUI();
+  const grid=document.getElementById('cards');
   const aliases=(lex.alias_zhh||'').split(/[;；]/).map(s=>s.trim()).filter(Boolean);
-  const left=document.createElement('div');left.className='card yellow left';left.innerHTML=`
+
+  // 左卡
+  const left=document.createElement('div');left.className='card yellow left';
+  left.innerHTML=`
     <div class="badge">粤语zhh：</div>
     <div class="h-head">
       <div class="h-title">${lex.zhh||'—'}</div>
@@ -20,49 +31,49 @@ function render(lex){const cards=document.getElementById('cards');cards.innerHTM
     </div>
     ${aliases.map(a=>`<div class="row"><div class="alias">${a}</div><button class="tts" title="发音">${ICON_SPK}</button></div>`).join('')}
   `;
+  grid.prepend(left); requestAnimationFrame(()=>left.classList.add('show'));
   left.querySelector('.t-head').addEventListener('click',()=>speak(lex.zhh||''));
   left.querySelectorAll('.row .tts').forEach((b,i)=>{const t=aliases[i];b.addEventListener('click',()=>speak(t))});
 
-  const rightTop=document.createElement('div');rightTop.className='card pink right-top';
-  const variants=(lex.variants_zhh||'').split(/[;；]/).map(s=>s.trim()).filter(Boolean);
-  rightTop.innerHTML = `<div class="vars">${variants.map(v=>`<div class="var-row">${v}</div>`).join('')}</div>`;
+  // 再渲染右上/右下
+  setTimeout(()=>{
+    const rightTop=document.createElement('div');rightTop.className='card pink right-top';
+    const variants=(lex.variants_zhh||'').split(/[;；]/).map(s=>s.trim()).filter(Boolean);
+    rightTop.innerHTML = `<div class="vars">${variants.map(v=>`<div class="var-row">${v}</div>`).join('')}</div>`;
+    grid.appendChild(rightTop); requestAnimationFrame(()=>rightTop.classList.add('show'));
 
-  const rightBottom=document.createElement('div');rightBottom.className='card gray right-bottom';
-  const note=(lex.note_en||'')+(lex.note_chs?('<br>'+lex.note_chs):'');rightBottom.innerHTML=`<div class="note">${note}</div>`;
+    const rightBottom=document.createElement('div');rightBottom.className='card gray right-bottom';
+    const note=(lex.note_en||'')+(lex.note_chs?('<br>'+lex.note_chs):'');rightBottom.innerHTML=`<div class="note">${note}</div>`;
+    grid.appendChild(rightBottom); requestAnimationFrame(()=>rightBottom.classList.add('show'));
 
-  cards.appendChild(left);cards.appendChild(rightTop);cards.appendChild(rightBottom);
-
-  const toggle=document.getElementById('expand-toggle');const box=document.getElementById('expand-box');const list=document.getElementById('expand-list');const exs=EXMAP[lex.id]||[];
-  if(exs.length){toggle.hidden=false;box.hidden=true;list.innerHTML='';toggle.textContent='example 扩展';
-    toggle.onclick=()=>{box.hidden=!box.hidden;toggle.textContent=box.hidden?'example 扩展':'收起扩展'};
-    if(!box.hidden){
-      // render when already visible
-    }
-    // Always (re)build list when toggled
-    toggle.addEventListener('click',()=>{
-      if(!box.hidden){
-        list.innerHTML='';
-        exs.forEach(e=>{
-          const row=document.createElement('div');row.className='ex-row';
-          row.innerHTML=`
-            <div class="ex-yue">${e.ex_zhh||''}</div>
-            <div class="ex-text">
-              <div class="ex-en">${e.ex_en||''}</div>
-              <div class="ex-chs">${e.ex_chs||''}</div>
-            </div>
-            <div class="ex-tts"><button class="tts" title="粤语">${ICON_SPK}</button></div>`;
-          row.querySelector('.tts').addEventListener('click',()=>speak(e.ex_zhh||''));
-          list.appendChild(row);
-        });
-      }
-    },{once:true});
-  }else{toggle.hidden=true;box.hidden=true;list.innerHTML='';}
+    // 绑定展开按钮（位于 grid 第一列第三行）
+    mountExamples(lex);
+  }, 120);
 }
+
+function mountExamples(lex){
+  const el=document.getElementById('expand-left');const toggle=document.getElementById('expand-toggle');
+  const box=document.getElementById('expand-box');const list=document.getElementById('expand-list');const exs=EXMAP[lex.id]||[];
+  if(!exs.length){el.hidden=true;box.hidden=true;list.innerHTML='';return;}
+  el.hidden=false;box.hidden=true;list.innerHTML='';toggle.textContent='example 扩展';
+  toggle.onclick=()=>{box.hidden=!box.hidden;toggle.textContent=box.hidden?'example 扩展':'收起扩展'};
+  exs.forEach(e=>{
+    const row=document.createElement('div');row.className='example';
+    row.innerHTML=`
+      <div class="yue">${e.ex_zhh||''}</div>
+      <div class="right"><div class="en">${e.ex_en||''}</div><div class="chs">${e.ex_chs||''}</div></div>
+      <div class="btns"><button class="tts t1" title="粤语">${ICON_SPK}</button></div>`;
+    row.querySelector('.t1').addEventListener('click',()=>speak(e.ex_zhh||''));
+    list.appendChild(row);
+  });
+}
+
 document.getElementById('q').addEventListener('input',e=>{
   const q=e.target.value;
-  if(!q){clearUI();return;}
+  if(!q){renderEmpty();return;}
   const ids=findLexemeIds(q);
-  if(!ids.length){renderEmpty(q);return;}
-  render(LEX[ids[0]]);
+  if(!ids.length){renderEmpty();return;}
+  renderPhased(LEX[ids[0]]);
 });
+
 boot();
