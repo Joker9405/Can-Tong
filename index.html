@@ -13,18 +13,18 @@
   </header>
 
   <main class="container">
+    <!-- 初始：只显示搜索框，其余留白 -->
     <div class="search">
       <input id="q" type="text" placeholder="" autocomplete="off" />
     </div>
 
     <section id="cards" class="cards grid">
-      <!-- example 扩展：位于第三行且跨两列 -->
-      <div id="expand-full" class="expand-full" hidden>
-        <button id="expand-toggle" class="expand-toggle">example 扩展</button>
-        <div id="expand-box" class="expand-box" hidden>
-          <div id="expand-list" class="expand-list"></div>
-        </div>
-      </div>
+      <!-- 搜索后按顺序注入：左黄卡 -> 右上粉卡 -> 右下灰卡(含按钮) -->
+    </section>
+
+    <!-- 展开后：整块粉色容器，位于 grid 下方，横跨两列，取代灰卡上的按钮 -->
+    <section id="examples-block" class="examples-block" hidden>
+      <div id="examples-list" class="examples-list"></div>
     </section>
   </main>
 
