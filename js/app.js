@@ -1,14 +1,20 @@
-// Load three CSVs: crossmap, lexeme, examples. Render strict layout.
+// v3: voice selection (yue/zh-HK), speaker icon, equal right column, example bilingual
 const PATH = '/data/';
-const CSV = { crossmap:'crossmap.csv', lexeme:'lexeme.csv', examples:'examples.csv' };
 let CROSS=[], LEX={}, EXMAP={};
+const ICON_SPK = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10v4h4l5 4V6L7 10H3zm13.5 2a3.5 3.5 0 0 0-2.5-3.34v6.68A3.5 3.5 0 0 0 16.5 12zm0-7a9.5 9.5 0 0 1 0 14l1.5 1.5A11.5 11.5 0 0 0 18 3.5L16.5 5z"/></svg>`;
 
 function parseCSV(text){
   const lines = text.split(/\r?\n/).filter(Boolean);
   const header = lines.shift().split(',').map(s=>s.trim());
   return lines.map(line=>{
-    const cells = line.split(',').map(s=>s.trim());
-    const obj={}; header.forEach((h,i)=>obj[h]=cells[i]||''); return obj;
+    const cells = []; let cur='', inQ=false;
+    for (let i=0;i<line.length;i++){
+      const ch=line[i];
+      if(ch=='"'){ inQ=!inQ; continue; }
+      if(ch==',' && !inQ){ cells.push(cur); cur=''; } else { cur+=ch; }
+    }
+    cells.push(cur);
+    const obj={}; header.forEach((h,i)=>obj[h]=(cells[i]||'').trim()); return obj;
   });
 }
 
@@ -22,34 +28,41 @@ async function loadCSV(name){
 function norm(s){return (s||'').toLowerCase().replace(/\s+/g,'');}
 function fuzzy(t,q){t=norm(t);q=norm(q);if(!q)return false;let i=0;for(const ch of t){if(ch===q[i]) i++;}return i===q.length || t.includes(q);}
 
+let VOICE=null;
+function pickVoice(){
+  const list = window.speechSynthesis.getVoices();
+  VOICE = list.find(v=>/yue|Cantonese|zh[-_]HK/i.test(v.lang+v.name)) 
+        || list.find(v=>/zh[-_]HK/i.test(v.lang))
+        || list.find(v=>/zh/i.test(v.lang))
+        || null;
+}
+if ('speechSynthesis' in window){
+  window.speechSynthesis.onvoiceschanged = pickVoice;
+  pickVoice();
+}
+function speak(text){
+  if(!('speechSynthesis' in window)) return;
+  const u = new SpeechSynthesisUtterance(text);
+  if(VOICE) u.voice = VOICE;
+  u.lang = VOICE?.lang || 'zh-HK';
+  window.speechSynthesis.cancel(); window.speechSynthesis.speak(u);
+}
+
 async function boot(){
-  try{
-    const [cm, lx, ex] = await Promise.all([loadCSV(CSV.crossmap), loadCSV(CSV.lexeme), loadCSV(CSV.examples)]);
-    CROSS = cm;
-    // build lex dict
-    lx.forEach(r=>{ LEX[r.id]=r; });
-    // examples by lexeme_id
-    EXMAP = ex.reduce((m,r)=>{ (m[r.lexeme_id]||(m[r.lexeme_id]=[])).push(r); return m; },{});
-  }catch(e){ console.error(e); }
+  const [cm, lx, ex] = await Promise.all([loadCSV('crossmap.csv'), loadCSV('lexeme.csv'), loadCSV('examples.csv')]);
+  CROSS = cm;
+  lx.forEach(r=>{ LEX[r.id]=r; });
+  EXMAP = ex.reduce((m,r)=>{ (m[r.lexeme_id]||(m[r.lexeme_id]=[])).push(r); return m; },{});
 }
 
 function findLexemeIds(q){
   const nq = norm(q);
-  const out = new Set();
-  // match in crossmap term and lexeme core fields
-  CROSS.forEach(r=>{
-    if(fuzzy(r.term, nq)) out.add(r.target_id);
-  });
+  const set = new Set();
+  CROSS.forEach(r=>{ if(fuzzy(r.term,nq)) set.add(r.target_id); });
   Object.values(LEX).forEach(r=>{
-    if(fuzzy(r.zhh,nq)||fuzzy(r.en,nq)||fuzzy(r.alias_zhh||'',nq)) out.add(r.id);
+    if(fuzzy(r.zhh,nq)||fuzzy(r.en,nq)||fuzzy(r.alias_zhh||'',nq)) set.add(r.id);
   });
-  return Array.from(out);
-}
-
-function speak(text){
-  if(!window.speechSynthesis) return;
-  const u=new SpeechSynthesisUtterance(text);
-  u.lang='yue-HK'; window.speechSynthesis.cancel(); window.speechSynthesis.speak(u);
+  return Array.from(set);
 }
 
 function renderEmpty(q){
@@ -63,58 +76,56 @@ function render(lex){
   const cards = document.getElementById('cards');
   cards.innerHTML='';
 
-  // left main
+  const aliases = (lex.alias_zhh||'').split(';').map(s=>s.trim()).filter(Boolean);
+
   const left = document.createElement('div');
   left.className='card yellow left';
   left.innerHTML = `
     <div class="badge">粤语zhh：</div>
     <div class="h-title">${lex.zhh||'—'}</div>
-    ${(lex.alias_zhh||'').split(';').filter(Boolean).map(a=>`
-      <div class="row"><div>${a}</div><button class="tts"></button></div>
+    ${[...aliases].map(a=>`
+      <div class="row"><div>${a}</div><button class="tts" title="发音">${ICON_SPK}</button></div>
     `).join('')}
   `;
-  // attach TTS buttons
-  left.querySelectorAll('.tts').forEach((b,i)=>{
-    const label = i===0 ? lex.zhh : (lex.alias_zhh||'').split(';').filter(Boolean)[i-0];
-    b.addEventListener('click',()=>speak(label||lex.zhh));
+  left.querySelectorAll('.row .tts').forEach((b,i)=>{
+    const t = aliases[i];
+    b.addEventListener('click',()=>speak(t));
   });
 
-  // right usage
-  const rt = document.createElement('div');
-  rt.className='card pink right-top';
-  rt.innerHTML = `<div class="vars">${lex.variants_zhh||''}</div>`;
+  const rightTop = document.createElement('div');
+  rightTop.className='card pink right-top';
+  rightTop.innerHTML = `<div class="vars">${lex.variants_zhh||''}</div>`;
 
-  // right note
-  const rb = document.createElement('div');
-  rb.className='card gray right-bottom';
+  const rightBottom = document.createElement('div');
+  rightBottom.className='card gray right-bottom';
   const note = (lex.note_en||'') + (lex.note_chs?('<br>'+lex.note_chs):'');
-  rb.innerHTML = `<div class="note">${note}</div>`;
+  rightBottom.innerHTML = `<div class="note">${note}</div>`;
 
   cards.appendChild(left);
-  cards.appendChild(rt);
-  cards.appendChild(rb);
+  cards.appendChild(rightTop);
+  cards.appendChild(rightBottom);
 
-  // expand examples
+  // Expand examples in ONE dialog group
   const toggle = document.getElementById('expand-toggle');
-  const list   = document.getElementById('expand-list');
+  const list = document.getElementById('expand-list');
   const exs = EXMAP[lex.id] || [];
   if(exs.length){
-    toggle.hidden=false; list.hidden=true;
-    toggle.onclick = ()=>{
-      list.hidden = !list.hidden;
-      if(!list.hidden){ toggle.textContent='收起扩展'; } else { toggle.textContent='example 扩展'; }
-    };
+    toggle.hidden=false; list.hidden=true; list.innerHTML='';
     toggle.textContent='example 扩展';
-
-    list.innerHTML = exs.map(e=>`
-      <div class="example">
-        <div class="txt">${e.ex_zhh || e.ex_chs || e.ex_en}</div>
-        <button class="tts"></button>
-      </div>
-    `).join('');
-    list.querySelectorAll('.example .tts').forEach((b,i)=>{
-      const t = exs[i].ex_zhh || exs[i].ex_chs || exs[i].ex_en;
-      b.addEventListener('click',()=>speak(t));
+    toggle.onclick = ()=>{ list.hidden = !list.hidden; toggle.textContent = list.hidden?'example 扩展':'收起扩展'; };
+    exs.forEach(e=>{
+      const row = document.createElement('div');
+      row.className='example';
+      row.innerHTML = `
+        <div class="left">${e.ex_zhh||''}</div>
+        <div class="right">
+          <div class="en">${e.ex_en||''}</div>
+          <div class="chs">${e.ex_chs||''}</div>
+        </div>
+        <button class="tts" title="发音">${ICON_SPK}</button>
+      `;
+      row.querySelector('.tts').addEventListener('click',()=>speak(e.ex_zhh || e.ex_en || e.ex_chs));
+      list.appendChild(row);
     });
   }else{
     toggle.hidden=true; list.hidden=true; list.innerHTML='';
@@ -126,8 +137,7 @@ document.getElementById('q').addEventListener('input', e=>{
   const ids = findLexemeIds(q);
   if(!q){ document.getElementById('cards').innerHTML=''; document.getElementById('expand-toggle').hidden=true; document.getElementById('expand-list').hidden=true; return; }
   if(!ids.length){ renderEmpty(q); return; }
-  const lex = LEX[ids[0]]; // take first
-  render(lex);
+  render(LEX[ids[0]]);
 });
 
 boot();
