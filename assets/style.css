@@ -1,47 +1,37 @@
-*{box-sizing:border-box}html,body{height:100%}
-/* 中文统一 Adobe 繁黑體 Std；品牌字用方正黄草简体 */
-body{margin:0;background:#0f0f10;color:#eee;
-  font-family:"Adobe Fan Heiti Std","Adobe 繁黑體 Std","PingFang TC","Microsoft JhengHei","Noto Sans TC","PingFang SC","Microsoft YaHei",Arial,sans-serif;}
-.topbar{display:flex;justify-content:space-between;align-items:center;padding:18px 22px}
-.brand{font-size:30px;font-weight:800;color:#b8ff2b;
-  font-family:'FZ HuangCaoS_GB','FZ HuangCao Simplified','方正黄草简体','HanziPen SC','DFKai-SB',cursive}
-.brand .dot{color:#7dff00}
-.lang{opacity:.7}
-.container{max-width:1080px;margin:0 auto;padding:0 18px 120px}
-.search input{width:100%;padding:26px 28px;border-radius:18px;border:none;background:#2b2b2c;color:#eee;font-size:42px;outline:none}
-.grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto auto;gap:16px;margin-top:16px;align-items:stretch}
-.card{border-radius:18px;padding:20px;opacity:0;transform:translateY(6px);transition:.18s ease}
-.card.show{opacity:1;transform:none}
-.card.yellow{background:#c8ff2b;color:#111}
-.card.pink{background:#ff4aa6;color:#fff}
-.card.gray{background:#333}
-.left{grid-column:1;grid-row:1 / span 2}
-.right-top{grid-column:2;grid-row:1}
-.right-bottom{grid-column:2;grid-row:2}
-.badge{font-size:16px;opacity:.7;margin-bottom:6px}
-.h-head{display:flex;align-items:center;justify-content:space-between;margin:0 0 8px 0}
-.h-title{font-size:78px;line-height:1.06;margin:0;font-weight:900}
-.row{display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-top:1px solid rgba(0,0,0,.12);font-size:38px;line-height:1.2}
-.row:first-of-type{border-top:1px solid rgba(0,0,0,.12)}
-.vars{display:flex;flex-direction:column;gap:12px}
-.var-row{font-size:26px;line-height:1.5;font-weight:800}
-.note{opacity:.95;font-size:18px;line-height:1.6}
-.tts{border:none;border-radius:22px;width:42px;height:42px;background:rgba(0,0,0,.12);cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
-.tts svg{width:22px;height:22px;fill:#111}
 
-/* ===== 展开块：跨两列，统一粉色容器；每行一个喇叭（只播粤语） ===== */
-.expand-full{grid-column:1 / span 2;grid-row:3}
-.expand-toggle{float:right;border:none;border-radius:999px;background:#ff4aa6;color:#fff;padding:8px 12px}
-.expand-box{clear:both;background:#ff4aa6;border-radius:18px;padding:6px 10px;margin-top:10px}
-.expand-list{display:flex;flex-direction:column}
-.example{display:grid;grid-template-columns:1fr 0.95fr auto;gap:18px;align-items:center;padding:12px 8px;background:transparent}
-.example + .example{border-top:1px solid rgba(255,255,255,.18)}
-.example .yue{font-size:20px}
-.example .en{font-weight:800;margin-bottom:4px}
-.example .chs{opacity:.95;font-size:14px}
-.example .btns{display:flex;gap:8px}
-.example .tts{background:rgba(255,255,255,.28)}
-/* ================================= */
-
-.foot{position:fixed;left:0;right:0;bottom:0;padding:10px 16px;text-align:center;color:#aaa;font-size:12px;background:transparent}
-@media(max-width:900px){.grid{grid-template-columns:1fr;grid-template-rows:auto auto auto auto}.left{grid-row:auto}.h-title{font-size:56px}.row{font-size:30px}.search input{font-size:32px}}
+*{box-sizing:border-box}
+:root{
+  --lime:#D6FF2A;--pink:#FF3FA4;--gray:#2E2E2E;--bg:#0F0F10;--ink:#111;
+}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:#fff;font-family:"Adobe Fan Heiti Std","Adobe 繁黑體 Std","PingFang HK","Noto Sans HK","Microsoft JhengHei","Heiti TC",system-ui,sans-serif;}
+.brand-row{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;}
+.brand{font-family:"FZ HuangCao", "FZ HuangCaoS", "方正黄草简体","HanziPen SC","ZCOOL KuaiLe", cursive;font-size:28px;color:#B8FF2A}
+.lang-hint{opacity:.65;font-size:14px}
+.search-row{padding:8px 16px}
+.search{width:100%;background:#2b2b2b;border:0;border-radius:14px;height:64px;padding:0 18px;font-size:28px;color:#fff}
+.hidden{display:none !important}
+.grid{display:grid;grid-template-columns:1fr;gap:16px;padding:8px 16px 24px}
+@media(min-width:900px){.grid{grid-template-columns:1.2fr 1fr} #card-note{grid-column:2/3} .control-row{grid-column:1/3} #card-examples{grid-column:1/3}}
+.card{border-radius:18px;padding:18px}
+.card.lime{background:var(--lime);color:#101}
+.card.pink{background:var(--pink);color:#101}
+.card.gray{background:#3a3a3a;color:#fff}
+.tag{font-size:14px;opacity:.7;margin-bottom:6px}
+.headword{font-weight:900;font-size:72px;line-height:1;margin:8px 0 10px}
+.alias-list,.variant-list,.example-list{list-style:none;margin:0;padding:0}
+.alias-item{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-top:1px solid rgba(0,0,0,.08)}
+.alias-item:first-child{border-top:1px solid rgba(0,0,0,.08)}
+.alias-text{font-size:28px}
+.play{appearance:none;border:0;background:rgba(0,0,0,.09);width:44px;height:44px;border-radius:50%}
+.variant-item{font-size:28px;padding:6px 0}
+.note{font-size:18px;opacity:.9}
+.btn{border:0;padding:10px 16px;border-radius:18px;cursor:pointer}
+.btn.pink{background:var(--pink);color:#101}
+.control-row{display:flex;justify-content:flex-end}
+.example-item{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.15)}
+.example-zhh{font-size:20px}
+.example-en{font-weight:700}
+.example-chs{font-size:14px;opacity:.9}
+.play-l{width:44px;height:44px;border-radius:50%;border:0;background:rgba(0,0,0,.12)}
+.foot{opacity:.5;text-align:center;padding:10px 0 24px;font-size:12px}
