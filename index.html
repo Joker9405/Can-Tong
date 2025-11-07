@@ -17,14 +17,13 @@
       <input id="q" type="text" placeholder="" autocomplete="off" />
     </div>
 
-    <section id="grid" class="grid">
-      <!-- 动态注入：左卡、右上、右下 -->
-    </section>
+    <!-- grid 2xN: 左卡、右上、右下 -->
+    <section id="grid" class="grid"></section>
 
-    <!-- 展开区（点击灰卡内按钮后出现），位于 grid 之后，整块粉色 -->
-    <section id="expand" class="expand-wide" hidden>
-      <div id="expand-box" class="expand-box">
-        <div id="expand-list" class="expand-list"></div>
+    <!-- 例句容器：默认隐藏；展开后显示，位于 grid 下方，与 grid 间隙等同 -->
+    <section id="examples" class="examples-wrap" hidden>
+      <div class="examples-box">
+        <div id="examples-list"></div>
       </div>
     </section>
   </main>
