@@ -1,111 +1,96 @@
-// CanTongMVP DOM-only patch v6.8 — removes example CTA after expand, hides on home.
-// Safe to include after /js/app.js; does not modify your app logic.
-(function () {
-  const q = (sel, root=document) => root.querySelector(sel);
-  const qa = (sel, root=document) => Array.from(root.querySelectorAll(sel));
 
-  const state = {
-    removed: false
-  };
+const PATH='/data/';
+let LEX={}, EXMAP={};
 
-  function els() {
-    return {
-      grid: q('#grid'),
-      expCtl: q('#expCtl'),
-      examples: q('#examples') || q('.exampleswrap')
-    };
-  }
+function parseCSV(t){return t.split(/\r?\n/).filter(Boolean).map(line=>{
+  const cells=[]; let cur=''; let inQ=false;
+  for(let i=0;i<line.length;i++){const ch=line[i];
+    if(ch=='"'){ if(inQ && line[i+1]=='"'){cur+='"';i++;} else {inQ=!inQ;} }
+    else if(ch==',' && !inQ){cells.push(cur);cur='';}
+    else {cur+=ch;}
+  } cells.push(cur); return cells;
+});}
 
-  function hideCTA(ctl) {
-    if (!ctl) return;
-    ctl.style.display = 'none';
-  }
-  function showCTA(ctl) {
-    if (!ctl) return;
-    if (state.removed) return; // after expand we never show again until reload/new search
-    ctl.style.removeProperty('display');
-    ctl.hidden = false;
-  }
-  function removeCTA(ctl) {
-    if (!ctl || state.removed) return;
-    state.removed = true;
-    try { ctl.remove(); } catch(e){ ctl.hidden = true; }
-  }
+async function loadCSV(name){
+  const r=await fetch(PATH+name,{cache:'no-store'});
+  if(!r.ok) throw new Error('load csv fail '+name);
+  return await r.text();
+}
 
-  function onInitial() {
-    const { grid, expCtl } = els();
-    // Home page: if no search results (no cards), keep example hidden
-    if (!grid || grid.children.length === 0) {
-      hideCTA(expCtl);
-    }
-  }
+function norm(s){return (s||'').toLowerCase().replace(/\s+/g,'').trim();}
 
-  function onAfterSearch() {
-    const { grid, expCtl, examples } = els();
-    if (!grid) return;
+function buildIndex(lexRows, exRows, crossRows){
+  // lexeme
+  const head=lexRows.slice(1).map(r=>({id:r[0], zhh:r[1], alias_zhh:r[3]||'', en:r[4]||'', note_chs:r[5]||'', variants_zhh:r[6]||''}));
+  head.forEach(x=>{LEX[x.id]=x; EXMAP[x.id]=[];});
+  // examples
+  exRows.slice(1).forEach(r=>{const e={lexeme_id:r[0], ex_zhh:r[1], ex_en:r[2], ex_chs:r[3]}; if(EXMAP[e.lexeme_id]) EXMAP[e.lexeme_id].push(e);});
+  // crossmap -> query map
+  window.QMAP=new Map();
+  crossRows.slice(1).forEach(r=>{
+    const term=norm(r[0]||''); const id=r[2]; if(!term||!LEX[id]) return;
+    if(!window.QMAP.has(term)) window.QMAP.set(term,new Set());
+    window.QMAP.get(term).add(id);
+  });
+}
 
-    const hasCards = grid.children.length > 0;
-    const examplesEmpty = !examples || examples.children.length === 0;
-    if (hasCards && examplesEmpty && !state.removed) {
-      showCTA(expCtl);
-    }
-  }
+function render(lexemeIds){
+  const grid=document.getElementById('grid'); grid.innerHTML='';
+  const ids=[...new Set(lexemeIds)];
+  if(ids.length===0){document.getElementById('expCtl').hidden=true; document.getElementById('examples').hidden=true; return;}
+  const id=ids[0]; const lex=LEX[id];
+  // left yellow
+  const left=document.createElement('div'); left.className='card yellow';
+  left.innerHTML=`<div class="h-badge">粤语zhh：</div>
+  <div class="h-title">${lex.zhh}</div>
+  <div class="row"><div class="alias">${(lex.alias_zhh||'').split('/').filter(Boolean)[0]||''}</div><button class="tts" title="🔊"></button></div>
+  <div class="row"><div class="alias">${(lex.alias_zhh||'').split('/').filter(Boolean)[1]||''}</div><button class="tts" title="🔊"></button></div>`;
+  grid.appendChild(left);
+  // right variants
+  const rightTop=document.createElement('div'); rightTop.className='card pink';
+  rightTop.innerHTML= (lex.variants_zhh||'').split('/').map(v=>`<div class="row"><div>${v}</div></div>`).join('') || '<div class="row"><div></div></div>';
+  grid.appendChild(rightTop);
+  // right note
+  const rightNote=document.createElement('div'); rightNote.className='card gray';
+  rightNote.innerHTML=`${lex.en?'<div>Colloquial ‘掟’, formal ‘擲’.</div>':''}<div>${lex.note_chs||''}</div>`;
+  grid.appendChild(rightNote);
+  // show expand btn if examples exist
+  const exCtl=document.getElementById('expCtl'); const hasEx=(EXMAP[id]||[]).length>0;
+  exCtl.hidden=!hasEx; document.getElementById('examples').hidden=true;
+  exCtl.dataset.lexeme=id;
+}
 
-  function attachClickToCTA() {
-    const { expCtl, examples } = els();
-    if (!expCtl) return;
-    expCtl.addEventListener('click', function (e) {
-      // Wait for examples to be rendered by app.js, then remove CTA.
-      setTimeout(() => {
-        const { examples: ex2 } = els();
-        if (ex2 && ex2.children.length > 0) {
-          removeCTA(expCtl);
-        }
-      }, 30);
-    }, { capture: false });
-  }
+// expand
+function showExamples(id){
+  const wrap=document.getElementById('examples'); wrap.innerHTML=''; wrap.hidden=false;
+  (EXMAP[id]||[]).forEach(e=>{
+    const row=document.createElement('div'); row.className='ex-item';
+    row.innerHTML=`<div class="ex-left">
+      <div class="ex-zhh">${e.ex_zhh}</div>
+      <div class="ex-en">${e.ex_en||''}</div>
+      <div class="ex-chs">${e.ex_chs||''}</div>
+    </div>
+    <button class="tts" title="🔊"></button>`;
+    wrap.appendChild(row);
+  });
+  // hide expand button after expanded (符合你的要求)
+  document.getElementById('expCtl').hidden=true;
+}
 
-  function observeExamples() {
-    const { examples, expCtl } = els();
-    if (!examples) return;
-    const mo = new MutationObserver(() => {
-      // If examples got content, nuke CTA and stop observing.
-      const hasContent = examples.children.length > 0;
-      if (hasContent) {
-        removeCTA(expCtl);
-        mo.disconnect();
-      }
-    });
-    mo.observe(examples, { childList: true, subtree: false });
-  }
-
-  // Observe grid so we can detect "after search" moment even if app.js re-renders.
-  function observeGrid() {
-    const { grid } = els();
-    if (!grid) return;
-    const mo = new MutationObserver(() => onAfterSearch());
-    mo.observe(grid, { childList: true, subtree: false });
-  }
-
-  function boot() {
-    onInitial();
-    onAfterSearch();
-    attachClickToCTA();
-    observeExamples();
-    observeGrid();
-    // Also handle route-refresh / app-level redraws with a timer safety.
-    // (Harmless, cheap — runs a few times and settles)
-    let tick = 0;
-    const iv = setInterval(() => {
-      onAfterSearch();
-      tick += 1;
-      if (tick > 40) clearInterval(iv); // ~1.2s total if 30ms tick
-    }, 30);
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', boot, { once: true });
-  } else {
-    boot();
-  }
-})();
+async function boot(){
+  const [crossTxt, lexTxt, exTxt]=await Promise.all([loadCSV('crossmap.csv'), loadCSV('lexeme.csv'), loadCSV('examples.csv')]);
+  buildIndex(parseCSV(crossTxt), parseCSV(lexTxt), parseCSV(exTxt));
+  // search input
+  const q=document.getElementById('q');
+  q.addEventListener('input',()=>{
+    const key=norm(q.value);
+    if(!key){ document.getElementById('grid').innerHTML=''; document.getElementById('expCtl').hidden=true; document.getElementById('examples').hidden=true; return; }
+    const ids = (window.QMAP.get(key) ? [...window.QMAP.get(key)] : []);
+    render(ids);
+  });
+  // expand
+  document.getElementById('btnExpand').addEventListener('click',()=>{
+    const id=document.getElementById('expCtl').dataset.lexeme; if(id) showExamples(id);
+  });
+}
+boot();
