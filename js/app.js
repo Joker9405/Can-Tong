@@ -17,7 +17,7 @@ function renderPhased(lex){
   clearUI(); const grid=document.getElementById('grid');
   const aliases=(lex.alias_zhh||'').split(/[;；]/).map(s=>s.trim()).filter(Boolean);
 
-  // 左卡
+  // 左黄卡：主词 + 别名行（均带粤语发音）
   const left=document.createElement('div');left.className='card yellow left';
   left.innerHTML=`
     <div class="badge">粤语zhh：</div>
@@ -31,7 +31,7 @@ function renderPhased(lex){
   left.querySelector('.t-head').addEventListener('click',()=>speak(lex.zhh||''));
   left.querySelectorAll('.row .tts').forEach((b,i)=>{const t=aliases[i];b.addEventListener('click',()=>speak(t))});
 
-  // 右上/右下
+  // 右上粉卡（变体：纯文本，无喇叭）+ 右下灰卡（备注）
   setTimeout(()=>{
     const rt=document.createElement('div');rt.className='card pink right-top';
     const variants=(lex.variants_zhh||'').split(/[;；]/).map(s=>s.trim()).filter(Boolean);
@@ -43,7 +43,7 @@ function renderPhased(lex){
     rb.innerHTML=`<div class="note">${note}</div>`;
     grid.appendChild(rb); requestAnimationFrame(()=>rb.classList.add('show'));
 
-    // 独立控制行：显示按钮（与 grid 对齐）
+    // 显示“example 扩展”控制行（与 grid gap 对齐）
     const ctl=document.getElementById('expCtl');
     ctl.hidden=false;
     document.getElementById('expBtn').onclick=()=>toggleExamples(lex);
@@ -56,7 +56,7 @@ function toggleExamples(lex){
   const ctl=document.getElementById('expCtl');
   const exs=EXMAP[lex.id]||[];
   if(wrap.hidden){
-    // 展开：隐藏按钮行
+    // 展开：按钮行隐藏；渲染整块粉容器
     ctl.hidden=true;
     list.innerHTML='';
     exs.forEach(e=>{
