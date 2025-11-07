@@ -17,13 +17,13 @@
       <input id="q" type="text" placeholder="" autocomplete="off" />
     </div>
 
-    <section id="cards" class="cards grid">
-      <!-- example 扩展：位于第三行且跨两列 -->
-      <div id="expand-full" class="expand-full" hidden>
-        <button id="expand-toggle" class="expand-toggle">example 扩展</button>
-        <div id="expand-box" class="expand-box" hidden>
-          <div id="expand-list" class="expand-list"></div>
-        </div>
+    <!-- grid 2xN: 左卡、右上、右下 -->
+    <section id="grid" class="grid"></section>
+
+    <!-- 例句容器：默认隐藏；展开后显示，位于 grid 下方，与 grid 间隙等同 -->
+    <section id="examples" class="examples-wrap" hidden>
+      <div class="examples-box">
+        <div id="examples-list"></div>
       </div>
     </section>
   </main>
