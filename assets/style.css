@@ -1,5 +1,6 @@
+
 *{box-sizing:border-box}html,body{height:100%}
-/* 中文统一 Adobe 繁黑體 Std；品牌字用方正黄草简体 */
+/* 中文统一 Adobe 繁黑體 Std；品牌用方正黄草简体（多别名 fallback） */
 body{margin:0;background:#0f0f10;color:#eee;
   font-family:"Adobe Fan Heiti Std","Adobe 繁黑體 Std","PingFang TC","Microsoft JhengHei","Noto Sans TC","PingFang SC","Microsoft YaHei",Arial,sans-serif;}
 .topbar{display:flex;justify-content:space-between;align-items:center;padding:18px 22px}
@@ -8,16 +9,19 @@ body{margin:0;background:#0f0f10;color:#eee;
 .brand .dot{color:#7dff00}
 .lang{opacity:.7}
 .container{max-width:1080px;margin:0 auto;padding:0 18px 120px}
+
 .search input{width:100%;padding:26px 28px;border-radius:18px;border:none;background:#2b2b2c;color:#eee;font-size:42px;outline:none}
-.grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto auto;gap:16px;margin-top:16px;align-items:stretch}
-.card{border-radius:18px;padding:20px;opacity:0;transform:translateY(6px);transition:.18s ease}
+.grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto;gap:16px;margin-top:16px;align-items:stretch}
+.card{border-radius:18px;padding:20px;opacity:0;transform:translateY(8px);transition:.18s ease}
 .card.show{opacity:1;transform:none}
 .card.yellow{background:#c8ff2b;color:#111}
 .card.pink{background:#ff4aa6;color:#fff}
 .card.gray{background:#333}
+
 .left{grid-column:1;grid-row:1 / span 2}
 .right-top{grid-column:2;grid-row:1}
 .right-bottom{grid-column:2;grid-row:2}
+
 .badge{font-size:16px;opacity:.7;margin-bottom:6px}
 .h-head{display:flex;align-items:center;justify-content:space-between;margin:0 0 8px 0}
 .h-title{font-size:78px;line-height:1.06;margin:0;font-weight:900}
@@ -29,10 +33,10 @@ body{margin:0;background:#0f0f10;color:#eee;
 .tts{border:none;border-radius:22px;width:42px;height:42px;background:rgba(0,0,0,.12);cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
 .tts svg{width:22px;height:22px;fill:#111}
 
-/* ===== 展开块：跨两列，统一粉色容器；每行一个喇叭（只播粤语） ===== */
-.expand-full{grid-column:1 / span 2;grid-row:3}
-.expand-toggle{float:right;border:none;border-radius:999px;background:#ff4aa6;color:#fff;padding:8px 12px}
-.expand-box{clear:both;background:#ff4aa6;border-radius:18px;padding:6px 10px;margin-top:10px}
+/* 展开：与左卡同宽，在 grid 下方单独一行 */
+.expand-wrap{max-width:1080px;margin:10px auto 0;padding:0 18px}
+.expand-btn{display:inline-block;margin-left:auto;border:none;border-radius:999px;background:#ff4aa6;color:#fff;padding:8px 12px}
+.expand-box{background:#ff4aa6;border-radius:18px;padding:8px 10px}
 .expand-list{display:flex;flex-direction:column}
 .example{display:grid;grid-template-columns:1fr 0.95fr auto;gap:18px;align-items:center;padding:12px 8px;background:transparent}
 .example + .example{border-top:1px solid rgba(255,255,255,.18)}
@@ -41,7 +45,14 @@ body{margin:0;background:#0f0f10;color:#eee;
 .example .chs{opacity:.95;font-size:14px}
 .example .btns{display:flex;gap:8px}
 .example .tts{background:rgba(255,255,255,.28)}
-/* ================================= */
 
 .foot{position:fixed;left:0;right:0;bottom:0;padding:10px 16px;text-align:center;color:#aaa;font-size:12px;background:transparent}
-@media(max-width:900px){.grid{grid-template-columns:1fr;grid-template-rows:auto auto auto auto}.left{grid-row:auto}.h-title{font-size:56px}.row{font-size:30px}.search input{font-size:32px}}
+
+@media(max-width:900px){
+  .grid{grid-template-columns:1fr;grid-template-rows:auto auto auto}
+  .left{grid-row:auto}
+  .h-title{font-size:56px}
+  .row{font-size:30px}
+  .search input{font-size:32px}
+  .example{grid-template-columns:1fr 1fr auto}
+}
