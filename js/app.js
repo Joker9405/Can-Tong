@@ -11,9 +11,10 @@ function findLexemeIds(q){const nq=norm(q);if(!nq)return[];const set=new Set();C
 const grid=document.getElementById('grid');const examples=document.getElementById('examples');const examplesList=document.getElementById('examples-list');
 function resetUI(){grid.innerHTML='';examples.hidden=true;examplesList.innerHTML=''}
 function renderEmpty(){resetUI()}
+function pairedVariants(chs,en){const A=(chs||'').split(/[;；]/).map(s=>s.trim()).filter(Boolean);const B=(en||'').split(/[;；]/).map(s=>s.trim()).filter(Boolean);const n=Math.max(A.length,B.length);const out=[];for(let i=0;i<n;i++){out.push({zh:A[i]||'',en:B[i]||''})}return out}
 function renderPhased(lex){resetUI();
   const aliases=(lex.alias_zhh||'').split(/[;；]/).map(s=>s.trim()).filter(Boolean);
-  const variants=(lex.variants_zhh||'').split(/[;；]/).map(s=>s.trim()).filter(Boolean);
+  const variants=pairedVariants(lex.variants_chs, lex.variants_en);
   const note=(lex.note_en||'')+(lex.note_chs?('<br>'+lex.note_chs):'');
   const left=document.createElement('div');left.className='card yellow left';
   left.innerHTML=`<div class="badge">粤语zhh：</div>
@@ -23,7 +24,8 @@ function renderPhased(lex){resetUI();
   left.querySelector('.t-head').onclick=()=>speak(lex.zhh||''); left.querySelectorAll('.row .tts').forEach((b,i)=>b.onclick=()=>speak(aliases[i]));
   setTimeout(()=>{
     const rt=document.createElement('div');rt.className='card pink right-top';
-    rt.innerHTML=`<div class="vars">${variants.map(v=>`<div class="var-row">${v}</div>`).join('')}</div>`;grid.appendChild(rt);requestAnimationFrame(()=>rt.classList.add('show'));
+    rt.innerHTML=`<div class="vars">${variants.map(v=>`<div class="var-row"><div class="var-zh">${v.zh}</div>${v.en?`<div class="var-en">${v.en}</div>`:''}</div>`).join('')}</div>`;
+    grid.appendChild(rt);requestAnimationFrame(()=>rt.classList.add('show'));
     const rb=document.createElement('div');rb.className='card gray right-bottom';
     rb.innerHTML=`<div class="note">${note||''}</div><button id="example-btn">example 扩展</button>`;grid.appendChild(rb);requestAnimationFrame(()=>rb.classList.add('show'));
     rb.querySelector('#example-btn').onclick=()=>toggleExamples(lex, rb.querySelector('#example-btn'));
