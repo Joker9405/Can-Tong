@@ -1,5 +1,5 @@
 *{box-sizing:border-box}html,body{height:100%}
-/* 全站中文优先 Adobe 繁黑體 Std */
+/* 全站中文字体：Adobe 繁黑體 Std */
 body{margin:0;background:#0f0f10;color:#eee;
   font-family:"Adobe Fan Heiti Std","Adobe 繁黑體 Std","PingFang TC","Microsoft JhengHei","Noto Sans TC","PingFang SC","Microsoft YaHei",Arial,sans-serif;}
 .topbar{display:flex;justify-content:space-between;align-items:center;padding:18px 22px}
@@ -28,8 +28,13 @@ body{margin:0;background:#0f0f10;color:#eee;
 .tts{border:none;border-radius:22px;width:42px;height:42px;background:rgba(0,0,0,.12);cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
 .tts svg{width:22px;height:22px;fill:#111}
 
-/* === Expand：自动展开，无按钮；对齐为三列：左粤语｜中 EN+ZH ｜右喇叭 === */
-.expand-wrap{margin-top:16px}
+/* === Expand CTA === */
+.expand-cta{display:flex;justify-content:flex-end;margin-top:14px}
+.pill{border:none;background:#ff4aa6;color:#fff;border-radius:18px;padding:10px 14px;cursor:pointer}
+.pill[disabled]{opacity:.55;cursor:default}
+
+/* === Expand 列表：展开后与前版一致 === */
+.expand-wrap{margin-top:10px}
 .expand-box{display:block;background:#ff4aa6;border-radius:18px;padding:10px 12px}
 .expand-list{display:block}
 .ex-row{display:grid;grid-template-columns:1fr 1fr 54px;align-items:center;column-gap:18px;padding:14px 8px;min-height:64px}

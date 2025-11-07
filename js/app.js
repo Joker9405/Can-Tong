@@ -9,8 +9,8 @@ function speak(t){if(!('speechSynthesis'in window)||!t)return;const u=new Speech
 
 async function boot(){const[cm,lx,ex]=await Promise.all([loadCSV('crossmap.csv'),loadCSV('lexeme.csv'),loadCSV('examples.csv')]);CROSS=cm;lx.forEach(r=>LEX[r.id]=r);EXMAP=ex.reduce((m,r)=>{(m[r.lexeme_id]||(m[r.lexeme_id]=[])).push(r);return m},{})}
 function findLexemeIds(q){const nq=norm(q);const set=new Set();CROSS.forEach(r=>{if(fuzzy(r.term,nq))set.add(r.target_id)});Object.values(LEX).forEach(r=>{if(fuzzy(r.zhh,nq)||fuzzy(r.en,nq)||fuzzy(r.alias_zhh||'',nq))set.add(r.id)});return Array.from(set)}
-function clearUI(){document.getElementById('cards').innerHTML='';document.getElementById('expand-wrap').hidden=true;document.getElementById('expand-list').innerHTML=''}
-function renderEmpty(q){document.getElementById('cards').innerHTML=`<div class="empty">未找到：<b>${q}</b>。请补充到词库。</div>`;document.getElementById('expand-wrap').hidden=true;document.getElementById('expand-list').innerHTML=''}
+function clearUI(){document.getElementById('cards').innerHTML='';document.getElementById('expand-wrap').hidden=true;document.getElementById('expand-list').innerHTML='';document.getElementById('expand-cta').hidden=true}
+function renderEmpty(q){document.getElementById('cards').innerHTML=`<div class="empty">未找到：<b>${q}</b>。请补充到词库。</div>`;document.getElementById('expand-wrap').hidden=true;document.getElementById('expand-list').innerHTML='';document.getElementById('expand-cta').hidden=true}
 
 function render(lex){const cards=document.getElementById('cards');cards.innerHTML='';
   const aliases=(lex.alias_zhh||'').split(/[;；]/).map(s=>s.trim()).filter(Boolean);
@@ -27,18 +27,21 @@ function render(lex){const cards=document.getElementById('cards');cards.innerHTM
 
   const rightTop=document.createElement('div');rightTop.className='card pink right-top';
   const variants=(lex.variants_zhh||'').split(/[;；]/).map(s=>s.trim()).filter(Boolean);
-  rightTop.innerHTML = `<div class="vars">${variants.map(v=>`<div class="var-row">${v}</div>`).join('')}</div>`; /* 按需无喇叭 */
+  rightTop.innerHTML = `<div class="vars">${variants.map(v=>`<div class="var-row">${v}</div>`).join('')}</div>`; /* 无喇叭 */
 
   const rightBottom=document.createElement('div');rightBottom.className='card gray right-bottom';
   const note=(lex.note_en||'')+(lex.note_chs?('<br>'+lex.note_chs):'');rightBottom.innerHTML=`<div class="note">${note}</div>`;
 
   cards.appendChild(left);cards.appendChild(rightTop);cards.appendChild(rightBottom);
 
-  // examples：存在即渲染并显示，无折叠功能
-  const wrap=document.getElementById('expand-wrap');const list=document.getElementById('expand-list');list.innerHTML='';
+  // 示例：默认只显示 CTA；点击后渲染并保持展开
   const exs=(EXMAP[lex.id]||[]);
-  if(exs.length){
-    wrap.hidden=false;
+  const cta=document.getElementById('expand-cta');const btn=document.getElementById('expand-btn');
+  const wrap=document.getElementById('expand-wrap');const list=document.getElementById('expand-list');
+  list.innerHTML='';wrap.hidden=true;btn.disabled=false;cta.hidden=exs.length?false:true;
+  btn.onclick=()=>{
+    if(!exs.length){return}
+    wrap.hidden=false;list.innerHTML='';
     exs.forEach(e=>{
       const row=document.createElement('div');row.className='ex-row';
       row.innerHTML=`
@@ -51,9 +54,9 @@ function render(lex){const cards=document.getElementById('cards');cards.innerHTM
       row.querySelector('.tts').addEventListener('click',()=>speak(e.ex_zhh||''));
       list.appendChild(row);
     });
-  }else{
-    wrap.hidden=true;
-  }
+    // 点击后禁用按钮使其看起来“已展开，不可收起”
+    btn.disabled=true;
+  };
 }
 
 document.getElementById('q').addEventListener('input',e=>{

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Can-Tong — 粤语查询</title>
-  <link rel="stylesheet" href="/assets/style.css?v=6.4">
+  <link rel="stylesheet" href="/assets/style.css?v=6.5">
 </head>
 <body>
   <header class="topbar">
@@ -19,7 +19,12 @@
 
     <section id="cards" class="cards grid"></section>
 
-    <!-- examples：没有按钮，存在时自动展开渲染；不存在时整个区域不显示 -->
+    <!-- 示例 CTA（默认显示为按钮；点击后渲染并常驻，不再收起） -->
+    <div id="expand-cta" class="expand-cta" hidden>
+      <button id="expand-btn" class="pill">example 扩展</button>
+    </div>
+
+    <!-- 示例列表（点击 CTA 后显示） -->
     <section id="expand-wrap" class="expand-wrap" hidden>
       <div id="expand-box" class="expand-box">
         <div id="expand-list" class="expand-list"></div>
@@ -31,6 +36,6 @@
     CanTongMVP — Code MIT, Lexicon Closed; data/* CSVs CC BY-NC-ND.
   </footer>
 
-  <script src="/js/app.js?v=6.4"></script>
+  <script src="/js/app.js?v=6.5"></script>
 </body>
 </html>
