@@ -1,5 +1,6 @@
 const PATH='/data/';let CROSS=[],LEX={},EXMAP={};
 const ICON_SPK=`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10v4h4l5 4V6L7 10H3zm13.5 2a3.5 3.5 0 0 0-2.5-3.34v6.68A3.5 3.5 0 0 0 16.5 12zm0-7a9.5 9.5 0 0 1 0 14l1.5 1.5A11.5 11.5 0 0 0 18 3.5L16.5 5z"/></svg>`;
+
 function parseCSV(t){const l=t.split(/\r?\n/).filter(Boolean);const h=l.shift().split(',').map(s=>s.trim());return l.map(line=>{const cells=[];let cur='',inQ=false;for(let i=0;i<line.length;i++){const ch=line[i];if(ch=='"'){inQ=!inQ;continue}if(ch==','&&!inQ){cells.push(cur);cur=''}else{cur+=ch}}cells.push(cur);const o={};h.forEach((k,i)=>o[k]=(cells[i]||'').trim());return o})}
 async function loadCSV(n){const r=await fetch(PATH+n,{cache:'no-store'});if(!r.ok)throw new Error(n+' 404');return parseCSV(await r.text())}
 function norm(s){return (s||'').toLowerCase().replace(/\s+/g,'')}function fuzzy(t,q){t=norm(t);q=norm(q);if(!q)return false;let i=0;for(const c of t){if(c===q[i])i++}return i===q.length||t.includes(q)}
@@ -17,7 +18,6 @@ function renderPhased(lex){
   clearUI(); const grid=document.getElementById('grid');
   const aliases=(lex.alias_zhh||'').split(/[;；]/).map(s=>s.trim()).filter(Boolean);
 
-  // 左黄卡：主词 + 别名行（均带粤语发音）
   const left=document.createElement('div');left.className='card yellow left';
   left.innerHTML=`
     <div class="badge">粤语zhh：</div>
@@ -31,7 +31,6 @@ function renderPhased(lex){
   left.querySelector('.t-head').addEventListener('click',()=>speak(lex.zhh||''));
   left.querySelectorAll('.row .tts').forEach((b,i)=>{const t=aliases[i];b.addEventListener('click',()=>speak(t))});
 
-  // 右上粉卡（变体：纯文本，无喇叭）+ 右下灰卡（备注）
   setTimeout(()=>{
     const rt=document.createElement('div');rt.className='card pink right-top';
     const variants=(lex.variants_zhh||'').split(/[;；]/).map(s=>s.trim()).filter(Boolean);
@@ -43,36 +42,28 @@ function renderPhased(lex){
     rb.innerHTML=`<div class="note">${note}</div>`;
     grid.appendChild(rb); requestAnimationFrame(()=>rb.classList.add('show'));
 
-    // 显示“example 扩展”控制行（与 grid gap 对齐）
     const ctl=document.getElementById('expCtl');
     ctl.hidden=false;
-    document.getElementById('expBtn').onclick=()=>toggleExamples(lex);
+    document.getElementById('expBtn').onclick=()=>showExamples(lex);
   },120);
 }
 
-function toggleExamples(lex){
+function showExamples(lex){
   const wrap=document.getElementById('examples');
   const list=document.getElementById('examples-list');
   const ctl=document.getElementById('expCtl');
+  ctl.hidden=true;
   const exs=EXMAP[lex.id]||[];
-  if(wrap.hidden){
-    // 展开：按钮行隐藏；渲染整块粉容器
-    ctl.hidden=true;
-    list.innerHTML='';
-    exs.forEach(e=>{
-      const row=document.createElement('div');row.className='example';
-      row.innerHTML=`
-        <div class="yue">${e.ex_zhh||''}</div>
-        <div class="right"><div class="en">${e.ex_en||''}</div><div class="chs">${e.ex_chs||''}</div></div>
-        <div class="btns"><button class="tts t1" title="粤语">${ICON_SPK}</button></div>`;
-      row.querySelector('.t1').addEventListener('click',()=>speak(e.ex_zhh||''));
-      list.appendChild(row);
-    });
-    wrap.hidden=false;
-  }else{
-    // 收起：清空并恢复按钮行
-    wrap.hidden=true; list.innerHTML=''; ctl.hidden=false;
-  }
+  list.innerHTML='';
+  exs.forEach(e=>{
+    const row=document.createElement('div');row.className='example';
+    row.innerHTML=`<div class="yue">${e.ex_zhh||''}</div>
+                   <div class="right"><div class="en">${e.ex_en||''}</div><div class="chs">${e.ex_chs||''}</div></div>
+                   <div class="btns"><button class="tts" title="粤语">${ICON_SPK}</button></div>`;
+    row.querySelector('.tts').addEventListener('click',()=>speak(e.ex_zhh||''));
+    list.appendChild(row);
+  });
+  wrap.hidden=false;
 }
 
 document.getElementById('q').addEventListener('input',e=>{
