@@ -1,2 +1,5 @@
-lex_id,head,alias,example
-L1,挟嘢,揼嘢,样例
+﻿term,lang,target_id,kind
+扔东西,chs,L1,head
+丢东西,chs,L1,alias
+throw,en,L1,head
+掟垃圾,zhh,L1,example
