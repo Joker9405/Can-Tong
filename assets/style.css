@@ -1,7 +1,7 @@
 *{box-sizing:border-box}html,body{height:100%}
 /* 全站中文字：Adobe 繁黑體 Std（优先） */
 body{margin:0;background:#0f0f10;color:#eee;
-  font-family:"Adobe Fan Heiti Std","Adobe 繁黑體 Std","PingFang TC","Microsoft JhengHei","Noto Sans TC","Heiti TC","Hiragino Sans CNS","PingFang SC","Microsoft YaHei",Arial,sans-serif;}
+  font-family:"Adobe Fan Heiti Std","Adobe 繁黑體 Std","PingFang TC","Microsoft JhengHei","Noto Sans TC","PingFang SC","Microsoft YaHei",Arial,sans-serif;}
 .topbar{display:flex;justify-content:space-between;align-items:center;padding:18px 22px}
 /* 品牌仍用方正黄草简体 */
 .brand{font-size:30px;font-weight:800;color:#b8ff2b;
@@ -28,10 +28,12 @@ body{margin:0;background:#0f0f10;color:#eee;
 .note{opacity:.95;font-size:18px;line-height:1.6}
 .tts{border:none;border-radius:22px;width:42px;height:42px;background:rgba(0,0,0,.12);cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
 .tts svg{width:22px;height:22px;fill:#111}
-.expand-toggle{float:right;border:none;border-radius:999px;background:#ff4aa6;color:#fff;padding:10px 14px;margin-top:12px}
-.expand-box{clear:both;background:#ff4aa6;border-radius:18px;padding:10px 12px;margin-top:10px}
-.expand-list{display:flex;flex-direction:column;gap:10px}
-.example{display:grid;grid-template-columns:1fr 0.9fr auto;gap:16px;align-items:center;background:#ff4aa6;color:#fff;border-radius:12px;padding:6px 8px}
+/* 扩展：按钮靠右，展开后为整块粉色外框；行距统一；每行右侧一个喇叭 */
+.expand-wrap{margin-top:14px}
+.expand-toggle{float:right;border:none;border-radius:999px;background:#ff4aa6;color:#fff;padding:10px 14px}
+.expand-box{clear:both;background:#ff4aa6;border-radius:18px;padding:14px 14px;margin-top:10px}
+.expand-list{display:flex;flex-direction:column;gap:12px}
+.example{display:grid;grid-template-columns:1fr 0.9fr auto;gap:16px;align-items:center;background:#ff4aa6;color:#fff;border-radius:12px;padding:4px 4px}
 .example .yue{font-size:18px}
 .example .en{font-weight:800;margin-bottom:3px}
 .example .chs{opacity:.95;font-size:14px}
