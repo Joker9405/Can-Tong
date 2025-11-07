@@ -1,1 +1,1 @@
-部署后请直接访问 /data/*.csv 验证；搜索“不要推/别推/don't push/咪擁我/扔东西/throw”应有对应结果。
+Upload to Vercel static. CSVs in /data.

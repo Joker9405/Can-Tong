@@ -1,5 +1,2 @@
-term,lang,target_id,kind
-扔东西,chs,L1,head
-掟嘢,zhh,L1,head
-don't throw things,en,L1,head
-唔好掟嘢,zhh,L1,example
+lex_id,head,alias,example
+L1,挟嘢,揼嘢,样例
