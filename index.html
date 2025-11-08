@@ -1,1 +1,30 @@
-<!doctype html><html><body><div id='app-root'></div><script src='./js/app.js'></script></body></html>
+<!doctype html>
+<html lang="zh-HK">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Can‑Tong — 粤语查询</title>
+  <link rel="stylesheet" href="/assets/style.css" />
+  <!-- Papa Parse for robust CSV parsing -->
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+</head>
+<body>
+  <main id="app" class="container">
+    <div class="search-wrap">
+      <input id="q" placeholder="输入中文/英文/粤语…" />
+      <button id="btnSearch">Search</button>
+    </div>
+    <div id="error" style="display:none;color:#ff6b6b;margin:8px 0;"></div>
+    <section class="grid">
+      <article class="card left" id="cardLeft"></article>
+      <article class="card right pink" id="cardVariants"></article>
+      <article class="card right gray" id="cardNotes">
+        <button id="btnExample" class="pill">example 扩展</button>
+        <div id="examplePanel" style="display:none;"></div>
+      </article>
+    </section>
+  </main>
+  <script src="/js/app.js"></script>
+</body>
+</html>
