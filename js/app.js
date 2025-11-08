@@ -1,4 +1,4 @@
-/* Can‑Tong robust front-end (csv‑compatible) */
+/* Can-Tong robust front-end (csv-compatible) */
 (function () {
   const $ = (sel) => document.querySelector(sel);
   const qInput = $('#q');
@@ -7,16 +7,13 @@
   const notes = $('#cardNotes');
   const errBox = $('#error');
   const exBtn = $('#btnExample');
-  const exPanel = $('#examplePanel');
 
-  // show errors in-page instead of white screen
   window.addEventListener('error', (e) => {
     errBox.style.display = 'block';
     errBox.textContent = '前端异常：' + (e.error?.message || e.message);
     console.error(e.error || e);
   });
 
-  // helpers
   const pick = (row, ...keys) => {
     for (const k of keys) {
       if (!k) continue;
@@ -30,12 +27,19 @@
     .map(x => x.trim())
     .filter(Boolean);
 
-  // fetch CSV with cache-busting & no-store headers hint
   async function fetchCSV() {
-    const url = `/data/lexeme.csv?v=${Date.now()}`;
-    const res = await fetch(url, { cache: 'no-store' });
-    if (!res.ok) throw new Error(`获取 CSV 失败：${res.status}`);
-    return await res.text();
+    // 支持两种来源：优先 data/ 下的文件；若失败回退到 jsDelivr
+    const primary = `data/lexeme.csv?v=${Date.now()}`;
+    try {
+      const r = await fetch(primary, { cache: 'no-store' });
+      if (r.ok) return await r.text();
+      throw new Error('primary failed ' + r.status);
+    } catch (_) {
+      const backup = "https://cdn.jsdelivr.net/gh/Joker9405/Can-Tong@main/data/lexeme.csv";
+      const r2 = await fetch(backup, { cache: 'no-store' });
+      if (!r2.ok) throw new Error('backup failed ' + r2.status);
+      return await r2.text();
+    }
   }
 
   function parseCSV(text) {
@@ -44,36 +48,29 @@
       skipEmptyLines: 'greedy',
       transformHeader: (h) => (h || '').replace(/^\uFEFF/, '').trim()
     });
-    if (parsed.errors?.length) {
-      console.warn('CSV parse warnings:', parsed.errors);
-    }
+    if (parsed.errors?.length) console.warn('CSV parse warnings:', parsed.errors);
     return parsed.data;
   }
 
-  // index row by multiple keys for search
   function buildIndex(rows) {
-    const map = new Map();
+    const m = new Map();
     for (const r of rows) {
-      const id = pick(r, 'id', 'ID');
+      const id  = pick(r, 'id', 'ID');
       if (!id) continue;
-
       const zhh = pick(r, 'zhh', 'yue', 'zh-HK');
       const chs = pick(r, 'chs', 'zh-CN');
       const en  = pick(r, 'en', 'en_US');
       const alias_zhh = toList(pick(r, 'alias_zhh', 'aliases_zhh', 'alias_yue'));
-
       const keys = new Set([id, zhh, chs, en, ...alias_zhh]);
       keys.forEach(k => {
         const kk = String(k || '').trim();
-        if (!kk) return;
-        map.set(kk.toLowerCase(), r);
+        if (kk) m.set(kk.toLowerCase(), r);
       });
     }
-    return map;
+    return m;
   }
 
   function renderRow(r) {
-    // guard: never crash rendering
     try {
       const id          = pick(r, 'id', 'ID');
       const zhh         = pick(r, 'zhh', 'yue', 'zh-HK');
@@ -95,21 +92,25 @@
         ${alias_zhh.length ? `<ul class="alias">${alias_zhh.map(x=>`<li>${x}</li>`).join('')}</ul>` : ''}
       `;
 
-      // pink variants card
-      const vBlocks = [];
-      if (variants_chs.length) vBlocks.push(`<div><strong>变体（中文）：</strong><ul>${variants_chs.map(x=>`<li>${x}</li>`).join('')}</ul></div>`);
-      if (variants_en.length)  vBlocks.push(`<div><strong>Variants (EN)：</strong><ul>${variants_en.map(x=>`<li>${x}</li>`).join('')}</ul></div>`);
-      if (variants_zhh.length) vBlocks.push(`<div><strong>变体（粤语）：</strong><ul>${variants_zhh.map(x=>`<li>${x}</li>`).join('')}</ul></div>`);
-      variants.innerHTML = vBlocks.join('') || '<div>暂无变体</div>';
+      // pink variants
+      const parts = [];
+      if (variants_chs.length) parts.push(`<div><strong>变体（中文）：</strong><ul>${variants_chs.map(x=>`<li>${x}</li>`).join('')}</ul></div>`);
+      if (variants_en.length)  parts.push(`<div><strong>Variants (EN)：</strong><ul>${variants_en.map(x=>`<li>${x}</li>`).join('')}</ul></div>`);
+      if (variants_zhh.length) parts.push(`<div><strong>变体（粤语）：</strong><ul>${variants_zhh.map(x=>`<li>${x}</li>`).join('')}</ul></div>`);
+      document.querySelector('#cardVariants').innerHTML = parts.join('') || '<div>暂无变体</div>';
 
-      // gray notes card
-      $('#examplePanel').style.display = 'none';
-      $('#examplePanel').innerHTML = `
+      // gray notes
+      const panel = document.querySelector('#examplePanel');
+      panel.style.display = 'none';
+      panel.innerHTML = `
         <div><strong>中文：</strong>${chs || '—'}</div>
         <div><strong>English：</strong>${en || '—'}</div>
         ${note_chs ? `<div class="mt"><strong>备注（中文）：</strong>${note_chs}</div>` : ''}
         ${note_en ? `<div class="mt"><strong>Notes (EN)：</strong>${note_en}</div>` : ''}
       `;
+      document.querySelector('#btnExample').onclick = () => {
+        panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+      };
     } catch (e) {
       errBox.style.display = 'block';
       errBox.textContent = '渲染异常：' + e.message;
@@ -117,19 +118,10 @@
     }
   }
 
-  function setupExampleToggle() {
-    exBtn?.addEventListener('click', () => {
-      const p = $('#examplePanel');
-      if (!p) return;
-      p.style.display = (p.style.display === 'none' ? 'block' : 'none');
-    });
-  }
-
   async function main() {
-    setupExampleToggle();
     const csv = await fetchCSV();
     const rows = parseCSV(csv);
-    if (!Array.isArray(rows) || rows.length === 0) {
+    if (!rows?.length) {
       errBox.style.display = 'block';
       errBox.textContent = 'CSV 为空或解析失败';
       return;
@@ -137,15 +129,13 @@
     const idx = buildIndex(rows);
     const doSearch = () => {
       const key = (qInput.value || '').trim().toLowerCase();
-      const row = idx.get(key) || rows[0]; // fallback first row
-      renderRow(row);
+      renderRow(idx.get(key) || rows[0]);
     };
-    $('#btnSearch')?.addEventListener('click', doSearch);
-    qInput?.addEventListener('keydown', (e) => { if (e.key === 'Enter') doSearch(); });
-    doSearch(); // initial render
+    document.querySelector('#btnSearch').onclick = doSearch;
+    qInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') doSearch(); });
+    doSearch();
   }
-
-  main().catch((e) => {
+  main().catch(e => {
     errBox.style.display = 'block';
     errBox.textContent = '初始化失败：' + e.message;
     console.error(e);
