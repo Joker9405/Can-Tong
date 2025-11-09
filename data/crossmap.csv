@@ -1,7 +1,7 @@
 term,lang,target_id,kind
-扔东西,chs,L1,head
-throw,en,L1,head
-丢东西,chs,L1,head
+扔/丢,chs,L1,head
+Throw/drop ,en,L1,head
+把东西扔掉,chs,L1,head
 扔垃圾,chs,L1,head
 丢垃圾,chs,L1,head
 爱面子,chs,L2,head
