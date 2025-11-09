@@ -1,22 +1,40 @@
 <!doctype html>
-<html lang="zh-Hans">
+<html lang="zh-HK">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Can-Tong — 粤语查询</title>
-  <link rel="stylesheet" href="/assets/style.css">
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Can‑Tong — 粤语查询</title>
+  <link rel="stylesheet" href="/assets/style.css" />
+  <link rel="stylesheet" href="/assets/hotfix.css" />
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand">Can-Tong <span class="dot">•</span></div>
-    <div class="lang">chs-zhh-en</div>
+  <header class="site-header">
+    <div class="brand">Can‑Tong •</div>
+    <div class="lang-chip">chs‑zhh‑en</div>
   </header>
+
   <main class="container">
-    <div class="search"><input id="q" type="text" placeholder="" autocomplete="off" /></div>
-    <section id="grid" class="grid"></section>
-    <section id="examples" class="examples" hidden><div class="examples-inner" id="examples-list"></div></section>
+    <div class="search-wrap">
+      <input id="q" placeholder="输入中文 / 粤语 / 英文 进行搜索…" />
+      <button id="btnSearch">Search</button>
+    </div>
+
+    <div id="error" class="error" style="display:none;"></div>
+
+    <section class="grid">
+      <article class="card left" id="cardLeft"></article>
+      <article class="card right pink" id="cardVariants"></article>
+      <article class="card right gray" id="cardNotes">
+        <button id="btnExample" class="pill">example 扩展</button>
+        <div id="examplePanel" style="display:none;"></div>
+      </article>
+    </section>
   </main>
-  <footer class="foot">CanTongMVP — Code MIT, Lexicon Closed; data/* CSVs CC BY‑NC‑ND.</footer>
+
+  <footer class="site-footer">CanTongMVP — Code MIT, Lexicon Closed, data/* CSVs CC BY‑NC‑ND.</footer>
+
   <script src="/js/app.js"></script>
 </body>
 </html>

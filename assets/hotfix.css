@@ -1,11 +1,1 @@
-/* Hotfix: swap CN/EN order in the small yellow hint block on the pink card */
-/* 不用删除 style.css；只需让这个文件在 style.css 之后被加载即可 */
-.card.right.pink .hint{
-  display: flex;
-  flex-direction: column-reverse; /* 英文在上，中文在下 */
-}
-/* 兜底：若没有 .hint 类，但黄框是粉卡里的第一个块，也能生效 */
-.card.right.pink > *:first-child{
-  display: flex;
-  flex-direction: column-reverse;
-}
+.card.right.pink .hint{display:flex;flex-direction:column-reverse}
