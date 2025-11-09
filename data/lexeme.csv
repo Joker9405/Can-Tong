@@ -1,10 +1,45 @@
+Column1,Column2,Column3,Column4,Column5,Column6,Column7,Column8,Column9,Column10,Column11
 id,zhh,zhh_pron,alias_zhh,chs,en,note_chs,note_en,variants_zhh,variants_chs,variants_en
-L1,æ¼,dam1,æ‰;æŸ;ä¸¢;æŒ;æ“—;é£›;å¼¹,æ‰”/ä¸¢,throw,æ‰”/ä¸¢ï¼Œå½¢å®¹è¿™ä¸ªåŠ¨ä½œæ ¹æ®ä¸åŒåŠ¨ä½œåŠ›åº¦å’ŒåŠ¨æœºæœ‰ä¸åŒç”¨æ³•ã€‚,"The word ""throw"" or ""drop"" has different uses depending on the force and motivation of the action.",,æ‰”/ä¸¢+sth ,Throw/drop + sth
-L2,æ¼å˜¢,dam1 laap6 saap3,æŸå˜¢;ä¸¢å˜¢,æ‰”/ä¸¢ä¸œè¥¿,Take out the garbage / put the garbage / dump the garbage /trash out the garbage ,æ‰”ä¸œè¥¿ï¼Œå¾€å¤–æ‰”ï¼Œæœ‰åŠ›é‡,"Throwing things, throwing them outwards, has power.",,æ‰”/ä¸¢+sth ä¸€èˆ¬ä¸œè¥¿å¾€å¤–æ‰”ï¼Œå¸¦æœ‰åŠ›åº¦,Throw/drop + sthï¼Œ
-L3,é£›,fei1,å¼¹/è½¦,é€Ÿåº¦å¾ˆå¿«åœ°æ‰”/ä¸¢,throw it over here/Toss it over/throw past/threw past,ç”¨å¾ˆå¿«çš„é€Ÿåº¦æ‰”/ä¸¢è¿‡æ¥ï¼Œæ‰”æ¥è‡ªå·±èº«è¾¹,Throw very quickly,,æ‰”+pcs+sthï¼Œ,Throwing +pcs+sthï¼Œ
-
-
-
-
-
-
+L1,“g,dam1,µô;’ğ;¶ª;Ì¢;ß¨;·É;µ¯,ÈÓ/¶ª,leave/throw,ÈÓ/¶ª£¬ĞÎÈİÕâ¸ö¶¯×÷¸ù¾İ²»Í¬¶¯×÷Á¦¶ÈºÍ¶¯»úÓĞ²»Í¬ÓÃ·¨¡£,"The word ""throw"" or ""drop"" has different uses depending on the force and motivation of the action.",,ÈÓ/¶ª+sth ,Throw/drop + sth
+L2,“g‡S,dam1 laap6 saap3,’ğ‡S;¶ª‡S,ÈÓ/¶ª¶«Î÷,Take out the garbage / put the garbage / dump the garbage /trash out the garbage ,ÈÓ¶«Î÷£¬ÍùÍâÈÓ£¬ÓĞÁ¦Á¿,"Throwing things, throwing them outwards, has power.",,ÈÓ/¶ª+sth Ò»°ã¶«Î÷ÍùÍâÈÓ£¬´øÓĞÁ¦¶È,Throw/drop + sth£¬
+L3,ïw,fei1 ,µ¯,ËÙ¶ÈºÜ¿ìµØÈÓ/¶ª,throw it over here/Toss it over/throw past/threw past,ÓÃºÜ¿ìµÄËÙ¶ÈÈÓ/¶ª¹ıÀ´£¬ÈÓÀ´×Ô¼ºÉí±ß,Throw very quickly,,ÈÓ+pcs+sth£¬,Throwing +pcs+sth£¬
+L4,?,ngung2,ong,ÍÆ,push/pushing/,ÍÆ¶¯ Îâ×¿ôË±êÖ¾ÃûÑÔ¡°ßíºÃong¡±£¬²»ÒªÍÆµÄÒâË¼,"The meaning of ""push""",,,
+L5,ßíºÃ?,m4 hou2 ngung2,ßä?;ƒÓ?,±ğÍÆ/²»ÒªÍÆ/ÍÆÄãÂè,Don't push/Don'tf*cking push/no push,ÍÆ=? Îâ×¿ôË±êÖ¾ÃûÒå¡°ßíºÃong¡±£¬²»ÒªÍÆµÄÒâË¼, (V) Don't to push/to shove/to jostle,,²»ÒªÍÆ+sb/sth  ÍÆÄ³Ğ©ÈË»òÕßÊÂ,"Don't push + sb/sth, or push certain people or things."
+L6,,,,,,,,,,
+L7,,,,,,,,,,
+L8,,,,,,,,,,
+L9,,,,,,,,,,
+L10,,,,,,,,,,
+L11,,,,,,,,,,
+L12,,,,,,,,,,
+L13,ËÀ¼¦³Å·¹¸Ç,sei2 gai1 caang3 faan6 goi3,ËÀ¶¥;ßíÈÏÊä,²»·şÊä/Ã÷Öª´í²»ÈÏ/°®Ãæ×Ó,The dead chicken forcing thelid of the rice pot open,ĞªºóÓï²»·şÊä£»Ã÷Öª×Ô¼º´íÁË£¬µ«ÎªÁËÃæ×Ó¶¼Òª×°Ã»ÊÂ¡¢²»ÈÏ´í£¬¸øÈË¿´´©ÁË¶¼²»ÈÏ¡£,(ldiom) (V) To refuse toadmit one's mistake evenwhen it is obvious,,ĞÎÈİ´Ê Í¨³£ÌØÖ¸ÈËµÄĞĞÎª,Adjectives usually refer specifically to human behavior.
+L14,,,,,,,,,,
+L15,,,,,,,,,,
+L16,,,,,,,,,,
+L17,,,,,,,,,,
+L18,,,,,,,,,,
+L19,,,,,,,,,,
+L20,,,,,,,,,,
+L21,,,,,,,,,,
+L22,,,,,,,,,,
+L23,,,,,,,,,,
+L24,,,,,,,,,,
+L25,,,,,,,,,,
+L26,,,,,,,,,,
+L27,,,,,,,,,,
+L28,,,,,,,,,,
+L29,,,,,,,,,,
+L30,,,,,,,,,,
+L31,,,,,,,,,,
+L32,,,,,,,,,,
+L33,,,,,,,,,,
+L34,,,,,,,,,,
+L35,,,,,,,,,,
+L36,,,,,,,,,,
+L37,,,,,,,,,,
+L38,,,,,,,,,,
+L39,,,,,,,,,,
+L40,,,,,,,,,,
+L41,,,,,,,,,,
+L42,,,,,,,,,,
+L43,,,,,,,,,,
