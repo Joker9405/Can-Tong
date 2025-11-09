@@ -43,4 +43,7 @@ function toggleExamples(lex, btn){const exs=EXMAP[lex.id]||[];if(!exs.length)ret
   }else{examples.hidden=true;}
 }
 document.getElementById('q').addEventListener('input',e=>{const q=e.target.value; if(!q){renderEmpty();return} const ids=findLexemeIds(q); if(!ids.length){renderEmpty();return} renderPhased(LEX[ids[0]])});
-boot();
+boot(); }
+    }
+  });
+});
