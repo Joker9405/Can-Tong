@@ -1,3 +1,44 @@
+Column1,Column2,Column3,Column4,Column5
 lexeme_id,ex_zhh,ex_zhh_pron,ex_chs,ex_en
-L1,å””å¥½æŸå˜¢ï¼,,ä¸è¦æ‰”ä¸œè¥¿!,Don't throw things!
-L1,ä½¢æŸä½å’—æ¯ã€‚,,ä»–æŠŠæ¯å­æ‰”åœ¨åœ°ä¸Šã€‚,He lobbed the cup onto the floor.
+L1,“g…ø†¬‡SÚ,,°Ñ¶«Î÷ÈÓµô,Throw things away.sense of power
+L1,µôÀ¬»ø,,ÈÓÀ¬»ø¹Ì¶¨ÓÃ·¨,Throw away the trash / garbage
+L1,¶ªÀ¬»ø,,ÈÓÀ¬»ø¹Ì¶¨ÓÃ·¨,Throw away the trash / garbage
+L1,’ğ†¬‡Sß^È¥,,ÓĞÄ¿±ê£¬Ïò×ÅÄ¿±êÈÓ¹ıÈ¥,Throw it toward the target
+L1,ß¨ÂñÒ»±ß,,ÈÓÔÚÒ»±ß£¬ËæÒâ²»¾­ÒâÈÓ,Put aside£¬set aside
+L1,Ì¢ÂäµØÏÂ,,ÈÓÔÚµØÉÏ£¬ºÜ´óÁ¦ÍùÏÂÈÓ,Drop it down. / Throw it down.
+L1,ïwŒ¦ÍÏĞ¬ß^‡­,,ÈÓÒ»Ñù¶«Î÷À´£¬ÈÓ¹ıÀ´ËÙ¶ÈºÜ¿ì£¬£¨Œ¦ÍÏĞ¬£©=Ò»Ë«ÍÏĞ¬,Throw a pair of slippers over. It was thrown very fast.
+L2,“gÀ¬»ø,,ÈÓÀ¬»ø£¬Ò»°ã¶«Î÷ÍùÍâÈÓ£¬,Throwing things.sense of power
+L2,ßä“gß^‡­,,²»ÒªÈÓ¹ıÀ´£¬´øÁ¦¶È,Don't throw it at me.sense of power
+L2,ßä’ğÎÒ,,²»ÒªÓÃÁ¦ÈÓÎÒ,Don't throw me hard.
+L2,ßíºÃµôğ¯ÎÒ,,²»ÒªÏòÎÒ·½ÏòÈÓ,Don't f*cking throw me away.
+L2,“gÂñÒ»¶şß…,,ÈÓÔÚÒ»±ß£¬ËæÒâ²»¾­ÒâÈÓ£¬´øÁ¦¶È,Put aside£¬set aside£¬sense of power
+L3,ßäµ¯ß^‡­,,²»ÒªÈÓ¹ıÀ´ËÙ¶ÈºÜ¿ì£¬µ¯´øÓĞÏÓÆú,Don't throw it at me.
+L3,ïw‚€²¨Âñ‡­,,ÈÓ¸öÇòÀà¹ıÀ´ÎÒÕâÀï,ÈÓ¸öÇòÀà¹ıÀ´ÎÒÕâÀï
+L3,µ¯‡­µ¯È¥,,ÈÓÀ´ÈÓÈ¥,Tossing around
+L3,µ¯†¬Jobß^‡­,,ÈÓµã¹¤×÷¹ıÀ´,Give me a Job
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,µô/¶ªÀ¬»ø,,ÈÓÀ¬»ø,
+,“gÀ¬»ø,,ÈÓÀ¬»ø£¬°Ñ¶«Î÷ÈÓµô,take out the trash
+,ß¨ÂñÒ»±ß,,ÈÓÔÚÒ»±ß£¬ËæÒâ²»¾­ÒâÈÓ,put aside£¬set aside
+,,,,
+,,,,
+,Å×À¬»ø,,ÈÓÀ¬»ø£¬ĞÎÈİÓĞÅ×ÎïÏßÍ¬Ê±Ò²ÊÇËæÒâÈÓ,lob it into the trash
+,ËÀ³Å,,åeÁË»ò›]ÄÜÁ¦Çé›rÏÂ£¬ÈÔÈ»ŠÓ²µØˆÔ³Ö²»ÕJİ”»ò²»³ĞÕJåe£¬§¹ÌˆÌ¡¢²»îŠÁTĞİ,Even when lacking the ability they stubbornly refused to admit defeat.
+,ËÀÒªÃæ,,°®Ãæ×Ó,Save face save 
