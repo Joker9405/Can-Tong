@@ -1,12 +1,44 @@
+Column1,Column2,Column3,Column4,Column5
 lexeme_id,ex_zhh,ex_zhh_pron,ex_chs,ex_en
-L1,æ‰/ä¸¢åƒåœ¾,,æ‰”åƒåœ¾,throw away the trash / garbage
-L1,æ¼åƒåœ¾,,æ‰”åƒåœ¾ï¼ŒæŠŠä¸œè¥¿æ‰”æ‰,take out the trash
-L1,æ“—åŸ‹ä¸€è¾¹,,æ‰”åœ¨ä¸€è¾¹ï¼Œéšæ„ä¸ç»æ„æ‰”,put asideï¼Œset aside
-L1,é£...è¿‡ç¦»,,æ‰”ä¸€æ ·ä¸œè¥¿æ¥ï¼Œæ‰”è¿‡æ¥é€Ÿåº¦å¾ˆå¿«,hurl / fling
-L1,æŒè½åœ°ä¸‹,,æ‰”åœ¨åº•ä¸Šï¼Œå¾ˆå¤§åŠ›å¾€ä¸‹æ‰”,Drop it down. / Throw it down.
-L1,æŠ›åƒåœ¾,,æ‰”åƒåœ¾ï¼Œå½¢å®¹æœ‰æŠ›ç‰©çº¿åŒæ—¶ä¹Ÿæ˜¯éšæ„æ‰”,lob it into the trash
-L2,æ­»æ’‘,,éŒ¯äº†æˆ–æ²’èƒ½åŠ›æƒ…æ³ä¸‹ï¼Œä»ç„¶å¼·ç¡¬åœ°å …æŒä¸èªè¼¸æˆ–ä¸æ‰¿èªéŒ¯ï¼Œå¸¶å›ºåŸ·ã€ä¸é¡˜ç½·ä¼‘,Even when lacking the ability they stubbornly refused to admit defeat.
-L2,æ­»è¦é¢,,çˆ±é¢å­,Save face save 
-L2,æ˜çŸ¥é”™éƒ½å””è®¤,,æ˜æ˜çŸ¥é“é”™äº†ä¹Ÿä¸æ‰¿è®¤é”™è¯¯,Even though they know they are wrong, they won't admit it.
-L2,è€é–ªå””è®¤è¾“,,æ€ä¹ˆæ ·ä¹Ÿä¸æœè¾“,I refuse to admit defeat no matter what
-L2,æ–­æ­£éƒ½å””æ’šè®¤,,è¯æ˜æ˜¯é”™äº†è¿˜ä¸æ‰¿è®¤æœ‰é—®é¢˜,Proving that it's wrong but still refusing to admit there's a problem.
+L1,“g…ø†¬‡SÚ,,°Ñ¶«Î÷ÈÓµô,Throw things away.sense of power
+L1,µôÀ¬»ø,,ÈÓÀ¬»ø¹Ì¶¨ÓÃ·¨,Throw away the trash / garbage
+L1,¶ªÀ¬»ø,,ÈÓÀ¬»ø¹Ì¶¨ÓÃ·¨,Throw away the trash / garbage
+L1,’ğ†¬‡Sß^È¥,,ÓĞÄ¿±ê£¬Ïò×ÅÄ¿±êÈÓ¹ıÈ¥,Throw it toward the target
+L1,ß¨ÂñÒ»±ß,,ÈÓÔÚÒ»±ß£¬ËæÒâ²»¾­ÒâÈÓ,Put aside£¬set aside
+L1,Ì¢ÂäµØÏÂ,,ÈÓÔÚµØÉÏ£¬ºÜ´óÁ¦ÍùÏÂÈÓ,Drop it down. / Throw it down.
+L1,ïwŒ¦ÍÏĞ¬ß^‡­,,ÈÓÒ»Ñù¶«Î÷À´£¬ÈÓ¹ıÀ´ËÙ¶ÈºÜ¿ì£¬£¨Œ¦ÍÏĞ¬£©=Ò»Ë«ÍÏĞ¬,Throw a pair of slippers over. It was thrown very fast.
+L2,“gÀ¬»ø,,ÈÓÀ¬»ø£¬Ò»°ã¶«Î÷ÍùÍâÈÓ£¬,Throwing things.sense of power
+L2,ßä“gß^‡­,,²»ÒªÈÓ¹ıÀ´£¬´øÁ¦¶È,Don't throw it at me.sense of power
+L2,ßä’ğÎÒ,,²»ÒªÓÃÁ¦ÈÓÎÒ,Don't throw me hard.
+L2,ßíºÃµôğ¯ÎÒ,,²»ÒªÏòÎÒ·½ÏòÈÓ,Don't f*cking throw me away.
+L2,“gÂñÒ»¶şß…,,ÈÓÔÚÒ»±ß£¬ËæÒâ²»¾­ÒâÈÓ£¬´øÁ¦¶È,Put aside£¬set aside£¬sense of power
+L3,ßäµ¯ß^‡­,,²»ÒªÈÓ¹ıÀ´ËÙ¶ÈºÜ¿ì£¬µ¯´øÓĞÏÓÆú,Don't throw it at me.
+L3,ïw‚€²¨Âñ‡­,,ÈÓ¸öÇòÀà¹ıÀ´ÎÒÕâÀï,ÈÓ¸öÇòÀà¹ıÀ´ÎÒÕâÀï
+L3,µ¯‡­µ¯È¥,,ÈÓÀ´ÈÓÈ¥,Tossing around
+L3,µ¯†¬Jobß^‡­,,ÈÓµã¹¤×÷¹ıÀ´,Give me a Job
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,µô/¶ªÀ¬»ø,,ÈÓÀ¬»ø,
+,“gÀ¬»ø,,ÈÓÀ¬»ø£¬°Ñ¶«Î÷ÈÓµô,take out the trash
+,ß¨ÂñÒ»±ß,,ÈÓÔÚÒ»±ß£¬ËæÒâ²»¾­ÒâÈÓ,put aside£¬set aside
+,,,,
+,,,,
+,Å×À¬»ø,,ÈÓÀ¬»ø£¬ĞÎÈİÓĞÅ×ÎïÏßÍ¬Ê±Ò²ÊÇËæÒâÈÓ,lob it into the trash
+,ËÀ³Å,,åeÁË»ò›]ÄÜÁ¦Çé›rÏÂ£¬ÈÔÈ»ŠÓ²µØˆÔ³Ö²»ÕJİ”»ò²»³ĞÕJåe£¬§¹ÌˆÌ¡¢²»îŠÁTĞİ,Even when lacking the ability they stubbornly refused to admit defeat.
+,ËÀÒªÃæ,,°®Ãæ×Ó,Save face save 
