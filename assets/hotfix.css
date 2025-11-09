@@ -1,0 +1,5 @@
+/* Hotfix: swap CN/EN order in the small yellow hint block on the pink card */
+.card.right.pink .hint{
+  display: flex;
+  flex-direction: column-reverse; /* EN appears first, CN second */
+}
