@@ -1,1 +1,1 @@
-{ "headers":[ { "source":"/data/(.*)", "headers":[ { "key":"Cache-Control", "value":"no-store" } ] } ] }
+{"cleanUrls":true,"headers":[{"source":"/(.*)","headers":[{"key":"Cache-Control","value":"no-store"}]}]}
