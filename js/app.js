@@ -44,3 +44,28 @@ function toggleExamples(lex, btn){const exs=EXMAP[lex.id]||[];if(!exs.length)ret
 }
 document.getElementById('q').addEventListener('input',e=>{const q=e.target.value; if(!q){renderEmpty();return} const ids=findLexemeIds(q); if(!ids.length){renderEmpty();return} renderPhased(LEX[ids[0]])});
 boot();
+// === HOTFIX: variants title EN on top, CHS below (no data swap) ===
+document.addEventListener('DOMContentLoaded', () => {
+  // 找所有粉卡标题容器（按你页面结构可能是 .variant-title 或 .variants-title）
+  const guessSelectors = ['.variant-title', '.variants-title', '.variants .title', '.pink .title'];
+  const roots = guessSelectors.flatMap(sel => Array.from(document.querySelectorAll(sel)));
+
+  roots.forEach(root => {
+    if (!root) return;
+    // 常见结构：<strong>中文</strong><small>English</small> 或反过来
+    const en = root.querySelector('.en, [data-lang="en"]') 
+            || Array.from(root.children).find(n => /[a-z]/i.test(n.textContent));
+    const chs = root.querySelector('.chs, [data-lang="chs"]')
+              || Array.from(root.children).find(n => /[\u4e00-\u9fa5]/.test(n.textContent));
+
+    if (en && chs && en !== chs) {
+      // 统一为“英文在上，中文在下”
+      // 1) 先把英文节点放到最前
+      root.insertBefore(en, root.firstChild);
+      // 2) 再把中文节点放到英文之后
+      if (en.nextSibling !== chs) {
+        root.insertBefore(chs, en.nextSibling);
+      }
+    }
+  });
+});
