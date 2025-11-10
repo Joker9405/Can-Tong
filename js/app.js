@@ -1,24 +1,14 @@
-/* Can-Tong single app.js (hotfix merged)
- * 说明：这是一个“最小改动”的合并版，只做 UI 顺序微调：
- *   - 粉色“变体”卡顶部黄色提示条：英文在上、中文在下（兼容 <br> 单元素换行写法）
- *   - “Variants (EN)” 分组排在 “变体（中文）” 分组之前
- * 不依赖其他新增脚本；可直接替换原 js/app.js 使用。
- * 如果你的原 app.js 还包含其他渲染逻辑，请把那部分保留在本文件“上方”或“下方”均可；
- * 本补丁是后置逻辑，不会影响既有功能。
- */
-
+// === variants zh/en swap hotfix (append at the very end of app.js) ===
 (function () {
   const CN_RE = /[\u4E00-\u9FFF]/;
   const EN_RE = /[A-Za-z]/;
   const q  = (sel, ctx=document) => ctx.querySelector(sel);
   const qa = (sel, ctx=document) => Array.from(ctx.querySelectorAll(sel));
 
-  // 找到粉色“变体”卡根节点（尽量不中断现有结构）
   function locatePinkRoot() {
     return q('#cardVariants') || q('.card.right.pink') || q('.card.pink') || null;
   }
 
-  // 判断是否接近黄色背景（用于兜底识别黄条）
   function isYellow(bg) {
     const m = String(bg||'').match(/rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/i);
     if (!m) return false;
@@ -26,21 +16,17 @@
     return (r>230)&&(g>200)&&(b<170);
   }
 
-  // 在粉卡内寻找“黄条”容器
   function findHint(root) {
     let el = q('.hint', root) || q('.badge', root) || q('[data-role="hint"]', root) || q('[data-type="hint"]', root);
     if (el) return el;
-    // 兜底：找黄底且文本较短的元素
     const cand = qa('*', root).find(x => {
-      try {
-        const s = getComputedStyle(x);
+      try { const s = getComputedStyle(x);
         return isYellow(s.backgroundColor) && (x.textContent || '').trim().length < 160;
       } catch { return false; }
     });
     return cand || null;
   }
 
-  // 把单元素换行拆成两行，并标注 .en / .chs
   function normalizeTwoLines(el){
     if (el.dataset.ctNormalized==='1') return;
     const kids = qa(':scope > *', el);
@@ -68,7 +54,6 @@
     }
   }
 
-  // 交换黄条两行：英文在上，中文在下
   function swapHint(el){
     normalizeTwoLines(el);
     const en = q(':scope > .en', el);
@@ -78,7 +63,6 @@
     el.dataset.ctHintDone = '1';
   }
 
-  // 把 “Variants (EN)” 分组移到 “变体（中文）” 前
   function swapVariantGroups(root){
     const blocks = qa(':scope > *', root);
     let enBlock=null, cnBlock=null;
@@ -101,13 +85,12 @@
     swapVariantGroups(root);
   }
 
-  // 初次执行
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', applyOnce);
   } else {
     applyOnce();
   }
-  // 监听后续更新
   const mo = new MutationObserver(() => applyOnce());
   mo.observe(document.body, { childList:true, subtree:true });
 })();
+// === end hotfix ===
