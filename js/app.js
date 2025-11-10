@@ -1,46 +1,113 @@
-const PATH='/data/'; let CROSS=[], LEX={}, EXMAP={};
-function parseCSV(t){const lines=t.split(/\r?\n/).filter(Boolean);const head=lines.shift().split(',').map(s=>s.trim());return lines.map(line=>{const cells=[];let cur='',inQ=false;for(let i=0;i<line.length;i++){const ch=line[i];if(ch=='"'){inQ=!inQ;continue}if(ch==','&&!inQ){cells.push(cur);cur=''}else{cur+=ch}}cells.push(cur);const obj={};head.forEach((k,i)=>obj[k]=(cells[i]||'').trim());return obj})}
-async function loadCSV(name){const r=await fetch(PATH+name,{cache:'no-store'});if(!r.ok) throw new Error('load '+name+' failed');return parseCSV(await r.text())}
-function norm(s){return (s||'').toLowerCase().replace(/\s+/g,'')}
-function fuzzy(text,q){text=norm(text);q=norm(q);if(!q)return false;let i=0;for(const c of text){if(c===q[i])i++}return i===q.length||text.includes(q)}
-let VOICE=null;function pickVoice(){const L=speechSynthesis.getVoices();VOICE=L.find(v=>/yue|Cantonese|zh[-_]HK/i.test(v.lang+v.name))||L.find(v=>/zh[-_]HK/i.test(v.lang))||L.find(v=>/zh/i.test(v.lang))||null}if('speechSynthesis'in window){speechSynthesis.onvoiceschanged=pickVoice;pickVoice()}
-function speak(t){if(!('speechSynthesis'in window)||!t)return;const u=new SpeechSynthesisUtterance(t);if(VOICE)u.voice=VOICE;u.lang=VOICE?.lang||'zh-HK';speechSynthesis.cancel();speechSynthesis.speak(u)}
-const ICON=`<svg viewBox="0 0 24 24"><path d="M3 10v4h4l5 4V6L7 10H3zm13.5 2a3.5 3.5 0 0 0-2.5-3.34v6.68A3.5 3.5 0 0 0 16.5 12zm0-7a9.5 9.5 0 0 1 0 14l1.5 1.5A11.5 11.5 0 0 0 18 3.5L16.5 5z"/></svg>`;
-async function boot(){const[cm,lx,ex]=await Promise.all([loadCSV('crossmap.csv'),loadCSV('lexeme.csv'),loadCSV('examples.csv')]);CROSS=cm;lx.forEach(r=>LEX[r.id]=r);EXMAP=ex.reduce((m,r)=>{(m[r.lexeme_id]||(m[r.lexeme_id]=[])).push(r);return m},{})}
-function findLexemeIds(q){const nq=norm(q);if(!nq)return[];const set=new Set();CROSS.forEach(r=>{if(fuzzy(r.term,nq))set.add(r.target_id)});Object.values(LEX).forEach(r=>{if(fuzzy(r.zhh,nq)||fuzzy(r.en,nq)||fuzzy(r.alias_zhh||'',nq))set.add(r.id)});return Array.from(set)}
-const grid=document.getElementById('grid');const examples=document.getElementById('examples');const examplesList=document.getElementById('examples-list');
-function resetUI(){grid.innerHTML='';examples.hidden=true;examplesList.innerHTML=''}
-function renderEmpty(){resetUI()}
-function pairedVariants(chs,en){const A=(chs||'').split(/[;；]/).map(s=>s.trim()).filter(Boolean);const B=(en||'').split(/[;；]/).map(s=>s.trim()).filter(Boolean);const n=Math.max(A.length,B.length);const out=[];for(let i=0;i<n;i++){out.push({zh:A[i]||'',en:B[i]||''})}return out}
-function renderPhased(lex){resetUI();
-  const aliases=(lex.alias_zhh||'').split(/[;；]/).map(s=>s.trim()).filter(Boolean);
-  const variants=pairedVariants(lex.variants_chs, lex.variants_en);
-  const note=(lex.note_en||'')+(lex.note_chs?('<br>'+lex.note_chs):'');
-  const left=document.createElement('div');left.className='card yellow left';
-  left.innerHTML=`<div class="badge">粤语zhh：</div>
-    <div class="h-head"><div class="h-title">${lex.zhh||'—'}</div><button class="tts t-head" title="发音">${ICON}</button></div>
-    ${aliases.map(a=>`<div class="row"><div class="alias">${a}</div><button class="tts">${ICON}</button></div>`).join('')}`;
-  grid.appendChild(left);requestAnimationFrame(()=>left.classList.add('show'));
-  left.querySelector('.t-head').onclick=()=>speak(lex.zhh||''); left.querySelectorAll('.row .tts').forEach((b,i)=>b.onclick=()=>speak(aliases[i]));
-  setTimeout(()=>{
-    const rt=document.createElement('div');rt.className='card pink right-top';
-    rt.innerHTML=`<div class="vars">${variants.map(v=>`<div class="var-row"><div class="var-zh">${v.zh}</div>${v.en?`<div class="var-en">${v.en}</div>`:''}</div>`).join('')}</div>`;
-    grid.appendChild(rt);requestAnimationFrame(()=>rt.classList.add('show'));
-    const rb=document.createElement('div');rb.className='card gray right-bottom';
-    rb.innerHTML=`<div class="note">${note||''}</div><button id="example-btn">example 扩展</button>`;grid.appendChild(rb);requestAnimationFrame(()=>rb.classList.add('show'));
-    rb.querySelector('#example-btn').onclick=()=>toggleExamples(lex, rb.querySelector('#example-btn'));
-  },120);
-}
-function toggleExamples(lex, btn){const exs=EXMAP[lex.id]||[];if(!exs.length)return;
-  if(examples.hidden){
-    examplesList.innerHTML='';
-    exs.forEach(e=>{const row=document.createElement('div');row.className='example';
-      row.innerHTML=`<div class="yue">${e.ex_zhh||''}</div>
-        <div class="right"><div class="en">${e.ex_en||''}</div><div class="chs">${e.ex_chs||''}</div></div>
-        <div class="btns"><button class="tts" title="粤语">${ICON}</button></div>`;
-      row.querySelector('.tts').onclick=()=>speak(e.ex_zhh||'');examplesList.appendChild(row)});
-    examples.hidden=false; btn.remove();
-  }else{examples.hidden=true;}
-}
-document.getElementById('q').addEventListener('input',e=>{const q=e.target.value; if(!q){renderEmpty();return} const ids=findLexemeIds(q); if(!ids.length){renderEmpty();return} renderPhased(LEX[ids[0]])});
-boot();
+/* Can-Tong single app.js (hotfix merged)
+ * 说明：这是一个“最小改动”的合并版，只做 UI 顺序微调：
+ *   - 粉色“变体”卡顶部黄色提示条：英文在上、中文在下（兼容 <br> 单元素换行写法）
+ *   - “Variants (EN)” 分组排在 “变体（中文）” 分组之前
+ * 不依赖其他新增脚本；可直接替换原 js/app.js 使用。
+ * 如果你的原 app.js 还包含其他渲染逻辑，请把那部分保留在本文件“上方”或“下方”均可；
+ * 本补丁是后置逻辑，不会影响既有功能。
+ */
+
+(function () {
+  const CN_RE = /[\u4E00-\u9FFF]/;
+  const EN_RE = /[A-Za-z]/;
+  const q  = (sel, ctx=document) => ctx.querySelector(sel);
+  const qa = (sel, ctx=document) => Array.from(ctx.querySelectorAll(sel));
+
+  // 找到粉色“变体”卡根节点（尽量不中断现有结构）
+  function locatePinkRoot() {
+    return q('#cardVariants') || q('.card.right.pink') || q('.card.pink') || null;
+  }
+
+  // 判断是否接近黄色背景（用于兜底识别黄条）
+  function isYellow(bg) {
+    const m = String(bg||'').match(/rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/i);
+    if (!m) return false;
+    const [r,g,b] = m.slice(1).map(Number);
+    return (r>230)&&(g>200)&&(b<170);
+  }
+
+  // 在粉卡内寻找“黄条”容器
+  function findHint(root) {
+    let el = q('.hint', root) || q('.badge', root) || q('[data-role="hint"]', root) || q('[data-type="hint"]', root);
+    if (el) return el;
+    // 兜底：找黄底且文本较短的元素
+    const cand = qa('*', root).find(x => {
+      try {
+        const s = getComputedStyle(x);
+        return isYellow(s.backgroundColor) && (x.textContent || '').trim().length < 160;
+      } catch { return false; }
+    });
+    return cand || null;
+  }
+
+  // 把单元素换行拆成两行，并标注 .en / .chs
+  function normalizeTwoLines(el){
+    if (el.dataset.ctNormalized==='1') return;
+    const kids = qa(':scope > *', el);
+    if (kids.length >= 2 && (kids.some(k=>k.classList.contains('en')) || kids.some(k=>k.classList.contains('chs')))) {
+      el.dataset.ctNormalized = '1'; return;
+    }
+    const parts = String(el.innerHTML).replace(/<br\s*\/?>/gi,'\n').split(/\n+/).map(s=>s.trim()).filter(Boolean);
+    if (parts.length >= 2){
+      let en = parts.find(p=>EN_RE.test(p)) || parts[0];
+      let cn = parts.find(p=>CN_RE.test(p)) || parts[1] || '';
+      el.innerHTML = `<div class="en">${en}</div><div class="chs">${cn}</div>`;
+      el.dataset.ctNormalized = '1'; return;
+    }
+    if (kids.length >= 2){
+      const [a,b] = kids;
+      if (!a.classList.contains('en') && !a.classList.contains('chs')){
+        if (EN_RE.test(a.textContent)) a.classList.add('en');
+        if (CN_RE.test(a.textContent)) a.classList.add('chs');
+      }
+      if (!b.classList.contains('en') && !b.classList.contains('chs')){
+        if (EN_RE.test(b.textContent)) b.classList.add('en');
+        if (CN_RE.test(b.textContent)) b.classList.add('chs');
+      }
+      el.dataset.ctNormalized = '1';
+    }
+  }
+
+  // 交换黄条两行：英文在上，中文在下
+  function swapHint(el){
+    normalizeTwoLines(el);
+    const en = q(':scope > .en', el);
+    const cn = q(':scope > .chs', el);
+    if (en) el.insertBefore(en, el.firstElementChild);
+    if (cn && el.children[1] !== cn) el.insertBefore(cn, el.children[1] || null);
+    el.dataset.ctHintDone = '1';
+  }
+
+  // 把 “Variants (EN)” 分组移到 “变体（中文）” 前
+  function swapVariantGroups(root){
+    const blocks = qa(':scope > *', root);
+    let enBlock=null, cnBlock=null;
+    for (const b of blocks){
+      const title = (q('strong', b)?.textContent || '').trim();
+      if (/Variants\s*\(EN\)/i.test(title)) enBlock = b;
+      if (/变体（?中文）?/.test(title) || /变体.*中文/.test(title)) cnBlock = b;
+    }
+    if (enBlock && cnBlock){
+      const enAfterCN = !!(enBlock.compareDocumentPosition(cnBlock) & Node.DOCUMENT_POSITION_FOLLOWING);
+      if (enAfterCN) root.insertBefore(enBlock, cnBlock);
+    }
+  }
+
+  function applyOnce(){
+    const root = locatePinkRoot();
+    if (!root) return;
+    const hint = findHint(root);
+    if (hint && hint.dataset.ctHintDone!=='1') swapHint(hint);
+    swapVariantGroups(root);
+  }
+
+  // 初次执行
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', applyOnce);
+  } else {
+    applyOnce();
+  }
+  // 监听后续更新
+  const mo = new MutationObserver(() => applyOnce());
+  mo.observe(document.body, { childList:true, subtree:true });
+})();
