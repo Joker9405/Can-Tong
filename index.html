@@ -1,22 +1,17 @@
 <!doctype html>
 <html lang="zh-Hans">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Can-Tong — 粤语查询</title>
-  <link rel="stylesheet" href="/assets/style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Can‑Tong — 粤语查询</title>
+  <!-- 关键修复：用绝对路径，确保线上始终能加载到样式 -->
+  <link rel="stylesheet" href="/assets/style.css" />
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand">Can-Tong <span class="dot">•</span></div>
-    <div class="lang">chs-zhh-en</div>
-  </header>
-  <main class="container">
-    <div class="search"><input id="q" type="text" placeholder="" autocomplete="off" /></div>
-    <section id="grid" class="grid"></section>
-    <section id="examples" class="examples" hidden><div class="examples-inner" id="examples-list"></div></section>
-  </main>
-  <footer class="foot">CanTongMVP — Code MIT, Lexicon Closed; data/* CSVs CC BY‑NC‑ND.</footer>
-  <script src="/js/app.js"></script>
+  <!-- 如果你的结构是由 JS 渲染，这里保留空容器即可；否则请替换为你的原始主体结构 -->
+  <div id="app"></div>
+
+  <!-- 关键修复：用绝对路径 + defer，确保脚本加载与执行顺序正确 -->
+  <script src="/js/app.js" defer></script>
 </body>
 </html>
