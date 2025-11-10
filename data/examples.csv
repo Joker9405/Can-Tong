@@ -1,41 +1,150 @@
+Column1,Column2,Column3,Column4,Column5
 lexeme_id,ex_zhh,ex_zhh_pron,ex_chs,ex_en
-L1,æ¼å’—å•²å˜¢ä½¢,,æŠŠä¸œè¥¿æ‰”æ‰,Throw things away.sense of power
-L1,æ‰åƒåœ¾,,æ‰”åƒåœ¾å›ºå®šç”¨æ³•,Throw away the trash / garbage
-L1,ä¸¢åƒåœ¾,,æ‰”åƒåœ¾å›ºå®šç”¨æ³•,Throw away the trash / garbage
-L1,æŸå•²å˜¢éå»,,æœ‰ç›®æ ‡ï¼Œå‘ç€ç›®æ ‡æ‰”è¿‡å»,Throw it toward the target
-L1,æ“—åŸ‹ä¸€è¾¹,,æ‰”åœ¨ä¸€è¾¹ï¼Œéšæ„ä¸ç»æ„æ‰”,Put asideï¼Œset aside
-L1,æŒè½åœ°ä¸‹,,æ‰”åœ¨åœ°ä¸Šï¼Œå¾ˆå¤§åŠ›å¾€ä¸‹æ‰”,Drop it down. / Throw it down.
-L1,é£›å°æ‹–é‹éåšŸ,,æ‰”ä¸€æ ·ä¸œè¥¿æ¥ï¼Œæ‰”è¿‡æ¥é€Ÿåº¦å¾ˆå¿«ï¼Œï¼ˆå°æ‹–é‹ï¼‰=ä¸€åŒæ‹–é‹,Throw a pair of slippers over. It was thrown very fast.
-L2,æ¼åƒåœ¾,,æ‰”åƒåœ¾ï¼Œä¸€èˆ¬ä¸œè¥¿å¾€å¤–æ‰”ï¼Œ,Throwing things.sense of power
-L2,å’ªæ¼éåšŸ,,ä¸è¦æ‰”è¿‡æ¥ï¼Œå¸¦åŠ›åº¦,Don't throw it at me.sense of power
-L2,å’ªæŸæˆ‘,,ä¸è¦ç”¨åŠ›æ‰”æˆ‘,Don't throw me hard.
-L2,å””å¥½æ‰é¸ æˆ‘,,ä¸è¦å‘æˆ‘æ–¹å‘æ‰”,Don't f*cking throw me away.
-L2,æ¼åŸ‹ä¸€äºŒé‚Š,,æ‰”åœ¨ä¸€è¾¹ï¼Œéšæ„ä¸ç»æ„æ‰”ï¼Œå¸¦åŠ›åº¦,Put asideï¼Œset asideï¼Œsense of power
-L3,å’ªå¼¹éåšŸ,,ä¸è¦æ‰”è¿‡æ¥é€Ÿåº¦å¾ˆå¿«ï¼Œå¼¹å¸¦æœ‰å«Œå¼ƒ,Don't throw it at me.
-L3,é£›å€‹æ³¢åŸ‹åšŸ,,æ‰”ä¸ªçƒç±»è¿‡æ¥æˆ‘è¿™é‡Œ,Throw a ball over here
-L3,å¼¹åšŸå¼¹å»,,æ‰”æ¥æ‰”å»,Tossing around
-L3,å¼¹å•²JobéåšŸ,,æ‰”ç‚¹å·¥ä½œè¿‡æ¥,Give me a Job
-L3,è»Šå€‹æ³¢åŸ‹åšŸ,,æ‰”ä¸ªçƒç±»è¿‡æ¥æˆ‘è¿™é‡Œ,Throw a ball at me; it will hurt a lot.
-L4,å””å¥½ğ¢«¨,,ä¸è¦æ¨,Don't push
-L4,å’ªğ¢«¨,,åˆ«æ¨,Don't push
-L4,å†‡é–ªğ¢«¨,,åˆ«ä»–å¦ˆæ¨,Don'tf*cking push me
-L4,å’ªæŸ’ğ¢«¨,,åˆ«ä»–å¦ˆæ¨,Don'tf*cking push me
-L4,ğ¢«¨ä½ æ¡æ’š,,æ¨ä½ å¦ˆ/æ¨ä½ ä¸ªé”¤å­,Stop f*cking pushing me.
-L4,ğ¢«¨ä½ ä¸ªå±„å•Šğ¢«¨,,æ¨ä½ å¦ˆ/æ¨ä½ ä¸ªé”¤å­,Stop f*cking pushing me.
-L4,ğ¢«¨ä¹œæ’šå•Š,,æ¨ä»€ä¹ˆæ¨,Why are you pushing me?
-L4,ğ¢«¨æˆ‘æ‰˜å•Š,,æˆ‘å¹²å˜›,Why are you pushing me?
-L4,ğ¢«¨ä¹œæŸ’å•Š,,æ¨ä»€ä¹ˆæ¨,Why are you pushing me ?
-L4,ğ¢«¨ä¹œæ’šå•Š,,æ¨ä»€ä¹ˆæ¨,Why are you pushing me ?
-L4,å†ğ¢«¨æˆ‘ä½ å°±å±„,,å†æ¨æˆ‘ä½ å°±æ­»å®šäº†,Push me again and you're
-L4,ğ¢«¨ä½ è€æ¯,,æ¨ä½ å¦ˆ,f*ck your mother
-L5,æ‰‹æ¨è½¦,,æ‰‹æ¨è½¦,a trolley
-L5,æ¨è»Šä»”,,å°è´©,cart
-L6,æ­»æ’‘,,éŒ¯äº†æˆ–æ²’èƒ½åŠ›æƒ…æ³ä¸‹ï¼Œä»ç„¶å¼·ç¡¬åœ°å …æŒä¸èªè¼¸æˆ–ä¸æ‰¿èªéŒ¯ï¼Œå¸¶å›ºåŸ·ã€ä¸é¡˜ç½·ä¼‘,Even when lacking the ability they stubbornly refused to admit defeat.
-L6,æ­»è¦é¢,,çˆ±é¢å­,Save face save 
-L6,å””è¾“å¾—,,ä¸æœè¾“,not to be outdone
-L7,å’æ’šå¥‡æ’šæ€ªï¼Ÿ,,æ€ä¹ˆè¿™ä¹ˆå¥‡æ€ª,Why is this so strange?
-L7,å‘¢å€‹æ‰“æ‰®å¤ æ™’æ—–æ—,,è¿™ä¸ªç©¿æ­è¶³å¤Ÿå¥‡æ€ª,This outfit is strange enough.
-L7,ä¹œä½ å’æ’ˆçµå’–,,æ€ä¹ˆä½ è¿™ä¹ˆä¹±ç³Ÿç³Ÿ,Why are you so messy?
-L7,ä½ æœ‰å°‘å°‘ğ ®©ğ ¹Œ,,ä½ æœ‰ä¸€ç‚¹å¥‡æ€ªçš„ç™–å¥½,You have a few strange quirks
-
-
+L1,“g…ø†¬‡SÚ,,°Ñ¶«Î÷ÈÓµô,Throw things away.sense of power
+L1,µôÀ¬»ø,,ÈÓÀ¬»ø¹Ì¶¨ÓÃ·¨,Throw away the trash / garbage
+L1,¶ªÀ¬»ø,,ÈÓÀ¬»ø¹Ì¶¨ÓÃ·¨,Throw away the trash / garbage
+L1,’ğ†¬‡Sß^È¥,,ÓĞÄ¿±ê£¬Ïò×ÅÄ¿±êÈÓ¹ıÈ¥,Throw it toward the target
+L1,ß¨ÂñÒ»±ß,,ÈÓÔÚÒ»±ß£¬ËæÒâ²»¾­ÒâÈÓ,Put aside£¬set aside
+L1,Ì¢ÂäµØÏÂ,,ÈÓÔÚµØÉÏ£¬ºÜ´óÁ¦ÍùÏÂÈÓ,Drop it down. / Throw it down.
+L1,ïwŒ¦ÍÏĞ¬ß^‡­,,ÈÓÒ»Ñù¶«Î÷À´£¬ÈÓ¹ıÀ´ËÙ¶ÈºÜ¿ì£¬£¨Œ¦ÍÏĞ¬£©=Ò»Ë«ÍÏĞ¬,Throw a pair of slippers over. It was thrown very fast.
+L2,“gÀ¬»ø,,ÈÓÀ¬»ø£¬Ò»°ã¶«Î÷ÍùÍâÈÓ£¬,Throwing things.sense of power
+L2,ßä“gß^‡­,,²»ÒªÈÓ¹ıÀ´£¬´øÁ¦¶È,Don't throw it at me.sense of power
+L2,ßä’ğÎÒ,,²»ÒªÓÃÁ¦ÈÓÎÒ,Don't throw me hard.
+L2,ßíºÃµôğ¯ÎÒ,,²»ÒªÏòÎÒ·½ÏòÈÓ,Don't f*cking throw me away.
+L2,“gÂñÒ»¶şß…,,ÈÓÔÚÒ»±ß£¬ËæÒâ²»¾­ÒâÈÓ£¬´øÁ¦¶È,Put aside£¬set aside£¬sense of power
+L3,ßäµ¯ß^‡­,,²»ÒªÈÓ¹ıÀ´ËÙ¶ÈºÜ¿ì£¬µ¯´øÓĞÏÓÆú,Don't throw it at me.
+L3,ïw‚€²¨Âñ‡­,,ÈÓ¸öÇòÀà¹ıÀ´ÎÒÕâÀï,Throw a ball over here
+L3,µ¯‡­µ¯È¥,,ÈÓÀ´ÈÓÈ¥,Tossing around
+L3,µ¯†¬Jobß^‡­,,ÈÓµã¹¤×÷¹ıÀ´,Give me a Job
+L3,Ü‡‚€²¨Âñ‡­,,ÈÓ¸öÇòÀà¹ıÀ´ÎÒÕâÀï,Throw a ball at me; it will hurt a lot.
+L4,ßíºÃ??,,²»ÒªÍÆ,Don't push
+L4,ßä??,,±ğÍÆ,Don't push
+L4,ƒÓé~??,,±ğËûÂèÍÆ,Don'tf*cking push me
+L4,ßäÆâ??/ßä“Ó??,,±ğËûÂèÍÆ,Don'tf*cking push me
+L4,??ÄãÌõ“Ó,,ÍÆÄãÂè/ÍÆÄã¸ö´¸×Ó,Stop f*cking pushing me.
+L4,??Äã¸öŒÂ°¡??,,ÍÆÄãÂè/ÍÆÄã¸ö´¸×Ó,Stop f*cking pushing me.
+L4,??Ø¿“Ó°¡,,ÍÆÊ²Ã´ÍÆ,Why are you pushing me?
+L4,??ÎÒÍĞ°¡/??ÎÒÍĞÆâ°¡,,ÎÒ¸ÉÂï,Why are you pushing me?
+L4,??Ø¿Æâ°¡/??Ø¿“Ó°¡,,ÍÆÊ²Ã´ÍÆ,Why are you pushing me ?
+L4,ÔÙ??ÎÒÄã¾ÍŒÂ,,ÔÙÍÆÎÒÄã¾ÍËÀ¶¨ÁË,Push me again and you're
+L4,??é_,,ÍÆ¿ª,to push aside
+L4,ÉñÍÆ¹í??,,ÓĞÒ»ÖÖÄÑÒÔ½âÊÍµÄ³å¶¯È¥×öÄ³ÊÂ¡£,to have an inexplicable drive to do something
+L4,??ÄãÀÏÄ¸,,ÍÆÄãÂè,f*ck your mother
+L5,ÊÖÍÆ³µ,,ÊÖÍÆ³µ,a trolley
+L5,ÍÆÜ‡×Ğ,,Ğ¡··,cart
+L6,ËÀ³Å,,åeÁË»ò›]ÄÜÁ¦Çé›rÏÂ£¬ÈÔÈ»ŠÓ²µØˆÔ³Ö²»ÕJİ”»ò²»³ĞÕJåe£¬§¹ÌˆÌ¡¢²»îŠÁTĞİ,Even when lacking the ability they stubbornly refused to admit defeat.
+L6,ËÀÒªÃæ,,°®Ãæ×Ó,Save face save 
+L6,ßíÊäµÃ,,²»·şÊä,not to be outdone
+L7,…î“ÓÆæ“Ó¹Ö£¿,,ÔõÃ´ÕâÃ´Ææ¹Ö,Why is this so strange?
+L7,ÄØ‚€´ò°ç‰òÉ¹ì½ì»,,Õâ¸ö´©´î×ã¹»Ææ¹Ö,This outfit is strange enough.
+L7,Ø¿Äã…î“Æ½g¿§,,ÔõÃ´ÄãÕâÃ´ÂÒÔãÔã,Why are you so messy?
+L7,ÄãÓĞÉÙÉÙ????,,ÄãÓĞÒ»µãÆæ¹ÖµÄñ±ºÃ,You have a few strange quirks
+L8,†Õ‡n†ş¡­,,ÊÇÕâÑùµÄ¡­, in this way
+L8,üc½â•ş‚S‡n†ş£¿,,ÎªÊ²Ã´»áÕâÑù,Why is this happening?
+L8,†şÑù†ş»°ßäºÃÊ´µ×¿©,,ÕâÑùµÄ»°Æñ²»ÊÇºÜ³Ô¿÷,Wouldn't that be a huge loss?
+L8,Ò»à¢‡nÍÌÂäÈ¥,,Ò»¿ÚÍÌÏÂÈ¥,Swallow in one gulp
+L8,‡n¶¼µÃ£¿,,ÕâÑùÒ²¿ÉÒÔ£¿,Is this okay?
+L8,×µÃÒâ‡n†·,,ºÃÏñÍ¦¿É°®, It seems interesting.
+L8,ÍÎÒÊ³‡n†¬ïˆß¹,,ÄãÄÜ°ïÎÒ°ÑÊ£ÏÂµÄÃ×·¹³ÔÍêÂğ,Could you help me finish up my serving of rice?
+L8,¶ø¼ÒÒÑ½›×ß‡n†¬ÈËÀ®,,ÒÑ¾­ÓĞ²»ÉÙÈË¿ªÊ¼Àë¿ªÁË¡£,A number of people already start leaving.
+L8,×Åµ½³ÉëbÈ¸‡n,,ÒÂ×Å¿¼¾¿£»×ÖÃæÒâË¼£º´©µÃÏñÖ»Äñ,to be well-dressed; literally: to wear like a bird
+L8,ËÄÈf‡n¿Ú ,,ÓÃÀ´ĞÎÈİÒ»ÕÅĞ¦Èİ²ÓÀÃµÄÁ³,used to describe a broadly smiling face
+L8,ÚŒ¦ÎÒ…îºÃ£¬‡nÎÒ†ÕßäÒª¼ŞÙÂÚ£¿,,Ëû¶ÔÎÒÕâÃ´ºÃ£¬ÄÇÃ´ÎÒÊÇÒª¼Ş¸øËû£¿,"He's so good to me, so should I marry him?"
+L8,´óÂ•‡nÖv‡S,,Ëµ»°ºÜ´óÉù,Speaking very loudly
+L8,Î¹£¬ÄãßíºÃ‡nà¸,,Î¹£¬Äã±ğÕâÑù°¡,"Hey, please don't do this."
+L8,ÉÙ‡n‚€Î»,,ÈÔÈ»È±ÉÙ×ùÎ»,still to lack a seat
+L8,‡n¼´ßí‚S,,ÄÇ¾Í²»ÊÇ,That's not it.
+L8,‡nÓÖßíµÃ,,ÄÇÓÖ²»ĞĞ,That won't work.
+L8,‡nºÃ¿©,,ÄÇºÃ°É,okay!
+L8,‡nÓÖ†Õ,,ÄÇÑùÒ²ÊÇ£»ÕâÑùÒ²¶Ô                              ,That's also
+L9,ÚŒ¦ÎÒ…îºÃ£¬‡nÎÒ†ÕßäÒª¼ŞÙÂÚ£¿,,Ëû¶ÔÎÒÕâÃ´ºÃ£¬ÄÇÃ´ÎÒÊÇÒª¼Ş¸øËû£¿,"He's so good to me, so should I marry him?"
+L9,…î±ã,,ÕâÃ´±ãÒË,So cheap
+L9,…î¹ó†ş£¿,,ÕâÃ´¹óµÄ£¿,So expensive?
+L9,…îö¦×Ğ,,ÕâÃ´Ë§,So handsome
+L9,Éµµ½é~…î,,ÄãÕâ¸ö×ö·¨Ì«ÓŞ´ÀÁË£¬ÎÒÄÃÄãÃ»°ì·¨ÁË,That's so stupid.
+L9,·³µ½é~…î,,ÏÖÔÚºÜ·³ÄÕ£¬²»ÖªµÀ¸ÃÔõÃ´°ì,I'm really troubled right now and I don't know what to do.
+L9,ÀÌµ½é~…î,,¸Ğ¾õÄãºÜÍÁ£¬ºÜ·ÇÖ÷Á÷ÓÖµÍË×,So cheap
+L9,…î°¡,,ÕâÑù°¡£»Ò»°ãËµÍêÔÚË¼¿¼,"I know,I know; usually, one thinks after speaking."
+L9,×öØ¿…îàµ,,¸ÉÂïÕâÑù,Why do this?
+L9,×öØ¿…î†ş,,ÔõÃ´ÕâÑù,How could this be?
+L9,ÃÍ…î??,,Ê¹¾¢ÍÆ,Push hard
+L9,…î†«µÃ…î˜ò,,ÕæÇÉºÏ£»ÕâÃ´ÇÉºÏ,coincidentally; fortuitously; by chance
+L9,…î¶àÈË†ş£¿,,ÔõÃ´ÕâÃ´¶àÈË£¿,Why is it so crowded?
+L9,ÈËÇé¼ˆ…î±¡,,ÈËÓëÈËÖ®¼äµÄ¹ØÏµÖĞ£¬ÈËĞÔµÄ×ğÑÏÊ®·Öº±¼û£»ºÁ²»¿äÕÅµØËµ£¬¡°ÈËĞÔµÄ×ğÑÏ±¡ÈçÖ½¡±,"human decency is rare in relationships between people; literally ""human decency is as thin as paper"
+L9,Æß‡ø…îy ,,Ò»Æ¬»ìÂÒ£»³¹µ×µÄ»ìÂÒ£»×ÖÃæÒâË¼£ºÈçÍ¬Æß¹úÊ±´ú°ã»ìÂÒ¡£,?in a total mess; in total chaos; literally: as chaotic as the Seven Warring States
+L9,¹í»ğ…îìn,,¿´ÆğÀ´ÃÀ¼«ÁË,looks stunning 
+L9,…î´óëb¸òpëS½ÖÌø,,²»ºÏÀí£¬²»¸ÒÏàĞÅ£¬,something too good to be true
+L9,…îÄÍÒÔ‡­,,ÕâÃ´¾ÃÒÔÀ´£»µ½Ä¿Ç°ÎªÖ¹£»Ö±µ½ÏÖÔÚ,so far; until now
+L9,†ñÂµ¹÷ºÃËÆÇà¹Ï…î´Ö,,ÄÇ¸ù¹÷×ÓÏñ»Æ¹ÏÒ»Ñù´Ö¡£,That stick was as thick as a cucumber.
+L10,ücğm ,,µã²Ë,to order food
+L10,üc†¬ôùÓÍß¹£¡,,ÕºÒ»µãôùÓÍ,Dip it in some soy sauce.
+L10,ücÈ¥?£¿,,ÔõÃ´È¥,how to go
+L10,…îÄãÏëÎÒücÑ½£¿,,ÄãÏëÎÒÔõÑù£¿,So what do you want me to do?
+L10,ö¦µ½Ò»‚€üc ,,Æ¯ÁÁµ½Ò»ÖÖ³Ì¶È£»×´Ì¬,Beautiful to a certain extent£»degree
+L10,‡nücµÃ°¡,,ÕâÔõÃ´ĞĞ,This won't do.
+L10,ÚÉúµÃücÑ½,,Ëû³¤³ÉÊ²Ã´Ñù,What does he look like?
+L10,ücÏÂÚÀ²,,Ö¸µãÒ»ÏÂËû,Give him some pointers
+L10,ßíºÃÀÏücÎÒ,,²»ÒªÆÛÆ­ÎÒ,Don't lie to me.
+L10,ücËãºÃ£»ücºÃ,,Ôõ°ì²ÅºÃ,What should I do?
+L10,üc»°ücºÃ,,ÄãËµÊ²Ã´¾ÍÊ²Ã´,Whatever you say.
+L10,‡nücÑ½£¿,,ÄÇÓÖÔõÃ´Ñù£¿£»²»ÀñÃ²ºÜ×§,okay
+L10,üc¶¼µÃ,,ÔõÃ´Ñù¶¼¿ÉÒÔ,Anything ok
+L10,üc‚S°¡,,²»¸Òµ±,"an expression of courtesy used when someone has done something for you, similar to saying ""it is very nice of you""; ""I don't deserve it""; ""you shouldn't have"""
+L10,ücÖø,,µã×ÅÁË»ğ,"to light (a candle, cigarette etc£©"
+L10,¼şÉÀücÖø,,Õâ¼şÒÂ·şÔõÃ´´©,How to wear this outfit?
+L10,üc¾Y,,Ñbï—,to decorate; to embellish; to adorn
+L10,üc“ô”µ,,¹Û¿´Á¿,number of clicks
+L11,¾oÒªß^ÎÒ,,±ÈÎÒ»¹ÖØÒª,More important than me
+L11,¾ÈÈËÒª¾o,,¾ÈÈË×îÖØÒª,Saving lives is the most important thing
+L11,ƒöµÃºÃ¾oÒª,,ÀäµÄºÜ¿äÕÅ,is so cold
+L11,²ÙµÃ¾oÒªµÃœş,,½¡Éí½¡µÃ±È½ÏÀ÷º¦,He's pretty good at working out.
+L11,˜òßíÅÂÅf£¬ÖÁ¾oÒªÊÜ,,Ïë·¨²»ÅÂÂäºó£¬×îÖØÒªÓĞÈË½ÓÊÜ,Old tricks are not clich¨¦ as long as the other person likes it.
+L11,¾¢µÃ…î½»êP,,Ç¿µÃ¿ÉÅÂ,Terrifyingly strong
+L12,Ê³ÎïÙ|ËØÓĞ·µ…îÉÏÏÂ,,Ê³ÎïÖÊÁ¿»¹ĞĞ,The food quality was okay.
+L12,ÄØ¼Ü‡S¶¼ÓĞ·µ…îÉÏÏÂÖØÁ¿?,,Õâ¶«Î÷ÓĞÒ»¶¨µÄÖØÁ¿,This thing is quite heavy.
+L12,²îßí¶àºÃ×ßÀ²,,Ê±¼ä²î²»¶àÁË£¬Òª×ßÁË,It's time to go
+L13,ß…ÓĞ…î´óëb¸òpëS½ÖÌø,,ÄÄÓĞÃâ·ÑÎç²Í,There's no such thing as a free lunch.
+L13,ß…ÓĞ…îºÃËÀ,,ÄÄÓĞÃâ·ÑÎç²Í,There's no such thing as a free lunch.
+L13,…îÆâ×Å”µ£¿ßí“Ó†Õ°¡Âï,,ÕâÃ´ºÃ£¿²»ÊÇ°É,That's really good? No way!
+L13,Æâ¶¼ßíĞÅ…î×Å”µ£¿,,ÎÒ²»ĞÅÓĞÃâ·ÑÎç²Í,I don't believe in free lunches.
+L14,ÓÖ»á…î†«µÃ…î˜ò†ş£¿,,ÕâÃ´ÇÉºÏ,What a coincidence
+L14,Ø¿…î†«°¡,,ÔõÃ´ÕâÃ´ÇÉ,How coincident it is!
+L15,…î¶àÈËÌøÂ¥ßíÒŠÄãÌøÂ¥,,ÕâÃ´¶àÈËËÀ²»¼ûÄãËÀ£»ÌøÂ¥¿ÉÒÔ»»ÈÎºÎËÀ·¨,"So many people have died, but you haven't; jumping off a building can lead to any kind of death."
+L16,…îÆâ½ü³ÇÚòR¶¼ßíÇóÖ§ºÃ»`,,ÓĞ´óÉñÔÚÅÔ±ß¶¼²»»á?°ÑÎÕ?»ú»á,to fail to take advantage of an opportunity
+L16,…îğ¯½ü³ÇÚòR¶¼ßíÇóÖ§ºÃ»`,,ÓĞ´óÉñÔÚÅÔ±ß¶¼²»»á?°ÑÎÕ?»ú»á,to fail to take advantage of an opportunity
+L16,…îğ¯½ü³ÇÚòR¶¼ßí“ÓÇóÖ§ºÃ‡S,,ÓĞ´óÉñÔÚÅÔ±ß¶¼²»»á?°ÑÎÕ?»ú»á,to fail to take advantage of an opportunity
+L17,…îÆâ´ó‚€¶¼ßí»¯,,ÕâÃ´´óÒ»¸öÈË±ğËûÂèµÄ²»¿ªÍ¨,Stubborn to the end
+L17,…î“Ó´ó‚€¶¼ßí»¯,,ÕâÃ´´óÒ»¸öÈË±ğËûÂèµÄ²»¿ªÍ¨,Stubborn to the end
+L17,…îğ¯´ó‚€¶¼ßí»¯,,ÕâÃ´´óÒ»¸öÈË±ğËûÂèµÄ²»¿ªÍ¨,Stubborn to the end
+L17,…îğ¯´ó‚€¶¼ßíğ¯“Óß³»¯,,ÕâÃ´´óÒ»¸öÈË±ğËûÂèµÄ²»¿ªÍ¨,Stubborn to the end
+L17,´ó‚€×ĞÀ²£¬ßíºÃ¸Êé~·â½¨,,ÕâÃ´´óÒ»¸öÈËÁË£¬²»ÒªÄÇÃ´·â½¨,"You're a grown man, don't be so old-fashioned."
+L17,…îé~´ó‚€¶¼ßí»¯,,ÕâÃ´´óÒ»¸öÈË±ğËûÂèµÄ²»¿ªÍ¨,Stubborn to the end
+L18,Œ¦ßíé~×¡,,¶Ô²»Æğ,I`m so sorry
+L18,Œ¦é~ßí×¡,,¶Ô²»Æğ,I`m so sorry
+L18,soğ¯rry,,¶Ô²»Æğ,I`m so sorry
+L19,ßí‚SÃÍıˆßíß^½­,,ÈË²»¹»À÷º¦²»¸Òµ½ÍâµØ,I'm not good enough to go to other places
+L20,¼¸åX/¼¸¶àåX,,¶àÉÙÇ®,how much
+L20,—l”µücÓ‹ÏÈ,,ÕâÕËÔõÃ´Ëã,How do I pay the bill?
+L20,ücÓ‹”µ,,ÔõÃ´Ëã,how much
+L20,¼¸åX½ï,,¶àÉÙÒ»½ï£»ÔõÃ´Âô,how much
+L21,üc²»ÖªË¥ÊÕÎ²,,Ë­ÖªµÀÊÇ¸ö»µ½á¾Ö,Who knew It's a bad ending
+L21,ücÏÈËã,,Ê²Ã´²ÅÊÇ¡­£¿,What is...?
+L21,ücÖªàµ,,ÎÒÔõÃ´ÖªµÀ£»·¢Æ¢Æø,How would I know; losing my temper
+L21,üc¹Àµ½/üc¹ÀÓ‹µ½,,Ã»Ïëµ½£»¸ù“şÉÏÏÂÎÄ·­×g³É £¨²Âœy£©,How to estimate
+L22,¸ã³ö‚€´óî^·ğÄãÔ’ücÊÕ¿Æ,,ÈÇ³ö´óÂéŸ©£¬ÄãËµÔõÃ´°ì,What do you suggest we do if we get into big trouble?
+L24,é_•ş†şÈËücÖ¹…îÉÙÈË°¡£¿,,»¹»á²»Ö¹ÕâÃ´ÉÙÈË°É£¿,Not only these few people are attending this meeting.
+L24,ücÖ¹…îº††Î,,Ã»ÄÇÃ´¼òµ¥,it's not so simple 
+L25,ëSÄãücÖv¶¼ºÃ,,Ëæ±ãÄãÔõÃ´Ëµ,You can say whatever you want.
+L25,üc¶¼ºÃÀ²,,ÎŞÂÛÔõÃ´Ñù,Whatever.
+L26,ÏÈÉú£¬ücµÃğmÎ´°¡£¿,,ÏÈÉú£¬ÄÜµã²ËÁËÂğ£¿,"Sir, are you ready to order?"
+L26,üc…ø†¬ßãğm,,µãÁËÊ²Ã´²Ë,What dishes did you order?
+L26,Ê³…ø†¬ßãğm,,³ÔÁËÊ²Ã´²Ë,What dishes did you eat?
+L26,üc…øßã‡S,,µãÁËÊ²Ã´,What did you order?
+L26,ßí¸Ã£¬üc²Ë,,Âé·³·şÎñÔ±£¬¹ıÀ´µã²Ë,"Excuse me, waiter, could you come and take our order?"
+L27,‡nüc‚S°¡,,ÄÇÔõÃ´ĞĞ£»ÄÇÔõÃ´ºÃÒâË¼ÄØ,That won't do.
+L27,ßíé~†Õ°¡Âï,,ÄÇÔõÃ´ĞĞ£»²»ÊÇ°É£»ÄÇÔõÃ´ºÃÒâË¼ÄØ,OMG
+L29,ücåeÏàÙÂÈË´ò,,ÎóÈÏÎªÄ¿±êÈËÎï°¤´ò,Mistakenly believing the target was beaten
+L30,ücÈ¥¹«ˆ@ÏÈ×î·½±ã,,È¥Õâ¸ö¹«Ô°ÔõÃ´Ñù±È½Ï·½±ã,What is the most convenient way to go to the park?
+L32,ÎÒÙIÄØ¼şÉÀ£¬Äãücíû£¿,,ÎÒÂòÕâ¼şÒÂ·ş£¬ÄãÓĞÊ²Ã´Òâ¼û£¿,I have bought a new shirt. What do you think?
+L32,ŸoÕ“ÅÔÈËücíû,,ÎŞÂÛÅÔÈËÔõÃ´¿´,Whatever how others think
+L33,,,,

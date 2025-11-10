@@ -1,22 +1,38 @@
+Column1,Column2,Column3,Column4,Column5,Column6,Column7,Column8,Column9,Column10,Column11
 id,zhh,zhh_pron,alias_zhh,chs,en,note_chs,note_en,variants_zhh,variants_chs,variants_en
-L1,æ¼,dam1,æ‰;æŸ;ä¸¢;æŒ;æ“—;é£;å¼¹,æ‰”/ä¸¢,leave/throw,æ‰”/ä¸¢ï¼Œå½¢å®¹è¿™ä¸ªåŠ¨ä½œæ ¹æ®ä¸åŒåŠ¨ä½œåŠ›åº¦å’ŒåŠ¨æœºæœ‰ä¸åŒç”¨æ³•ã€‚,"The word ""throw"" or ""drop"" has different uses depending on the force and motivation of the action.",,æ‰”/ä¸¢+sth ,Throw/drop + sth
-L2,æ¼å˜¢,dam1 laap6 saap3,æŸå˜¢;ä¸¢å˜¢,æ‰”/ä¸¢ä¸œè¥¿,Take out the garbage / put the garbage / dump the garbage /trash out the garbage ,æ‰”ä¸œè¥¿ï¼Œå¾€å¤–æ‰”ï¼Œæœ‰åŠ›é‡,"Throwing things, throwing them outwards, has power.",,æ‰”/ä¸¢+sth ä¸€èˆ¬ä¸œè¥¿å¾€å¤–æ‰”ï¼Œå¸¦æœ‰åŠ›åº¦,Throw/drop + sthï¼Œ
-L3,é£›,fei1,å¼¹,é€Ÿåº¦å¾ˆå¿«åœ°æ‰”/ä¸¢,throw it over here/Toss it over/throw past/threw past,ç”¨å¾ˆå¿«çš„é€Ÿåº¦æ‰”/ä¸¢è¿‡æ¥ï¼Œæ‰”æ¥è‡ªå·±èº«è¾¹,Throw very quickly,,æ‰”+pcs+sthï¼Œ,Throwing +pcs+sthï¼Œ
-L4,ğ¢«¨,ung2,ong,æ¨,push/pushing/,æ¨åŠ¨ å´å“ç¾²æ ‡å¿—åè¨€â€œå””å¥½ongâ€ï¼Œä¸è¦æ¨çš„æ„æ€,"The meaning of ""push""",,æ¨+sth/æ¨+sb,push+sth/push+sb
-L5,æ¨è»Š,teoi1 ce1,æ‘†æ¡£;æ‘†æ¡£æ‘Š;èµ°é¬¼,æ‘†æ‘Š/è¡—è¾¹æ‘Š/è·¯è¾¹æ‘Š,set up a stall/stand,åè¯ï¼Œè·¯è¾¹æ‘Šã€æ‘†æ‘Šçš„æ„æ€,ï¼ˆNï¼‰meaning roadside stall or vendor.,,,
-L6,æ­»é›æ’‘é£¯è“‹,sei2 gai1 caang3 faan6 goi3,æ­»é¡¶;å””è®¤è¾“,ä¸æœè¾“/æ˜çŸ¥é”™ä¸è®¤/çˆ±é¢å­,The dead chicken forcing thelid of the rice pot open,æ­‡åè¯­ä¸æœè¾“ï¼›æ˜çŸ¥è‡ªå·±é”™äº†ï¼Œä½†ä¸ºäº†é¢å­éƒ½è¦è£…æ²¡äº‹ã€ä¸è®¤é”™ï¼Œç»™äººçœ‹ç©¿äº†éƒ½ä¸è®¤ã€‚,(ldiom) (V) To refuse toadmit one's mistake evenwhen it is obvious,,å½¢å®¹è¯ é€šå¸¸ç‰¹æŒ‡äººçš„è¡Œä¸º,Adjectives usually refer specifically to human behavior.
-L7,ğ ®©ğ ¹Œ,liu1 lang1,æ—–æ—;ğ µ‡ğ º«;å¥‡æ€ª,åˆé’»/å¤åˆ¶éš¾æ/å¥‡æ€ª,srare,éº»çƒ¦å¤æ‚éš¾æï¼Œåˆé’»ï¼Œå¥‡æ€ª,rare and strange; highly specialized.,,è¿™ä¹ˆå¥‡æ€ª/è›®å¥‡æ€ªçš„,It's so weir
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+L1,“g,dam1,µô;’ğ;¶ª;Ì¢;ß¨;·É;µ¯,ÈÓ/¶ª,leave/throw,¶¯´Ê£»ÈÓ/¶ª£¬ĞÎÈİÕâ¸ö¶¯×÷¸ù¾İ²»Í¬¶¯×÷Á¦¶ÈºÍ¶¯»úÓĞ²»Í¬ÓÃ·¨¡£,"£¨V£©The word ""throw"" or ""drop"" has different uses depending on the force and motivation of the action.",,ÈÓ/¶ª+sth ,Throw/drop + sth
+L2,“g‡S,dam1 laap6 saap3,’ğ‡S;¶ª‡S,ÈÓ/¶ª¶«Î÷,Take out the garbage / put the garbage / dump the garbage /trash out the garbage ,ÈÓ¶«Î÷£¬ÍùÍâÈÓ£¬ÓĞÁ¦Á¿,"Throwing things, throwing them outwards, has power.",,ÈÓ/¶ª+sth Ò»°ã¶«Î÷ÍùÍâÈÓ£¬´øÓĞÁ¦¶È,Throw/drop + sth£¬
+L3,ïw,fei1,µ¯,ËÙ¶ÈºÜ¿ìµØÈÓ/¶ª,throw it over here/Toss it over/throw past/threw past,¶¯´Ê£»ÓÃºÜ¿ìµÄËÙ¶ÈÈÓ/¶ª¹ıÀ´£¬ÈÓÀ´×Ô¼ºÉí±ß,£¨V£©Throw very quickly,,ÈÓ+pcs+sth£¬,Throwing +pcs+sth£¬
+L4,??,ung2,ong,ÍÆ,push/pushing/,¶¯´Ê£»ÍÆ¶¯ Îâ×¿ôË±êÖ¾ÃûÑÔ¡°ßíºÃong¡±£¬²»ÒªÍÆµÄÒâË¼,"£¨V£©The meaning of ""push""",,ÍÆ+sth/ÍÆ+sb,push+sth/push+sb
+L5,ÍÆÜ‡,teoi1 ce1,°Úµµ;°ÚµµÌ¯;×ß¹í,°ÚÌ¯/½Ö±ßÌ¯/Â·±ßÌ¯,set up a stall/stand,Ãû´Ê£»Â·±ßÌ¯¡¢°ÚÌ¯µÄÒâË¼,£¨N£©meaning roadside stall or vendor.,,,
+L6,ËÀëu³ÅïˆÉw,sei2 gai1 caang3 faan6 goi3,ËÀ¶¥;ßíÈÏÊä,²»·şÊä/Ã÷Öª´í²»ÈÏ/°®Ãæ×Ó,The dead chicken forcing thelid of the rice pot open,ĞªºóÓï£»²»·şÊä£¬Ã÷Öª×Ô¼º´íÁË£¬µ«ÎªÁËÃæ×Ó¶¼Òª×°Ã»ÊÂ¡¢²»ÈÏ´í£¬¸øÈË¿´´©ÁË¶¼²»ÈÏ¡£,(ldiom) (V) To refuse toadmit one's mistake evenwhen it is obvious,,ĞÎÈİ´Ê Í¨³£ÌØÖ¸ÈËµÄĞĞÎª,Adjectives usually refer specifically to human behavior.
+L7,????,liu1 lang1,ì½ì»;????;Ææ¹Ö,µó×ê/¸´ÖÆÄÑ¸ã/Ææ¹Ö,srare,ĞÎÈİ´Ê£»Âé·³¸´ÔÓÄÑ¸ã£¬µó×ê£¬Ææ¹Ö,£¨adj£©rare and strange,,ÕâÃ´Ææ¹Ö/ÂùÆæ¹ÖµÄ,It's so weir
+L8,‡n , gam2 ,‡nÓÖßíµÃ,ÕâÑù/ÄÇÑù/µØ/ÄÇ,In this way/in that way,´ú´Ê£»¾ßÌåµÄ·½Ê½¡¢ÄÇÑù£»ÃèÊöÊÂ¼ş¡¢¶¯×÷µÄ×´Ì¬,"£¨pron.£©The specific method, that way; describing the state of events and actions.",,ÕâÑù+adj/adv£»°ÚÔÚĞÎÈİ´ÊÇ°Ãæ,"This way, add adj/adv;Placed before the adj"
+L9,…î, gam3,…î,ÕâÃ´/ÄÇÃ´,like this/so,¸±´Ê£»±í´ïÒ»¸ö³Ì¶È,"£¨adv£©expressing a degree, modifying adjectives or verbs.",,ÕâÃ´+adj/v£»°ÚÔÚĞÎÈİ´Ê¶¯´ÊÇ°Ãæ,So + adj/v; placed before adj and v
+L10,üc,dim2,üc”µ;ücÏÂÚ,ÔõÃ´/ÔõÃ´Ñù/Ê²Ã´Ñù/Ö¸µã/ÆÛÆ­/ºıÅª/Õº/ÈçºÎ/Æñ/ÄÄ,How/What kind/Guide/Deceive/Fool/Dipping/Where,¶¯´Ê£¬´úÔ~£¬Á¿Ô~£¬ÃûÔ~,"£¨V£©,£¨pron.£©, £¨ PCS£©, £¨N£©",,ÍòÄÜ×Ö,versatile word
+L11,¾oÒª,gan2 jiu3,Òª¾o;¹Ø¼ü;½»êP,Òª½ô/ÑÏÖØÊÂÇé,crucial/important/vital,ÒâÒå?»ò?¼ÛÖµÖØ´ó?£¬?·Ç³£?Ö®?ÖµµÃ?»ò?ĞèÒª?×¢Òâ?£¬?ÉõÖÁ?²»?ÄÜ¹»?È±·¦?£»?¿ÉÒÔ?Ôì³É?ÉîÔ¶Ó°Ïì,£¨adj£©crucial; important; vital,,,
+L12,…îÉÏÏÂ,gam3 soeng6 haa2,²î?ßí?¶à?,ß_µ½?Ò»¶¨?Ë®Æ½/²î²»¶à/´óÖÂÉÏ,nsignificant/unassuming/ordinary/mediocre,ĞÎÈİ´Ê£»´ïµ½?Ò»¶¨?Ë®Æ½,£¨adj£©to describe something that reaches a certain standard or level,,,
+L13,…î´óëb¸òpëS½ÖÌø,gam3 daai6 zek3 gaap3 naa2 ceoi4 gaai1 tiu3,…îµÖ£¿;¼áßí¼á°¡£¿;…îºÃËÀ£¿;…î×Å”µ£¿,ÌìÏÂ›]ÓĞÃâÙMµÄÎç²Í/²»ºÏÀí/²»¸ÒÏàĞÅ/ÒÉµãÖØÖØ,There's no such thing as a free lunch/Unbelievable/too good to be true,ĞªºóÓï£»·´ÎÊ¾ä£¬ÊÀ½çÉÏ²»»áÓĞÕâÃ´ºÃµÄÊÂ¡¢,"a rhetorical question suggesting that a deal is too good to be true, literally meaning ""why would there be such a big toad hopping around the street?""",,Óöµ½²»ºÏÀíµÄÇé¿ö£¬¶Ô´ËÃèÊö,"When encountering unreasonable situations, describe them accordingly."
+L14,…î†«µÃ…î˜ò, gam3 ngaam1 dak1 gam3 kiu2,…î†«µÃ…îÜE; …î†«;²»Ä±¶øºÏ,ÕæÇÉºÏ/ÕâÃ´ÇÉºÏ/²»Ä±¶øºÏ/œÇÉ,coincidentally/fortuitously/by chance,ĞªºóÓï£»Ã»ÓĞ¿ÉÒÔÈ¥×ö£¬Å¼¶û·¢Éú,coincidentally; fortuitously; by chance,,Óöµ½ÇÉºÏµÄÇé¿ö£¬¶Ô´ËÃèÊö,"In cases of coincidence, describe this."
+L15,…î¶àÈËËÀßíÒŠÄãËÀ,gam3 do1 jan4 sei2 m4 gin3 nei5 sei2 ,×ßé_À²;ĞĞé_À²,¸ÃËÀ²»ËÀ/Ó¦¸Ã?È¥?ËÀ,"Damn it, yet still alive",ĞªºóÓï£»ÓÃ?À´Âî?ÈË?£¬?°µÖ¸¶Ô·½Ó¦¸Ã?È¥?ËÀ,"an insulting expression indirectly depicting one should be dead, ""still with us?""; literally: so many people have died, but I don't see you dying",,,
+L16,…î½ü³ÇÚòR¶¼ßíÇóÖ§ºÃ»`,gam3 kan5 sing4 wong4 miu2 dou1 m4 kau4 zi1 hou2 cim1,ßí?×R?°ÑÎÕ?™C•ş,²»»á°ÑÎÕ»ú»á,to fail to take advantage of an opportunity,ĞªºóÓï£»´óÉñÔÚÅÔ±ß²»»á?°ÑÎÕ?»ú»á,to fail to take advantage of an opportunity,,,
+L17,…î´ó‚€¶¼ßí»¯,gam3 daai6 go3 dou1 m4 faa3,Ê³¹Å²»»¯,Ê³¹Å²»»¯/»¹Ã»ÓĞ³ÉÊìÆğÀ´/»¹²»¿ªÍ¨,Stubborn to the end/Not mature yet/Not open up,ĞªºóÓï£»ĞÎÈİ´Ê£»ÕâÃ´´óÁË»¹ÕâÃ´¹Å°å,£¨adj£©So old-fashioned,,,
+L18,Ê§ÓX•ñ,sat1 gok3 saai3,ßíºÃÒâË¼;Œ¦ßí×¡,²»ºÃÒâË¼,so sorry,Ç«ĞéÊ±ËµµÄ»°£»Ã°·¸Ö®ºóÊ¹ÓÃ,Phrases used when being humble; Phrases used after an offense,,,
+L19,ÃÍıˆß^½­,maang5 lung4 gwo3 gong1,ß^½­ıˆ;ÀÌ¹ı½ç,ÓĞÄÜÁ¦µ½Íâ/ÓĞ±¾Éíµ½Íâ,Ability to go to other places,ĞÎÈİ´Ê£»Ö¸ÓĞÄÜÁ¦¡¢ÓĞ±¾ÊÂµ½ÍâµØÈ¥¿ª´´ÊÂÒµ»ò²ÎÓë¾ºÕùµÄÈË,It refers to people who have the ability and skill to start a business or compete in other places.,,,
+L20,ücÙu,di¨£n m¨¤i,¼¸åX;¼¸¶àåX£»ücÓ‹”µ£»ücÓ‹,ÔõÃ´Âô/¶àÉÙÇ®/ÔõÃ´Ëã,how much,"¶àÉÙÇ®,ÔõÃ´Ëã",how mach£¿,,,
+L21,üc²»Öª,dim2 bat1 zi1,³öºõÒâÁÏ;Õl²»Öª;¹À?ßí?µ½;üc¹Àµ½;ücÖª,²»ÖªµÀ/Ë­ÖªµÀ/ÄÄÖªµÀ/Ë­Ïëµ½/µ«ÊÇ/Ã»Ïëµ½/ÔõüNÖªµÀ/ÈçºÎµÃÖª/²»ÁÏ/Ë­Öª/Ë­ÁÏµ½,unexpectedly/but,²»ÖªµÀ/ÕlÖªµÀ/ÄÄÖªµÀ/Ë­Ïëµ½/³öºõÒâÁÏ,unexpectedly/but/ how was one to know,,,
+L22,ücÊÕ¿Æ,dim2 sau1 fo1,ücËãºÃ;ücºÃ,ÔõÃ´°ì/ÔõÃ´Ñù²ÅºÃ/ÈçºÎÊÇºÃ,What to do/How to do it well,ÔõÃ´°ì/ÔõÃ´Ñù²ÅºÃ,what to do,,,
+L23,üc¾Y,dim2 zeoi6,,µã×º,to decorate/to adorn/,µã×º,(verb)  Embellished; (noun) Embellishment,,,
+L24,ücÖ¹,dim2 zi2,ßí??Ö¸?;?ßí?œQ?Ö¸;±ßÖ¹;ºÎÖ¹,²»Ö¹/ºÎÖ¹/ÄÄ¶ùÖ¹/ÄÄÖ¹,not only,²»Ö¹/ºÎÖ¹/ÄÄ¶ùÖ¹/ÄÄÖ¹,not only,,,
+L25,ücÖv¶¼,dim2 gong2 dou1,ŸoÕ“ÈçºÎ;üc¶¼ºÃ,²»ÂÛÔõÃ´Ëµ/²»¹ÜÔõÑù/ÎŞÂÛÈçºÎ,No matter what/whatever/in any case,²»ÂÛÔõÃ´Ëµ/²»¹ÜÔõÑù/ÎŞÂÛÈçºÎ,No matter what / whatever / in any case,,,
+L26,ücğm ,dim2 sung3,üc²Ë;üc²Í;üc‡S,µã²Ë/µã²Í,to order,²ÍÌüµã²Ë,Ordering food at a restaurant,,,
+L27,üc‚S°¡,dim2 hai6 aa3,ücºÃÒâË¼°¡;Ì«¿ÍÆøÀ²,Ì«¿ÍÆøÁË/ÔõÃ´ºÃÒâË¼ÄØ,too kind,Ì«¿ÍÆøÁË/ÔõÃ´ºÃÒâË¼ÄØ/ÄãÆÆ·ÑÁË ÎÒ¸Ğ¾õ²»ºÃÒâË¼,too kind,,,
+L28,ücĞÄÜ‡,dim2 sam1 ce1,ÍÆÜ‡ücĞÄ;¸âµãÜ‡,µãĞÄ³µ/Ğ¡Ê³³µ,dim sum cart,Ãû´Ê£»µãĞÄ³µ/Ğ¡Ê³³µ£»²èÂ¥µÄÎÄ»¯ÒÅ²ú,£¨N£©dim sum cart£»Cultural heritage of teahouses,,,
+L29,ücåeÏà,dim2 co3 soeng3,ÕJåe?ÈË,ÈÏ´íÈË/ÕÒ´íÈË,Mistaken identity,¶¯´Ê£»ÕÒ´íÄ¿±êÈËÎï,"£¨V£©to pick out the wrong person for (usually for something bad, such as for revenge) [colloquial]",,,
+L30,üc˜ÓÈ¥£¿,dim2 joeng2 heoi3,ücÈ¥£¿,ÔõÃ´È¥,how to get there,ÔõÃ´È¥£¿,how to get there£¿,,,
+L31,ücµ½éÖ¹,dim2 dou3 wai4 zi2,ücµ½¼´Ö¹,µãµ½ÎªÖ¹,Stop here,µãµ½ÎªÖ¹,to make a point without going into details,,,
+L32,ücíû,dim2 tai2,ÓĞßãÁÕ·¨;ÓĞºÎíû·¨,ÓĞºÎ¿´·¨/ÓĞÊ²Ã´¿´·¨/ÓĞÊ²Ã´Ïë·¨/ÔõÃ´Ñù/ÔõÃ´¿´,how do you see this?,ÓĞºÎ¿´·¨/ÓĞÊ²Ã´¿´·¨/ÓĞÊ²Ã´Ïë·¨/ÔõÃ´Ñù/ÔõÃ´¿´,What are your thoughts?,,,
+L33,üc¹í˜Ó,dim2 gwai2 joeng2,üc˜Ó;üc“Ó˜Ó;üc˜Ó˜Ó,ÔõÃ´Ñù/ÈçºÎ/ÔõÑù,how£¿/what way,´ú´Ê£»Ñ°ÇóÒ»¸ö×ö·¨¡¢ĞĞ¶¯·½Ê½,£¨pron.£©(usually added in front of a verb to ask how something is / should be done) how to; what,,Ñ¯ÎÊ,ask
+L34,üc»°ücºÃ,dim2 waa6 dim2 hou2,ëS?Äã?ÒâË¼;Äã?Ïëüc?¶¼?µÃ;üc?¶¼?µÃ,ÔõÃ´¶¼¿ÉÒÔ/ÔõÑùËµ¶¼¿ÉÒÔ/ÔõÃ´Ëµ¾ÍÔõÃ´°ì,up to you/as you wish/whatever you say,ËæÄãÒâË¼£¬±íÊ¾×Ô¼º¶¼¿ÉÒÔ,"""up to you""; ""as you wish""; ""whatever you say""",,,
+L35,ücî^Ö®½»,dim2 tau4 zi1 gaau1,·º·ºÖ®½»;ÆÕÍ¨?ÅóÓÑ,ÆÕÍ¨?ÅóÓÑ/Ã»Ê²Ã´½»¼¯/·º·ºÖ®½»,common friend / people with little interaction / casual acquaintances,²»ÊÇºÜÊìµÄÅóÓÑ,common friend£¬nodding acquaintance,,,
+L36,üc¼tüc¾G,dim2 hung4 dim2 luk6,Ö¸üc½­É½,´æĞÄÎóµ¼ÈË,,ĞÎÈİ´Ê£»´æĞÄ?Îóµ¼Œ§ÈË,£¨adj£©to mislead someone deliberately,,,
