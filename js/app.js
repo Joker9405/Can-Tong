@@ -1,231 +1,46 @@
-/* Can-Tong — final single-file app.js (robust loader)
- * 功能：
- *  1) 加载 data/*.csv（相对/绝对路径都兼容）
- *  2) 输入框搜索（中/英/粤语别名），渲染左黄绿主卡、右上粉卡（变体），右下灰卡（备注），下方示例
- *  3) 粉卡黄条：英文在上、中文在下；并把 “Variants (EN)” 分组排在“变体（中文）”之前
- * 说明：仅替换 /js/app.js；其它文件不改
- */
-
-/* ------------------------------ 小工具 ------------------------------ */
-const $  = (sel, ctx=document) => ctx.querySelector(sel);
-const $$ = (sel, ctx=document) => Array.from(ctx.querySelectorAll(sel));
-const sleep = (ms)=>new Promise(r=>setTimeout(r,ms));
-function debounce(fn, wait=200) { let t=null; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn(...args), wait); }; }
-
-// 简易 CSV 解析（支持引号/换行）
-function parseCSV(text){
-  const rows=[]; let i=0, cur="", inQ=false; let row=[];
-  const pushCell = (arr, cell)=>arr.push(String(cell??'').replace(/\r/g,'').replace(/^"(.*)"$/s,'$1').replace(/""/g,'"'));
-  while(i<text.length){
-    const ch=text[i];
-    if(inQ){
-      if(ch==='"' && text[i+1]==='"'){ cur+='"'; i+=2; continue; }
-      if(ch==='"'){ inQ=false; i++; continue; }
-      cur+=ch; i++; continue;
-    }else{
-      if(ch==='"'){ inQ=true; i++; continue; }
-      if(ch===','){ pushCell(row,cur); cur=""; i++; continue; }
-      if(ch==='\n'){ pushCell(row,cur); rows.push(row); row=[]; cur=""; i++; continue; }
-      cur+=ch; i++; continue;
-    }
-  }
-  if(cur.length>0 || row.length>0){ pushCell(row,cur); rows.push(row); }
-  if(rows.length===0) return [];
-  const header = rows[0].map(h => String(h||'').trim().replace(/^\uFEFF/,'')); // 去掉 BOM
-  return rows.slice(1).filter(r=>r.some(c=>String(c).trim().length)).map(cells => {
-    const o={};
-    header.forEach((k,idx)=>o[k]=cells[idx]===undefined?"":cells[idx]);
-    return o;
-  });
+const PATH='/data/'; let CROSS=[], LEX={}, EXMAP={};
+function parseCSV(t){const lines=t.split(/\r?\n/).filter(Boolean);const head=lines.shift().split(',').map(s=>s.trim());return lines.map(line=>{const cells=[];let cur='',inQ=false;for(let i=0;i<line.length;i++){const ch=line[i];if(ch=='"'){inQ=!inQ;continue}if(ch==','&&!inQ){cells.push(cur);cur=''}else{cur+=ch}}cells.push(cur);const obj={};head.forEach((k,i)=>obj[k]=(cells[i]||'').trim());return obj})}
+async function loadCSV(name){const r=await fetch(PATH+name,{cache:'no-store'});if(!r.ok) throw new Error('load '+name+' failed');return parseCSV(await r.text())}
+function norm(s){return (s||'').toLowerCase().replace(/\s+/g,'')}
+function fuzzy(text,q){text=norm(text);q=norm(q);if(!q)return false;let i=0;for(const c of text){if(c===q[i])i++}return i===q.length||text.includes(q)}
+let VOICE=null;function pickVoice(){const L=speechSynthesis.getVoices();VOICE=L.find(v=>/yue|Cantonese|zh[-_]HK/i.test(v.lang+v.name))||L.find(v=>/zh[-_]HK/i.test(v.lang))||L.find(v=>/zh/i.test(v.lang))||null}if('speechSynthesis'in window){speechSynthesis.onvoiceschanged=pickVoice;pickVoice()}
+function speak(t){if(!('speechSynthesis'in window)||!t)return;const u=new SpeechSynthesisUtterance(t);if(VOICE)u.voice=VOICE;u.lang=VOICE?.lang||'zh-HK';speechSynthesis.cancel();speechSynthesis.speak(u)}
+const ICON=`<svg viewBox="0 0 24 24"><path d="M3 10v4h4l5 4V6L7 10H3zm13.5 2a3.5 3.5 0 0 0-2.5-3.34v6.68A3.5 3.5 0 0 0 16.5 12zm0-7a9.5 9.5 0 0 1 0 14l1.5 1.5A11.5 11.5 0 0 0 18 3.5L16.5 5z"/></svg>`;
+async function boot(){const[cm,lx,ex]=await Promise.all([loadCSV('crossmap.csv'),loadCSV('lexeme.csv'),loadCSV('examples.csv')]);CROSS=cm;lx.forEach(r=>LEX[r.id]=r);EXMAP=ex.reduce((m,r)=>{(m[r.lexeme_id]||(m[r.lexeme_id]=[])).push(r);return m},{})}
+function findLexemeIds(q){const nq=norm(q);if(!nq)return[];const set=new Set();CROSS.forEach(r=>{if(fuzzy(r.term,nq))set.add(r.target_id)});Object.values(LEX).forEach(r=>{if(fuzzy(r.zhh,nq)||fuzzy(r.en,nq)||fuzzy(r.alias_zhh||'',nq))set.add(r.id)});return Array.from(set)}
+const grid=document.getElementById('grid');const examples=document.getElementById('examples');const examplesList=document.getElementById('examples-list');
+function resetUI(){grid.innerHTML='';examples.hidden=true;examplesList.innerHTML=''}
+function renderEmpty(){resetUI()}
+function pairedVariants(chs,en){const A=(chs||'').split(/[;；]/).map(s=>s.trim()).filter(Boolean);const B=(en||'').split(/[;；]/).map(s=>s.trim()).filter(Boolean);const n=Math.max(A.length,B.length);const out=[];for(let i=0;i<n;i++){out.push({zh:A[i]||'',en:B[i]||''})}return out}
+function renderPhased(lex){resetUI();
+  const aliases=(lex.alias_zhh||'').split(/[;；]/).map(s=>s.trim()).filter(Boolean);
+  const variants=pairedVariants(lex.variants_chs, lex.variants_en);
+  const note=(lex.note_en||'')+(lex.note_chs?('<br>'+lex.note_chs):'');
+  const left=document.createElement('div');left.className='card yellow left';
+  left.innerHTML=`<div class="badge">粤语zhh：</div>
+    <div class="h-head"><div class="h-title">${lex.zhh||'—'}</div><button class="tts t-head" title="发音">${ICON}</button></div>
+    ${aliases.map(a=>`<div class="row"><div class="alias">${a}</div><button class="tts">${ICON}</button></div>`).join('')}`;
+  grid.appendChild(left);requestAnimationFrame(()=>left.classList.add('show'));
+  left.querySelector('.t-head').onclick=()=>speak(lex.zhh||''); left.querySelectorAll('.row .tts').forEach((b,i)=>b.onclick=()=>speak(aliases[i]));
+  setTimeout(()=>{
+    const rt=document.createElement('div');rt.className='card pink right-top';
+    rt.innerHTML=`<div class="vars">${variants.map(v=>`<div class="var-row"><div class="var-zh">${v.zh}</div>${v.en?`<div class="var-en">${v.en}</div>`:''}</div>`).join('')}</div>`;
+    grid.appendChild(rt);requestAnimationFrame(()=>rt.classList.add('show'));
+    const rb=document.createElement('div');rb.className='card gray right-bottom';
+    rb.innerHTML=`<div class="note">${note||''}</div><button id="example-btn">example 扩展</button>`;grid.appendChild(rb);requestAnimationFrame(()=>rb.classList.add('show'));
+    rb.querySelector('#example-btn').onclick=()=>toggleExamples(lex, rb.querySelector('#example-btn'));
+  },120);
 }
-
-/* ------------------------------ 数据加载 ------------------------------ */
-async function fetchText(path){
-  const res = await fetch(path, {cache:'no-store'});
-  if(!res.ok) throw new Error(`${res.status} ${res.statusText}`);
-  return await res.text();
+function toggleExamples(lex, btn){const exs=EXMAP[lex.id]||[];if(!exs.length)return;
+  if(examples.hidden){
+    examplesList.innerHTML='';
+    exs.forEach(e=>{const row=document.createElement('div');row.className='example';
+      row.innerHTML=`<div class="yue">${e.ex_zhh||''}</div>
+        <div class="right"><div class="en">${e.ex_en||''}</div><div class="chs">${e.ex_chs||''}</div></div>
+        <div class="btns"><button class="tts" title="粤语">${ICON}</button></div>`;
+      row.querySelector('.tts').onclick=()=>speak(e.ex_zhh||'');examplesList.appendChild(row)});
+    examples.hidden=false; btn.remove();
+  }else{examples.hidden=true;}
 }
-// 优先相对路径，其次绝对路径，最后 ./ 相对
-async function loadCSVSmart(filename){
-  const tries = [`data/${filename}`, `/data/${filename}`, `./data/${filename}`];
-  for (const p of tries){
-    try { const txt = await fetchText(p); return parseCSV(txt); }
-    catch(e){ /* 下一条 */ }
-  }
-  return [];
-}
-
-const Data = { lexemes:[], examples:[], crossmap:[] };
-
-async function bootLoad(){
-  Data.lexemes  = await loadCSVSmart('lexeme.csv');
-  Data.examples = await loadCSVSmart('examples.csv');
-  Data.crossmap = await loadCSVSmart('crossmap.csv');
-}
-
-/* ------------------------------ 索引与搜索 ------------------------------ */
-const CJK_RE = /[\u4E00-\u9FFF]/i;
-const normalize = (s)=>String(s||'').trim();
-const splitSemi = (str)=>normalize(str).split(/[;；、\|,]/).map(s=>s.trim()).filter(Boolean);
-
-function buildIndex(list){
-  return list.map((row, idx)=>{
-    const zhh = normalize(row.zhh);
-    const chs = normalize(row.chs);
-    const en  = normalize(row.en);
-    const alias = splitSemi(row.alias_zhh||"");
-    return { idx, row, zhh, chs, en, alias };
-  });
-}
-function scoreRow(q, item){
-  const s = q.toLowerCase(); let score = 0;
-  if(CJK_RE.test(q)){
-    if(item.zhh.includes(q)) score += 50;
-    if(item.chs.includes(q)) score += 40;
-    if(item.alias.some(a=>a.includes(q))) score += 35;
-  }else{
-    if(item.en.toLowerCase().includes(s)) score += 50;
-    if(item.alias.some(a=>a.toLowerCase().includes(s))) score += 30;
-    if(item.chs.toLowerCase().includes(s)) score += 10;
-  }
-  return score;
-}
-function searchLexeme(q){
-  if(!Data.lexemes.length) return null;
-  const idx = buildIndex(Data.lexemes);
-  const scored = idx.map(it => ({...it, _s: scoreRow(q, it)})).filter(x=>x._s>0);
-  scored.sort((a,b)=>b._s-a._s || a.idx-b.idx);
-  return scored.length? scored[0].row : null;
-}
-
-/* ------------------------------ 渲染容器 ------------------------------ */
-function ensureContainers(){
-  let root = $('#ct-root'); if(!root){ root = document.createElement('div'); root.id='ct-root'; document.body.appendChild(root); }
-  if(!$('#cardLeft',root)){ const d=document.createElement('div'); d.id='cardLeft'; d.className='card left lime'; root.appendChild(d); }
-  if(!$('#cardVariants',root)){ const d=document.createElement('div'); d.id='cardVariants'; d.className='card right pink'; root.appendChild(d); }
-  if(!$('#cardNote',root)){ const d=document.createElement('div'); d.id='cardNote'; d.className='card right gray'; root.appendChild(d); }
-  if(!$('#examples',root)){ const d=document.createElement('div'); d.id='examples'; d.className='examples'; root.appendChild(d); }
-  return root;
-}
-
-/* ------------------------------ 具体渲染 ------------------------------ */
-function renderLeft(row){
-  const box = $('#cardLeft'); if(!box) return; box.innerHTML='';
-  const title = document.createElement('div'); title.className='yue-title'; title.textContent=row.zhh||'—';
-  const pron  = document.createElement('div'); pron.className='yue-pron'; pron.textContent=(row.zhh_pron||'').trim();
-  const aliasWrap = document.createElement('div'); aliasWrap.className='alias';
-  splitSemi(row.alias_zhh||'').forEach(a=>{ const li=document.createElement('div'); li.textContent=a; aliasWrap.appendChild(li); });
-  box.appendChild(title); if(pron.textContent) box.appendChild(pron); if(aliasWrap.childElementCount) box.appendChild(aliasWrap);
-}
-function renderVariants(row){
-  const box = $('#cardVariants'); if(!box) return; box.innerHTML='';
-  const en = (row.variants_en||'').trim(); const ch = (row.variants_chs||'').trim(); const zh = (row.variants_zhh||'').trim();
-
-  // 顶部黄条：英文在上、中文在下
-  const hint = document.createElement('div'); hint.className='hint';
-  hint.innerHTML = `<div class="en">${en}</div><div class="chs">${ch}</div>`; box.appendChild(hint);
-
-  // 分组：英文在前，中文在后
-  if(en){ const gEn=document.createElement('div'); gEn.className='group'; gEn.innerHTML=`<strong>Variants (EN)</strong><div class="list">${en}</div>`; box.appendChild(gEn); }
-  if(ch||zh){ const gZh=document.createElement('div'); gZh.className='group'; gZh.innerHTML=`<strong>变体（中文）</strong><div class="list">${[zh,ch].filter(Boolean).join('；')}</div>`; box.appendChild(gZh); }
-}
-function renderNote(row){
-  const box=$('#cardNote'); if(!box) return; box.innerHTML='';
-  const en=(row.note_en||'').trim(); const ch=(row.note_chs||'').trim();
-  if(en){ const p=document.createElement('div'); p.innerHTML=`<strong>(EN)</strong> ${en}`; box.appendChild(p); }
-  if(ch){ const p=document.createElement('div'); p.innerHTML=`<strong>（中文）</strong> ${ch}`; box.appendChild(p); }
-}
-function renderExamples(row){
-  const box=$('#examples'); if(!box) return; box.innerHTML=''; if(!Data.examples.length) return;
-  // 简单关联：例句里包含 zhh 或别名（不依赖 crossmap 字段名）
-  const keys=[row.zhh,...splitSemi(row.alias_zhh||'')].map(s=>s.toLowerCase()).filter(Boolean);
-  const results = Data.examples.filter(ex=>{
-    const hay = `${ex.chs||''} ${ex.en||''} ${ex.zhh||''}`.toLowerCase();
-    return keys.some(k => k && hay.includes(k));
-  }).slice(0,20);
-  results.forEach(ex=>{
-    const li=document.createElement('div'); li.className='example-row';
-    const zh=document.createElement('div'); zh.className='zhh'; zh.textContent=(ex.zhh||ex.chs||'').trim();
-    const en=document.createElement('div'); en.className='en'; en.textContent=(ex.en||'').trim();
-    li.appendChild(zh); li.appendChild(en); box.appendChild(li);
-  });
-}
-
-/* ------------------------------ 搜索绑定 ------------------------------ */
-function findSearchInput(){ return $('#q') || $('#search') || $('input[type="search"]') || $('input[type="text"]'); }
-async function onQuery(q){
-  if(!q || !q.trim()) return;
-  const row = searchLexeme(q.trim());
-  ensureContainers();
-  if(!row){ ['#cardLeft','#cardVariants','#cardNote','#examples'].forEach(sel=>{ const el=$(sel); if(el) el.innerHTML=''; }); return; }
-  renderLeft(row); renderVariants(row); renderNote(row); renderExamples(row);
-}
-
-/* ------------------------------ 启动 ------------------------------ */
-async function startApp(){
-  await bootLoad();
-  ensureContainers();
-  const input = findSearchInput();
-  if(input){
-    input.addEventListener('keydown', e=>{ if(e.key==='Enter'){ onQuery(input.value); } });
-    input.addEventListener('input', debounce(()=>onQuery(input.value), 250));
-  }
-}
-
-// 兼容旧页面：把黄条两行顺序强制校正（保险）
-(function () {
-  const CN_RE = /[\u4E00-\u9FFF]/; const EN_RE = /[A-Za-z]/;
-  const q=(s,c=document)=>c.querySelector(s); const qa=(s,c=document)=>Array.from(c.querySelectorAll(s));
-  function locatePinkRoot(){ return q('#cardVariants') || q('.card.right.pink') || q('.card.pink') || null; }
-  function normalizeTwoLines(el){
-    if (el.dataset.ctNormalized==='1') return;
-    const kids = qa(':scope > *', el);
-    if (kids.length >= 2 && (kids.some(k=>k.classList.contains('en')) || kids.some(k=>k.classList.contains('chs')))) { el.dataset.ctNormalized='1'; return; }
-    const parts = String(el.innerHTML).replace(/<br\s*\/?>/gi,'\n').split(/\n+/).map(s=>s.trim()).filter(Boolean);
-    if (parts.length >= 2){
-      let en = parts.find(p=>EN_RE.test(p)) || parts[0];
-      let cn = parts.find(p=>CN_RE.test(p)) || parts[1] || '';
-      el.innerHTML = `<div class="en">${en}</div><div class="chs">${cn}</div>`;
-      el.dataset.ctNormalized='1'; return;
-    }
-    if (kids.length >= 2){
-      const [a,b]=kids;
-      if (!a.classList.contains('en') && EN_RE.test(a.textContent)) a.classList.add('en');
-      if (!a.classList.contains('chs') && CN_RE.test(a.textContent)) a.classList.add('chs');
-      if (!b.classList.contains('en') && EN_RE.test(b.textContent)) b.classList.add('en');
-      if (!b.classList.contains('chs') && CN_RE.test(b.textContent)) b.classList.add('chs');
-      el.dataset.ctNormalized='1';
-    }
-  }
-  function swapHint(el){
-    normalizeTwoLines(el);
-    const en = q(':scope > .en', el); const cn = q(':scope > .chs', el);
-    if (en) el.insertBefore(en, el.firstElementChild);
-    if (cn && el.children[1] !== cn) el.insertBefore(cn, el.children[1] || null);
-    el.dataset.ctHintDone='1';
-  }
-  function swapVariantGroups(root){
-    const blocks = qa(':scope > *', root); let enBlock=null, cnBlock=null;
-    for (const b of blocks){
-      const title = (q('strong', b)?.textContent || '').trim();
-      if (/Variants\s*\(EN\)/i.test(title)) enBlock = b;
-      if (/变体（?中文）?/.test(title) || /变体.*中文/.test(title)) cnBlock = b;
-    }
-    if (enBlock && cnBlock){
-      const enAfterCN = !!(enBlock.compareDocumentPosition(cnBlock) & Node.DOCUMENT_POSITION_FOLLOWING);
-      if (enAfterCN) root.insertBefore(enBlock, cnBlock);
-    }
-  }
-  function applyOnce(){
-    const root = locatePinkRoot(); if (!root) return;
-    const hint = q('.hint', root) || q('.badge', root) || q('[data-role="hint"]', root) || q('[data-type="hint"]', root);
-    if (hint && hint.dataset.ctHintDone!=='1') swapHint(hint);
-    swapVariantGroups(root);
-  }
-  window.addEventListener('DOMContentLoaded', applyOnce);
-  const mo = new MutationObserver(() => applyOnce());
-  mo.observe(document.body, { childList:true, subtree:true });
-})();
-
-if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', startApp);
-else startApp();
+document.getElementById('q').addEventListener('input',e=>{const q=e.target.value; if(!q){renderEmpty();return} const ids=findLexemeIds(q); if(!ids.length){renderEmpty();return} renderPhased(LEX[ids[0]])});
+boot();
