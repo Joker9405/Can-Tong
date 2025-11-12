@@ -1,0 +1,40 @@
+
+:root{
+  --bg:#0b0b0c;
+  --fg:#eaeef2;
+  --muted:#a3a9b3;
+  --pink:#ff78b6;
+  --yellow:#ffd666;
+  --card:#141417;
+  --accent:#2a2a30;
+  --chip-fg:#3b0f27;
+  --chip-bg: #ffd8ea;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+.header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--accent);position:sticky;top:0;background:rgba(11,11,12,0.8);backdrop-filter: blur(8px);}
+.brand{font-weight:800;letter-spacing:.3px}
+.search-wrap{display:flex;gap:8px;max-width:720px;width:100%}
+.search-input{flex:1;padding:12px 14px;border-radius:12px;border:1px solid var(--accent);background:#0f0f13;color:var(--fg);outline:none}
+.search-input:focus{border-color:#444}
+.btn{padding:12px 14px;border-radius:12px;border:1px solid var(--accent);background:#18181c;color:var(--fg);cursor:pointer}
+.container{max-width:980px;margin:24px auto;padding:0 16px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 18px 0}
+.chip{background:var(--chip-bg);color:#5b0040;border:1px solid #ffb5d9;padding:8px 10px;border-radius:999px;cursor:pointer;font-weight:700}
+.chip.active{outline:2px solid var(--pink)}
+.result-grid{display:grid;grid-template-columns:1fr 280px;gap:16px;align-items:start}
+.card{background:var(--card);border:1px solid var(--accent);border-radius:16px;padding:16px}
+.card-main .card-head{display:flex;align-items:center;gap:8px}
+.zhh{font-size:28px;margin:0 4px 6px 0}
+.icon-btn{background:#1c1c22;border:1px solid var(--accent);color:var(--fg);border-radius:12px;padding:8px 10px;cursor:pointer}
+.pairs{display:grid;grid-template-columns:100px 1fr;gap:10px;margin-top:8px}
+.label{color:var(--muted)}
+.text{color:var(--fg)}
+.variants{margin-top:14px;padding-top:10px;border-top:1px dashed #444}
+.notes{margin-top:8px;color:var(--muted)}
+.hint{background:#111117;border:1px dashed #333;border-radius:12px;padding:12px;color:var(--muted)}
+.empty{margin:40px 0;text-align:center;color:var(--muted)}
+.error{margin:16px 0;padding:14px;border:1px solid #b00020;background:#250008;color:#ffb3c0;border-radius:12px}
+.footer{max-width:980px;margin:24px auto 40px;padding:0 16px;color:var(--muted)}
+.hidden{display:none}
+@media(max-width:780px){.result-grid{grid-template-columns:1fr}}

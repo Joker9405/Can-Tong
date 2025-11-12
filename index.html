@@ -1,58 +1,54 @@
 <!doctype html>
-<html lang="zh-Hans">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>CanTong — 粤语翻译</title>
-  <link rel="stylesheet" href="/assets/style.css" />
-</head>
-<body>
-  <header class="topbar">
-    <div class="brand">Can-Tong <span class="dot">•</span></div>
-    <div class="lang">chs-zhh-env</div>
-  </header>
+<html lang="zh-HK">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>CanTong MVP — 搜索</title>
+    <link rel="stylesheet" href="./style.css?v=1" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="brand">CanTong MVP</div>
+      <div class="search-wrap">
+        <input id="q" class="search-input" placeholder="輸入中文 / English / 粤語，按 Enter 搜索" />
+        <button id="btnSearch" class="btn">搜索</button>
+      </div>
+    </header>
 
-  <main class="container">
-    <div class="search">
-      <input id="q" type="text" placeholder="" autocomplete="off" />
-    </div>
+    <main class="container">
+      <section id="chips" class="chips"></section>
 
-    <section id="grid" class="grid"></section>
+      <section id="result" class="result-grid">
+        <article id="card-main" class="card card-main hidden">
+          <div class="card-head">
+            <h1 id="zhhText" class="zhh"></h1>
+            <button id="speakBtn" class="icon-btn" title="播放發音">🔊</button>
+          </div>
+          <div class="pairs">
+            <div><span class="label">中文</span><span id="chsText" class="text"></span></div>
+            <div><span class="label">English</span><span id="enText" class="text"></span></div>
+          </div>
+          <div id="variantsBox" class="variants hidden"></div>
+          <div id="notesBox" class="notes hidden"></div>
+        </article>
 
-    <section id="examples" class="examples" hidden>
-      <div class="examples-inner" id="examples-list"></div>
-    </section>
-  </main>
+        <aside class="side">
+          <div id="pinkGuide" class="hint hidden">有多個同名詞條，請在上面<strong>粉色選項</strong>中點選你要的翻譯。</div>
+        </aside>
+      </section>
 
-  <footer class="foot">
-    CanTongMVP — Code MIT, Lexicon Closed; data/* CSVs © CC BY-NC-ND.
-  </footer>
+      <section id="empty" class="empty">輸入關鍵詞後按 Enter 搜索。</section>
+      <section id="error" class="error hidden"></section>
+    </main>
 
-  <!-- 你原有的主逻辑 -->
-  <script src="/js/app.js"></script>
+    <footer class="footer">
+      <small>純前端版本 · 讀取 <code>/data/lexeme.csv</code> 與 <code>/data/crossmap.csv</code></small>
+    </footer>
 
-  <!-- 插件：仅新增以下三段（务必放在 </body> 之前） -->
-<link rel="stylesheet" href="/assets/addons/disambiguation.css" />
-<script src="/assets/addons/disambiguation.js"></script>
-  <script>
-    Disambig.init({
-      getQuery: () => (document.querySelector('#q')?.value || '').trim(),
-      onPick: ({ id, row }) => {
-        if (window.renderById) {
-          window.renderById(id);
-        } else if (window.renderLexeme) {
-          window.renderLexeme(row);
-        } else {
-          const q = (row.zhh || '').trim();
-          const $q = document.querySelector('#q');
-          if ($q) {
-            $q.value = q;
-            $q.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
-          }
-        }
-      },
-      mount: document.body
-    });
-  </script>
-</body>
+    <script>
+      window.__BUILD_TS__ = '1762935607';
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    <script src="./app.js?v=1"></script>
+  </body>
 </html>
