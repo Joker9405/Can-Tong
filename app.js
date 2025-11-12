@@ -1,205 +1,46 @@
-
-const Q = document.getElementById('q');
-const BTN = document.getElementById('btnSearch');
-const chipsEl = document.getElementById('chips');
-const cardMain = document.getElementById('card-main');
-const zhhText = document.getElementById('zhhText');
-const chsText = document.getElementById('chsText');
-const enText = document.getElementById('enText');
-const variantsBox = document.getElementById('variantsBox');
-const notesBox = document.getElementById('notesBox');
-const emptyEl = document.getElementById('empty');
-const errEl = document.getElementById('error');
-const pinkGuide = document.getElementById('pinkGuide');
-const speakBtn = document.getElementById('speakBtn');
-
-let LEXEME = new Map(); // id -> lexeme row
-let CROSS = [];         // {term, target_id}
-
-const CSV_OPTS = {header:true, skipEmptyLines:true, transformHeader: h => h.trim(), dynamicTyping:false};
-
-function absolute(path){ return `${path}?v=${window.__BUILD_TS__}`; }
-
-async function loadCSV(url){
-  return new Promise((resolve, reject)=>{
-    Papa.parse(absolute(url), {
-      ...CSV_OPTS,
-      download:true,
-      fastMode:true,
-      error: err => reject(err),
-      complete: res => resolve(res.data),
-    });
-  });
+const PATH='/data/'; let CROSS=[], LEX={}, EXMAP={};
+function parseCSV(t){const lines=t.split(/\r?\n/).filter(Boolean);const head=lines.shift().split(',').map(s=>s.trim());return lines.map(line=>{const cells=[];let cur='',inQ=false;for(let i=0;i<line.length;i++){const ch=line[i];if(ch=='"'){inQ=!inQ;continue}if(ch==','&&!inQ){cells.push(cur);cur=''}else{cur+=ch}}cells.push(cur);const obj={};head.forEach((k,i)=>obj[k]=(cells[i]||'').trim());return obj})}
+async function loadCSV(name){const r=await fetch(PATH+name,{cache:'no-store'});if(!r.ok) throw new Error('load '+name+' failed');return parseCSV(await r.text())}
+function norm(s){return (s||'').toLowerCase().replace(/\s+/g,'')}
+function fuzzy(text,q){text=norm(text);q=norm(q);if(!q)return false;let i=0;for(const c of text){if(c===q[i])i++}return i===q.length||text.includes(q)}
+let VOICE=null;function pickVoice(){const L=speechSynthesis.getVoices();VOICE=L.find(v=>/yue|Cantonese|zh[-_]HK/i.test(v.lang+v.name))||L.find(v=>/zh[-_]HK/i.test(v.lang))||L.find(v=>/zh/i.test(v.lang))||null}if('speechSynthesis'in window){speechSynthesis.onvoiceschanged=pickVoice;pickVoice()}
+function speak(t){if(!('speechSynthesis'in window)||!t)return;const u=new SpeechSynthesisUtterance(t);if(VOICE)u.voice=VOICE;u.lang=VOICE?.lang||'zh-HK';speechSynthesis.cancel();speechSynthesis.speak(u)}
+const ICON=`<svg viewBox="0 0 24 24"><path d="M3 10v4h4l5 4V6L7 10H3zm13.5 2a3.5 3.5 0 0 0-2.5-3.34v6.68A3.5 3.5 0 0 0 16.5 12zm0-7a9.5 9.5 0 0 1 0 14l1.5 1.5A11.5 11.5 0 0 0 18 3.5L16.5 5z"/></svg>`;
+async function boot(){const[cm,lx,ex]=await Promise.all([loadCSV('crossmap.csv'),loadCSV('lexeme.csv'),loadCSV('examples.csv')]);CROSS=cm;lx.forEach(r=>LEX[r.id]=r);EXMAP=ex.reduce((m,r)=>{(m[r.lexeme_id]||(m[r.lexeme_id]=[])).push(r);return m},{})}
+function findLexemeIds(q){const nq=norm(q);if(!nq)return[];const set=new Set();CROSS.forEach(r=>{if(fuzzy(r.term,nq))set.add(r.target_id)});Object.values(LEX).forEach(r=>{if(fuzzy(r.zhh,nq)||fuzzy(r.en,nq)||fuzzy(r.alias_zhh||'',nq))set.add(r.id)});return Array.from(set)}
+const grid=document.getElementById('grid');const examples=document.getElementById('examples');const examplesList=document.getElementById('examples-list');
+function resetUI(){grid.innerHTML='';examples.hidden=true;examplesList.innerHTML=''}
+function renderEmpty(){resetUI()}
+function pairedVariants(chs,en){const A=(chs||'').split(/[;；]/).map(s=>s.trim()).filter(Boolean);const B=(en||'').split(/[;；]/).map(s=>s.trim()).filter(Boolean);const n=Math.max(A.length,B.length);const out=[];for(let i=0;i<n;i++){out.push({zh:A[i]||'',en:B[i]||''})}return out}
+function renderPhased(lex){resetUI();
+  const aliases=(lex.alias_zhh||'').split(/[;；]/).map(s=>s.trim()).filter(Boolean);
+  const variants=pairedVariants(lex.variants_chs, lex.variants_en);
+  const note=(lex.note_en||'')+(lex.note_chs?('<br>'+lex.note_chs):'');
+  const left=document.createElement('div');left.className='card yellow left';
+  left.innerHTML=`<div class="badge">粤语zhh：</div>
+    <div class="h-head"><div class="h-title">${lex.zhh||'—'}</div><button class="tts t-head" title="发音">${ICON}</button></div>
+    ${aliases.map(a=>`<div class="row"><div class="alias">${a}</div><button class="tts">${ICON}</button></div>`).join('')}`;
+  grid.appendChild(left);requestAnimationFrame(()=>left.classList.add('show'));
+  left.querySelector('.t-head').onclick=()=>speak(lex.zhh||''); left.querySelectorAll('.row .tts').forEach((b,i)=>b.onclick=()=>speak(aliases[i]));
+  setTimeout(()=>{
+    const rt=document.createElement('div');rt.className='card pink right-top';
+    rt.innerHTML=`<div class="vars">${variants.map(v=>`<div class="var-row"><div class="var-zh">${v.zh}</div>${v.en?`<div class="var-en">${v.en}</div>`:''}</div>`).join('')}</div>`;
+    grid.appendChild(rt);requestAnimationFrame(()=>rt.classList.add('show'));
+    const rb=document.createElement('div');rb.className='card gray right-bottom';
+    rb.innerHTML=`<div class="note">${note||''}</div><button id="example-btn">example 扩展</button>`;grid.appendChild(rb);requestAnimationFrame(()=>rb.classList.add('show'));
+    rb.querySelector('#example-btn').onclick=()=>toggleExamples(lex, rb.querySelector('#example-btn'));
+  },120);
 }
-
-function normalize(s){
-  return (s || '').toString().trim().toLowerCase();
+function toggleExamples(lex, btn){const exs=EXMAP[lex.id]||[];if(!exs.length)return;
+  if(examples.hidden){
+    examplesList.innerHTML='';
+    exs.forEach(e=>{const row=document.createElement('div');row.className='example';
+      row.innerHTML=`<div class="yue">${e.ex_zhh||''}</div>
+        <div class="right"><div class="en">${e.ex_en||''}</div><div class="chs">${e.ex_chs||''}</div></div>
+        <div class="btns"><button class="tts" title="粤语">${ICON}</button></div>`;
+      row.querySelector('.tts').onclick=()=>speak(e.ex_zhh||'');examplesList.appendChild(row)});
+    examples.hidden=false; btn.remove();
+  }else{examples.hidden=true;}
 }
-
-function unique(arr){
-  return Array.from(new Set(arr));
-}
-
-function buildIndexes(lexRows, crossRows){
-  // Map lexeme by id
-  LEXEME.clear();
-  for(const r of lexRows){
-    const id = (r.id || r.ID || r.Id || '').toString().trim();
-    if(!id) continue;
-    LEXEME.set(id, {
-      id,
-      zhh: r.zhh || r.yue || r['粵語'] || '',
-      chs: r.chs || r.zh || r['中文'] || '',
-      en:  r.en || r['English'] || '',
-      variants_chs: r.variants_chs || r['variants_zhh'] || r['variants'] || '',
-      variants_en: r.variants_en || '',
-      notes: r.notes || r.note || r['備註'] || ''
-    });
-  }
-  // Crossmap rows
-  CROSS = [];
-  for(const c of crossRows){
-    const term = c.term ?? c.Term ?? c['詞條'] ?? c['term'];
-    const tid  = c.target_id ?? c.target ?? c['target'] ?? c['targetId'] ?? c['target_id'];
-    if(!term || !tid) continue;
-    CROSS.push({ term: String(term), target_id: String(tid) });
-  }
-}
-
-function searchByCross(term){
-  const key = normalize(term);
-  if(!key) return [];
-
-  // 1) exact match by crossmap.term
-  let exact = CROSS.filter(r => normalize(r.term) === key).map(r => r.target_id);
-
-  // 2) if none, fallback to contains()
-  if(exact.length === 0){
-    exact = CROSS.filter(r => normalize(r.term).includes(key)).map(r => r.target_id);
-  }
-
-  // Map to lexeme
-  const ids = unique(exact).filter(id => LEXEME.has(id));
-  return ids.map(id => LEXEME.get(id));
-}
-
-function fallbackSearchLexeme(term){
-  const key = normalize(term);
-  const results = [];
-  for(const row of LEXEME.values()){
-    const hay = [row.zhh, row.chs, row.en].map(normalize).join(' || ');
-    if(hay.includes(key)) results.push(row);
-  }
-  return results.slice(0, 30);
-}
-
-function renderChips(rows, activeId){
-  chipsEl.innerHTML = '';
-  if(rows.length <= 1){ pinkGuide.classList.add('hidden'); return; }
-  pinkGuide.classList.remove('hidden');
-
-  rows.forEach(row => {
-    const btn = document.createElement('button');
-    btn.className = 'chip' + (row.id === activeId ? ' active' : '');
-    btn.textContent = row.zhh || row.chs || row.en || ('#' + row.id);
-    btn.dataset.id = row.id;
-    btn.addEventListener('click', () => {
-      renderMain(row);
-      renderChips(rows, row.id);
-    });
-    chipsEl.appendChild(btn);
-  });
-}
-
-function renderMain(row){
-  if(!row){ cardMain.classList.add('hidden'); return; }
-  emptyEl.classList.add('hidden');
-  cardMain.classList.remove('hidden');
-
-  zhhText.textContent = row.zhh || '（無粵語）';
-  chsText.textContent = row.chs || '—';
-  enText.textContent  = row.en  || '—';
-
-  // Variants (if any)
-  const vchs = row.variants_chs ? String(row.variants_chs).split(/[,;、|]/).map(s=>s.trim()).filter(Boolean) : [];
-  const ven  = row.variants_en ? String(row.variants_en).split(/[,;、|]/).map(s=>s.trim()).filter(Boolean) : [];
-  const blocks = [];
-  if(vchs.length){
-    blocks.push(`<div><b>中文變體：</b> ${vchs.map(x=>`<span class="chip">${x}</span>`).join(' ')}</div>`);
-  }
-  if(ven.length){
-    blocks.push(`<div><b>英文變體：</b> ${ven.map(x=>`<span class="chip">${x}</span>`).join(' ')}</div>`);
-  }
-  if(blocks.length){
-    variantsBox.innerHTML = blocks.join('');
-    variantsBox.classList.remove('hidden');
-  }else{
-    variantsBox.classList.add('hidden');
-    variantsBox.innerHTML = '';
-  }
-
-  // Notes
-  if(row.notes){
-    notesBox.textContent = row.notes;
-    notesBox.classList.remove('hidden');
-  }else{
-    notesBox.classList.add('hidden');
-    notesBox.textContent = '';
-  }
-
-  // Speak
-  speakBtn.onclick = () => speakYue(row.zhh || row.chs || '');
-}
-
-function speakYue(text){
-  try{
-    const utter = new SpeechSynthesisUtterance(text);
-    // Try to pick Cantonese voice if available
-    const pick = (window.speechSynthesis.getVoices() || []).find(v => /yue|zh[-_]hk/i.test(v.lang));
-    if(pick) utter.voice = pick;
-    utter.rate = 0.95;
-    speechSynthesis.cancel();
-    speechSynthesis.speak(utter);
-  }catch(e){ console.warn('speech error', e); }
-}
-
-async function boot(){
-  try{
-    // Fetch CSVs with no-cache semantics
-    const [lexRows, crossRows] = await Promise.all([
-      loadCSV('/data/lexeme.csv'),
-      loadCSV('/data/crossmap.csv')
-    ]);
-    buildIndexes(lexRows, crossRows);
-  }catch(e){
-    errEl.textContent = '數據文件讀取失敗：' + (e?.message || e);
-    errEl.classList.remove('hidden');
-    return;
-  }
-
-  function doSearch(){
-    const term = Q.value.trim();
-    if(!term){ emptyEl.classList.remove('hidden'); return; }
-    const rows = searchByCross(term);
-    const list = rows.length ? rows : fallbackSearchLexeme(term);
-
-    if(list.length === 0){
-      chipsEl.innerHTML = '';
-      pinkGuide.classList.add('hidden');
-      renderMain(null);
-      emptyEl.textContent = '未找到，換個關鍵詞試試。';
-      emptyEl.classList.remove('hidden');
-      return;
-    }
-
-    // Initial active row: prefer exact zhh/chS/en match
-    const active = list[0];
-    renderChips(list, active.id);
-    renderMain(active);
-  }
-
-  BTN.addEventListener('click', doSearch);
-  Q.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') doSearch(); });
-}
-
+document.getElementById('q').addEventListener('input',e=>{const q=e.target.value; if(!q){renderEmpty();return} const ids=findLexemeIds(q); if(!ids.length){renderEmpty();return} renderPhased(LEX[ids[0]])});
 boot();

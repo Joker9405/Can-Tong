@@ -1,14 +1,1 @@
-{
-  "cleanUrls": true,
-  "headers": [
-    {
-      "source": "/data/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-store, must-revalidate"
-        }
-      ]
-    }
-  ]
-}
+{"cleanUrls":true,"headers":[{"source":"/(.*)","headers":[{"key":"Cache-Control","value":"no-store"}]}]}
