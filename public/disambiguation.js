@@ -1,10 +1,11 @@
-(function(){
+
+;(function(){
   const PATHS = {
-    lexeme: ['../data/lexeme.csv', '../data/seed.csv'],
-    crossmap: ['../data/crossmap.csv'],
+    lexeme: ['/data/lexeme.csv', '/data/seed.csv', '/data/external_seed.csv'],
+    crossmap: ['/data/crossmap.csv'],
   };
 
-  function norm(s) { return (s||'').toLowerCase().trim().replace(/\s+/g,''); }
+  function norm(s){ return (s||'').toLowerCase().trim().replace(/\s+/g,''); }
 
   function csvParse(txt){
     const lines = txt.split(/\r?\n/).filter(x=>x.trim().length);
@@ -27,7 +28,7 @@
           const rows = csvParse(txt);
           if(rows && rows.length) return rows;
         }
-      }catch{}
+      }catch(e){}
     }
     return [];
   }
@@ -52,7 +53,6 @@
     document.body.appendChild(mask);
     return mask;
   }
-
   function show(mask){ mask.style.display = 'block'; }
   function hide(mask){ mask.style.display = 'none'; }
 
@@ -81,7 +81,6 @@
         mount: options.mount || document.body,
       };
 
-      // Load data
       const lexeme = await loadFirst(PATHS.lexeme);
       const byId = new Map();
       for(const r of lexeme) if(r.id) byId.set(String(r.id).trim(), r);
@@ -97,7 +96,6 @@
         map.get(key).push(String(id).trim());
       }
 
-      // Prepare mask
       const mask = buildMask();
 
       async function maybeDisambiguate(rawQuery){
@@ -114,7 +112,6 @@
         return true;
       }
 
-      // Hook default search UI if present
       const $q = document.querySelector('#q');
       const $btn = document.querySelector('#btnSearch');
       if($q){
@@ -132,10 +129,8 @@
         }, true);
       }
 
-      // Expose API
       window.Disambig = Object.assign({}, window.Disambig || {}, {
-        maybe: maybeDisambiguate,
-        init: Disambig.init
+        maybe: maybeDisambiguate
       });
     }
   };

@@ -15,7 +15,6 @@
   <main class="container">
     <div class="search">
       <input id="q" type="text" placeholder="" autocomplete="off" />
-      <!-- 若你有独立搜索按钮，它的 id 可叫 #btnSearch，插件能自动监听；没有也没关系 -->
     </div>
 
     <section id="grid" class="grid"></section>
@@ -32,22 +31,18 @@
   <!-- 你原有的主逻辑 -->
   <script src="/js/app.js"></script>
 
-  <!-- ↓↓↓ 仅新增这三段（放在 </body> 之前）↓↓↓ -->
+  <!-- 插件：仅新增以下三段（务必放在 </body> 之前） -->
   <link rel="stylesheet" href="/public/disambiguation.css" />
   <script src="/public/disambiguation.js"></script>
   <script>
     Disambig.init({
-      // 如果你的输入框不是 #q，这里改成你真实的选择器或自定义函数
       getQuery: () => (document.querySelector('#q')?.value || '').trim(),
-
-      // 用户从弹层中选了某个候选后的回调：交还给你原有的渲染逻辑
       onPick: ({ id, row }) => {
         if (window.renderById) {
           window.renderById(id);
         } else if (window.renderLexeme) {
           window.renderLexeme(row);
         } else {
-          // 兜底：把选中的 zhh 写回输入框并触发一次你的搜索（若你用回车触发）
           const q = (row.zhh || '').trim();
           const $q = document.querySelector('#q');
           if ($q) {
@@ -56,11 +51,8 @@
           }
         }
       },
-
-      // 遮罩挂载点，不填默认挂 body
-      mount: document.body,
+      mount: document.body
     });
   </script>
-  <!-- ↑↑↑ 仅新增以上三段 ↑↑↑ -->
 </body>
 </html>
