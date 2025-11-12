@@ -1,0 +1,11 @@
+/* 极小样式，避免影响你的主题 */
+.cantong-mask { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 9999; display: none; }
+.cantong-panel { position: absolute; left: 50%; top: 12%; transform: translateX(-50%);
+  width: min(720px, 92%); background: #0f1621; color: #e6ecf1; border: 1px solid #233244;
+  border-radius: 16px; box-shadow: 0 10px 36px rgba(0,0,0,.5); padding: 16px 16px 10px; }
+.cantong-title { margin: 0 0 6px; font-size: 18px; }
+.cantong-hint  { opacity: .75; margin: 0 0 12px; font-size: 13px; }
+.cantong-list  { display: flex; flex-wrap: wrap; gap: 8px; }
+.cantong-opt   { cursor: pointer; padding: 8px 12px; border: 1px solid #274; background: #0d2217; border-radius: 999px; }
+.cantong-opt:hover { background: #10301f; }
+.cantong-close { position: absolute; right: 12px; top: 10px; border: 1px solid #233244; background: transparent; color: #9fb; border-radius: 8px; font-size: 12px; padding: 4px 8px; cursor: pointer; }
