@@ -1,1 +1,1 @@
-代码 MIT；词库闭源（/data/*）。
+Data terms placeholder.

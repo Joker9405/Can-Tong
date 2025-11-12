@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CanTong MVP · Disambiguation</title>
+  <link rel="stylesheet" href="../public/style.css" />
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>CanTong MVP</h1>
+      <p class="sub">支持 crossmap 歧义消解：同键多 ID → 选择 zhh</p>
+    </header>
+
+    <section class="search-box">
+      <input id="q" type="text" placeholder="输入查询词，按 Enter 搜索…" autofocus />
+      <button id="btnSearch">搜索</button>
+    </section>
+
+    <section id="results" class="results empty">
+      <div class="placeholder">开始搜索，或试试：<span class="hint">不要推 / phone / fromwa</span></div>
+    </section>
+
+    <footer class="footer">
+      <span>Code MIT · Data terms in <a href="../docs/LICENSE_USAGE.md" target="_blank">LICENSE_USAGE</a></span>
+    </footer>
+  </div>
+
+  <script src="../public/app.js"></script>
+</body>
+</html>
