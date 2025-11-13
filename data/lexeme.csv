@@ -1,14 +1,14 @@
 id,zhh,zhh_pron,alias_zhh,chs,en,note_chs,note_en,variants_zhh,variants_chs,variants_en
-L1,揼,dam1,掉;掟;丢;挞;擗;飞;弹,扔/丢,leave/throw,动词；扔/丢，形容这个动作根据不同动作力度和动机有不同用法。,"（V）The word ""throw"" or ""drop"" has different uses depending on the force and motivation of the action.",,扔/丢+sth ,Throw/drop + sth
-L2,揼嘢,dam1 laap6 saap3,掟嘢;丢嘢,扔/丢东西,Take out the garbage / put the garbage / dump the garbage /trash out the garbage ,扔东西，往外扔，有力量,"Throwing things, throwing them outwards, has power.",,扔/丢+sth 一般东西往外扔，带有力度,Throw/drop + sth，
-L3,飛,fei1,弹,速度很快地扔/丢,throw it over here/Toss it over/throw past/threw past,动词；用很快的速度扔/丢过来，扔来自己身边,（V）Throw very quickly,,扔+pcs+sth，,Throwing +pcs+sth，
+L1,揼波鐘,dam1 bo1 zung1,揼時間；拖延時間​；捱時間,拖延时间/耽误时间/摸鱼/磨洋工/划水,Delaying/Wasting time,磨洋工，故意拖长时间，,"Slow down and waste time",,扔/丢+sth ,Throw/drop + sth
+L2,揼嘢,dam1 laap6 saap3,掟嘢;掉嘢,扔/丢东西,Throwing things,扔东西，往外扔，有力量,"Throwing things, throwing them outwards, has power.",,扔/丢+sth 一般东西往外扔，带有力度,Throw/drop + sth，
+L3,飛啲嘢埋嚟,fei1 go3 bo1 maai4 lai4,掟啲嘢埋嚟；車埋嚟,扔/丢东西过来,Throw/drop something over,用很快速度扔了过来，已经进行中，在空中,"It was thrown over at high speed; it was already in progress, in the air.",,,
 L4,𢫨,ung2,ong,推,push/pushing/,动词；推动 吴卓羲标志名言“唔好ong”，不要推的意思,"（V）The meaning of ""push""",,推+sth/推+sb,push+sth/push+sb
 L5,推車,teoi1 ce1,摆档;摆档摊;走鬼,摆摊/街边摊/路边摊,set up a stall/stand,名词；路边摊、摆摊的意思,（N）meaning roadside stall or vendor.,,,
 L6,死雞撑飯蓋,sei2 gai1 caang3 faan6 goi3,死顶;唔认输,不服输/明知错不认/爱面子,The dead chicken forcing thelid of the rice pot open,歇后语；不服输，明知自己错了，但为了面子都要装没事、不认错，给人看穿了都不认。,(ldiom) (V) To refuse toadmit one's mistake evenwhen it is obvious,,形容词 通常特指人的行为,Adjectives usually refer specifically to human behavior.
-L7,𠮩𠹌,liu1 lang1,旖旎;𠵇𠺫;奇怪,刁钻/复制难搞/奇怪,srare,形容词；麻烦复杂难搞，刁钻，奇怪,（adj）rare and strange,,这么奇怪/蛮奇怪的,It's so weir
-L8,噉 , gam2 ,噉又唔得,这样/那样/地/那,In this way/in that way,代词；具体的方式、那样；描述事件、动作的状态,"（pron.）The specific method, that way; describing the state of events and actions.",,这样+adj/adv；摆在形容词前面,"This way, add adj/adv;Placed before the adj"
-L9,咁, gam3,咁犀利,这么/那么,like this/so,副词；表达一个程度,"（adv）expressing a degree, modifying adjectives or verbs.",,这么+adj/v；摆在形容词动词前面,So + adj/v; placed before adj and v
-L10,點,dim2,點數;點下佢,怎么/怎么样/什么样/指点/欺骗/糊弄/蘸/如何/岂/哪,How/What kind/Guide/Deceive/Fool/Dipping/Where,动词，代詞，量詞，名詞,"（V）,（pron.）, （ PCS）, （N）",,万能字,versatile word
+L7,𠮩𠹌,liu1 lang1,旖旎；𠵇𠺫；奇怪；撩棱,刁钻/复制难搞/奇怪,srare,形容词；麻烦复杂难搞，刁钻，奇怪,（adj）rare and strange,,这么奇怪/蛮奇怪的,It's so weir
+L8,噉, gam2 ,噉樣,这样/那样/地/那,In this way/in that way,代词；具体的方式、那样；描述事件、动作的状态,"（pron.）The specific method, that way; describing the state of events and actions.",,这样+adj/adv；摆在形容词前面,"This way, add adj/adv;Placed before the adj"
+L9,咁, gam3,咁犀利；咁劲；,这么/那么,like this/so,副词；表达一个程度,"（adv）expressing a degree, modifying adjectives or verbs.",,这么+adj/v；摆在形容词动词前面,So + adj/v; placed before adj and v
+L10,點樣,dim2 joeng2,點;點下佢,怎么/怎么样/如何,How,动词，代詞，量詞，名詞,"（V）,（pron.）, （ PCS）, （N）",,万能字,versatile word
 L11,緊要,gan2 jiu3,要緊;关键;交關,要紧/严重事情,crucial/important/vital,意义或价值重大，非常之值得或需要注意，甚至不能够缺乏；可以造成深远影响,（adj）crucial; important; vital,,,
 L12,咁上下,gam3 soeng6 haa2,差唔多,达到一定水平/差不多/大致上,nsignificant/unassuming/ordinary/mediocre,形容词；达到一定水平,（adj）to describe something that reaches a certain standard or level,,,
 L13,咁大隻蛤乸隨街跳,gam3 daai6 zek3 gaap3 naa2 ceoi4 gaai1 tiu3,咁抵？;坚唔坚啊？;咁好死？;咁着數？,天下沒有免费的午餐/不合理/不敢相信/疑点重重,There's no such thing as a free lunch/Unbelievable/too good to be true,歇后语；反问句，世界上不会有这么好的事、,"a rhetorical question suggesting that a deal is too good to be true, literally meaning ""why would there be such a big toad hopping around the street?""",,遇到不合理的情况，对此描述,"When encountering unreasonable situations, describe them accordingly."
@@ -24,7 +24,8 @@ L22,點收科,dim2 sau1 fo1,點算好;點好,怎么办/怎么样才好/如何是
 L23,點綴,dim2 zeoi6,,点缀,to decorate/to adorn/,点缀,(verb)  Embellished; (noun) Embellishment,,,
 L24,點止,dim2 zi2,唔指;唔淨指;边止;何止,不止/何止/哪儿止/哪止,not only,不止/何止/哪儿止/哪止,not only,,,
 L25,點講都,dim2 gong2 dou1,無論如何;點都好,不论怎么说/不管怎样/无论如何,No matter what/whatever/in any case,不论怎么说/不管怎样/无论如何,No matter what / whatever / in any case,,,
-L26,點餸 ,dim2 sung3,點菜;點餐;點嘢,点菜/点餐,to order,餐厅点菜,Ordering food at a restaurant,,,
+L26,點餸 ,dim2 sung3,"點菜；點餐；點嘢；落單；
+寫嘢；嗌嘢",点菜/点餐,to order,餐厅点菜,Ordering food at a restaurant,,服务员，点餐,"Waiter, take your order"
 L27,點係啊,dim2 hai6 aa3,點好意思啊;太客气啦,太客气了/怎么好意思呢,too kind,太客气了/怎么好意思呢/你破费了 我感觉不好意思,too kind,,,
 L28,點心車,dim2 sam1 ce1,推車點心;糕点車,点心车/小食车,dim sum cart,名词；点心车/小食车；茶楼的文化遗产,（N）dim sum cart；Cultural heritage of teahouses,,,
 L29,點錯相,dim2 co3 soeng3,認錯人,认错人/找错人,Mistaken identity,动词；找错目标人物,"（V）to pick out the wrong person for (usually for something bad, such as for revenge) [colloquial]",,,
@@ -35,4 +36,57 @@ L33,點鬼樣,dim2 gwai2 joeng2,點樣;點撚樣;點樣樣,怎么样/如何/怎�
 L34,點話點好,dim2 waa6 dim2 hou2,隨你意思;你想點都得;點都得,怎么都可以/怎样说都可以/怎么说就怎么办,up to you/as you wish/whatever you say,随你意思，表示自己都可以,"""up to you""; ""as you wish""; ""whatever you say""",,,
 L35,點頭之交,dim2 tau4 zi1 gaau1,泛泛之交;普通朋友,普通朋友/没什么交集/泛泛之交,common friend / people with little interaction / casual acquaintances,不是很熟的朋友,common friend，nodding acquaintance,,,
 L36,點紅點綠,dim2 hung4 dim2 luk6,指點江山,存心误导人/忽悠,to mislead someone deliberately,形容词；存心?误导導人,（adj）to mislead someone deliberately,,,
-L37,想點,soeng2 dim2,想點就點,想怎么样/想怎样,What do you want/How do you want,想怎么样/想怎样,What do you want/How do you want,,,
+L37,想點,soeng2 dim2,冧住點；想點樣；想點閪樣；想點撚樣,想怎么样/想怎样,What do you want/How do you want,想怎么样/想怎样；询问他人,What do you want/How do you want；Ask others,,怎么打扮成这样，想怎么样,Why are you dressed like this? What are you trying to do?
+L38,擗埋一二邊,pet6 maai4 jat1 ji6 bin6,擗埋一邊；放埋一邊；放埋一二邊,扔在一边/丢在一边/放在一边,set it aside/throw it aside/chuck it to one side/put it aside/toss it aside/brush it aside/shelve it aside,暂缓/搁置，比较随手；有方向性，复数表示本来也有,"Postponing/shelving is more flexible.；It has directionality, and complex numbers inherently also have this.",,把事情放在一边；把书包扔在一边；先把难题放在一边,Put things aside;Throw the schoolbag aside; Let's put the difficult problems aside for now.
+L39,揼埋一二邊,dam1 maai4 jat1 ji6 bin6,揼埋一邊,甩在一边,cast it aside/brush it aside,果断抛弃/摒弃，置之不理；有方向性，复数表示本来也有,"Decisively discard/abandon, ignore；It has directionality, and complex numbers inherently also have this.",,把你的烦恼甩在一边,Leave your troubles behind.
+L40,擗一二邊,pet6 jat1 ji6 bin6,擗一邊；放一二邊；放一邊,扔一边/丢一边/放一边,set it /throw it /toss it ,暂缓/搁置，比较随手；命令但还没做,Postponing/shelving is more casual; it's an order that hasn't been given yet.,,你扔一边先，再做其他,"Put it aside for now, then do other things."
+L41,揼一二邊,dam1 jat1 ji6 bin6,揼一邊,甩一边,cast it ,果断抛弃/摒弃，置之不理；命令但还没做,"Decisively abandon/discard, ignore; give an order but haven't done it yet.",,他先把老婆甩一边去，才能义无反顾,He had to leave his wife aside before he could act without hesitation.
+L42,揼垃圾,dam1 laap6 saap3,,丢垃圾/扔垃圾/扔掉它/丢掉它,throw it away,地道说法,Authentic saying,,,
+L43,掉垃圾,deu6 laap6 saap3,掉垃圾,倒垃圾,throw out the trash,正式，书面,"Formal, written",,,
+L44,揼咗佢,dam1 zo2  keoi5,掉咗佢；倒咗佢；,倒掉它/扔掉它/丢掉它,Pour it out / Throw it away / Discard it,倒掉/扔掉/丢掉 单数；一般是回应,Pour out/throw away/discard (singular)；it's a response.,,,
+L45,弹開,daan6 hoi,行開；死開；走開；躝開；躝屍趷路；死埋一邊；躝；过主；趷開,走开/起开/滚,Get out of here/Get out of here/Get lost/Fuck off,一般对人，在你厌倦或者讨厌那个人向他/她消失,"Generally speaking, when you get tired of or dislike someone, you disappear from their life.",,你滚；你滚开；你给我起开,Get out of here!
+L46,揼咗啲嘢佢,dam1 zo2 di1 je5 keoi5,掉咗啲嘢佢；倒咗啲嘢佢,把东西倒掉/把东西扔掉,Throw things away,倒掉/扔掉/丢掉 复数；一般是劝导,Pour out/throw away/discard (plural)；it involves persuasion.,,,
+L47,躝街,laan1 gaai1,出街；哨街；逛街；出门,逛街/逛街去/出门,shop/Shopping/ Going shopping/Going out,躝街；带有无所事事的感觉,With a feeling of having nothing to do,,,
+L48,挞落地下,taat1 lok6 dei6 haa5,挞啲嘢落地下,重重甩在地下/摔在地下,Thrown heavily to the ground/slammed to the ground,重重甩/摔在地下；表示很痛,Thrown or slammed to the ground; indicates great pain.,,,
+L49,飛啲嘢過嚟,fei1 deoi3 to1 haai2 gwo3 lai4,,用很快速度扔一些东西过来,Throw something over very quickly,用很快速度扔一些东西过来,Throw something over very quickly,,扔一双拖鞋过来,Throw a pair of slippers over
+L50,揼春 ,dam2 ceon1,抌心；揼袋；后悔；抌心口；揼膥 ；趸春；呻笨 ；呻笨柒,后悔/后悔莫及/极度失望,regret/Too late to regret,原意是捶到那个卵好痛，又不好说话。暗义吃亏了自己忍不敢出声！,"The original meaning was that it hurt so much to be hit on the testicles, but it was too painful to say anything. The implied meaning was that the person suffered a loss but dared not utter a sound!",,给人割韭菜了，她后悔莫及,She regretted betraying her friends and exploiting them.
+L51,包剪㩉,baau1 zin2 dap6,,剪刀石头布,Rock Paper Scissors,,,,,
+L52,㩉骨,dap6 gwat1,㩉背脊；按摩,捶背/按摩,Back massage/massage,㩉=用力锤,㩉 = hammering,,,
+L53,畀人㩉,bei2 jan4 dap6,畀人毆,给人打/揍,Beat up,,,,,
+L54,㩉佢镬甘嘅,dap6 keoi5 wok6 gam1 ge3,㩉佢扑劲嘅,打/揍他/她一顿厉害的,Give him/her a good beating.,给她/他点颜色看看，揍一顿厉害的,"Show him/her what's what, give him/her a good beating.",,,
+L55,揼功夫,dam1 gung1 fu1,揼功,所需时间较长,It takes a long time,,,,,
+L56,揼低佢,dap6 dai1 keoi5,掉低佢；放低佢,抛弃他/她/放下他/她,Abandon him/her,抛弃他/她/放下他/她,Abandon him/her,,抛弃他/她重新出发,Abandon him/her and start over
+L57,沙𦢊,saa1 buk1,吉屎；膽生毛；沙膽；夠薑；未死過；死字唔識寫；作死；夠𦢊；夠pok；沙pok,大胆/胆子大/不怕死,Bold/daring/fearless,,,,,
+L58,點下佢,dim2 haa5 keoi5,指點下；指點下佢,指点一下他/她,Give him/her some pointers,,,,,
+L59,老點,lou5 dim2,呃；坤；騙；水,欺骗/糊弄/瞎骗,to trick/to fool,特指带领受害人入局,Specifically refers to leading victims into a trap.,,,
+L60,呃鬼食豆腐,ngaak1 gwai2 sik6 dau6 fu6,揾笨；呃人；水人,骗人/哄骗/哄骗人,to lie to a ghost to eat tofu,用低级容易试穿的谎言佢哄骗人, to deceive somebody using a poor excuse or lies that are easily seen through; lterally: to trick a ghost to eat bean curd,,你骗谁呢！当我傻子呢！,Who are you trying to fool?! Do you think I'm stupid?!
+L61,侧侧膊,zak1 zak1 bok3,"推卸責任；搏懵
+",推卸责任,shirking responsibility,推卸责任,to shirk responsibilities and muddle through,,,
+L62,壽頭,sau6 tau4,"蠢材；低能仔；大番薯；人頭豬腦；烚熟狗頭；柒頭；水鱼",蠢人/低能者,blockhead/moron/nitwit,方言。指昧於人情世故，易受愚弄欺騙的人,(noun) a blockhead; a dullard; a nitwit; a moron,,,
+L63,傻閪,so4 hai1,傻仔；傻鸠；傻佬；扑街仔；蒸生瓜；戇居居；傻更更,傻子/愚蠢的人/傻乎乎/sb,idiot/Stupid/tosser,愚蠢的人，​有藐视的意思​,silly lad; foolish ,,,
+L64,水鱼,seoi2 jyu2,老襯；戆撚；俾人揾笨；契爷；揾笨柒；壽頭；揾笨,容易上当受骗的人/冤大头/割韭菜,milking me dry/fleecing us,形容鳖有钱的傻瓜，容易上当受骗，轻易相信别人,Describing a rich fool as someone easily deceived and readily trusting others.,,很怕被人宰,
+L65,傻到閪噉,so4 dou2 hai1 gam2,傻撚到咧；傻到冇朋友；傻到笑；傻度驚,笨到极致/傻到一个点,moron/boneheaded ,不是一般的傻,"boneheaded,Not just stupid",,,
+L66,戇鳩,ngong6 gau1,戇鳩仔；柒下柒下；戇直,沙雕/傻屌/傻叼,dunce/Stupid dick,不该硬的时候硬，浪费精力；形容不应该出风头的偏要说自己多牛逼,Being assertive when you shouldn't is a waste of energy; it describes someone who insists on showing off when they shouldn't.,,评论人的一种状态，别人在局外人评价当事人行为,"A state of mind for commentators，Others, as outsiders, evaluate the behavior of the parties involved."
+L67,懵撚,mung2 lan2,碌葛；懵炳；腦塞屎；反应迟钝；一嚿雲；一碌木；成碌木；烏哩單刀；懵盛盛；慢半拍,呆瓜/糊里糊涂/反应迟钝/慢半拍,One step behind/half a bit slower/obtuse,,,,,
+L68,黐線,ci1 sin6,发神經；白痴；黐筋；黐孖筋；忽忽地；腎腎地；傻傻地,神经病/发神经/白痴,tool/mad/ridiculous,,,,,
+L69,死蠢,sei2 ceon2,蠢材；笨柒；笨撚柒；大番薯；人頭豬腦；死蠢,笨蛋/蠢货,dumb/imbecile,,,,,
+L70,扑街仔,bok1 gaai1 zai2,反骨仔；二五仔；戇鳩仔；懵仔；茂利；柒頭,死小子/孙子/臭小子/混蛋/王八蛋,Bastard/Asshole/shithead,,,,他停车很缺德,He parked like a 
+L71,扑街,bok1 gaai1 ,食屎；死你就去；,去死吧；吃屎去,Go to hell,,,,,
+L72,柒頭,cat6 tau4,柒頭皮；龜頭；柒轱辘；撚​樣,龟头,dickhead,该硬的时候不硬，浪费机会；形容应该出风头时不出来,Failing to stand up when you should has wasted an opportunity; describes someone who doesn't step up when they should be in the limelight.,,评论人的一种状态，别人在局外人评价当事人行为,"A state of mind for commentators，Others, as outsiders, evaluate the behavior of the parties involved."
+L73,非洲和尚,haak1 jan4 zang1,黑人憎,讨人厌，讨厌鬼,jerk,,,,,
+L74,樣衰,joeng2 seoi1,出丑；瘀嘢；好瘀；肉酸；醜樣,小丑/出洋相/难为情,clown,,,,,
+L75,垃圾,laap6 saap3,,失败者/废人,Loser,,,,,
+L76,收声,sau1 seng1,收皮,闭嘴,Shut up,,,,,
+L77,屌你,diu2 nei5 lou5 mou2,,去你的,Screw you,,,,,
+L78,你真系搞笑,nei5 zan1 hai6 gaau2 siu3,你真系好好笑/你真系笑撚死我,你就是个笑话,You're a joke,,,,,
+L79,老閪,,寸；串；招积；鸠屎；得戚；鸠屎；閪,拽；得瑟,,,,,,
+L80,俾人劏,,,被人宰,,,,,,
+L81,契爷,,,干爹,,,,,,
+L82,閪晒,,叼閪啦,完了/该死的,Damn it,,,,,
+L83,鳩噏,,鸠噏当秘笈；鸠噏柒喷,胡说/吹牛逼,,,,,,
+L84,醜樣,cau2 joeng2,樣衰；樣鸠衰；肉酸；難睇；唔順眼,丑陋,imbecile,外貌不讨好、不吸引,,,,
+L85,核突,wat6 dat6,鶻突；肉鸠酸,恶心,,,,,,
+L86,烚熟狗頭,sab³ sug⁶ geo² teo⁴,烚下烚下；四万甘口,傻笑的样子,,,,,你看到她/他多么开心，就像...,"You see how happy she/he is, just like..."
+,認頭,jing6 tau4,認數,承认关系,,,,,,
+,过山峰,,,眼镜王蛇,,,,,,
+,饭铲头,,,眼镜蛇,,,,,,
