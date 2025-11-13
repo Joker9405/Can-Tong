@@ -1,7 +1,6 @@
 term,lang,target_id,kind
 扔/丢/把东西扔掉,chs,L1,head
 Throw,en,L1,head
-扔/丢垃圾,chs,L2,head
 扔/丢东西,chs,L2,head
 Throwing things,en,L2,head
 速度很快地扔/丢,chs,L3,head
@@ -11,12 +10,9 @@ fly Throw,en,L3,head
 push,en,L4,head
 a trolley/cart/set up a stall/stand,en,L5,head
 street vending,en,L5,head
-小贩,chs,L5,head
-摆摊,chs,L5,head
-路边摊,chs,L5,head
+小贩/路边摊/摆摊,chs,L5,head
 爱面子,chs,L6,head
-Die chicken pushing the rice cooker cover,en,L6,head
-The dead chicken forcing thelid of the rice pot open,en,L6,head
+Die chicken pushing the rice cooker cover/The dead chicken forcing thelid of the rice pot open,en,L6,head
 歇后语；明知错不认,chs,L6,head
 歇后语；不服输,chs,L6,head
 歇后语；鸡撑饭盖,chs,L6,head
@@ -236,3 +232,4 @@ to mislead someone deliberately,en,L36,
 What do you want,en,L37,
 
 How do you want,en,L37,
+
