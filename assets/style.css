@@ -42,5 +42,7 @@ body{margin:0;background:var(--bg);color:var(--fg);
 .example .tts{background:rgba(255,255,255,.28)}
 /* 展开 examples 时隐藏 example 按钮 */
 main:has(#examples:not([hidden])) #example-btn{display:none}
+/* 展开 examples 时，grid 去掉额外 padding，这样黄框间距 = 蓝框 gap */
+main:has(#examples:not([hidden])) .grid{padding-bottom:0}
 .foot{position:fixed;left:0;right:0;bottom:0;padding:10px 16px;text-align:center;color:#aaa;font-size:12px;background:transparent}
 @media(max-width:900px){.grid{grid-template-columns:1fr}.h-title{font-size:56px}.row{font-size:30px}.search input{font-size:32px}}
