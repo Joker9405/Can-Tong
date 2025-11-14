@@ -18,8 +18,7 @@ body{margin:0;background:var(--bg);color:var(--fg);
 .card.gray{background:var(--g);color:#fff}
 .left{grid-column:1;grid-row:1 / span 2}
 .right-top{grid-column:2;grid-row:1}
-/* 右侧灰色 note 卡：改为纵向布局，按钮自然排在文字下面 */
-.right-bottom{grid-column:2;grid-row:2;min-height:92px;display:flex;flex-direction:column;align-items:flex-start;gap:14px}
+.right-bottom{grid-column:2;grid-row:2;position:relative;min-height:92px;display:flex;flex-direction:column;justify-content:flex-start}
 .badge{font-size:16px;opacity:.7;margin-bottom:6px}
 .h-head{display:flex;align-items:center;justify-content:space-between;margin:0 0 8px 0}
 .h-title{font-size:78px;line-height:1.06;margin:0;font-weight:900}
@@ -31,8 +30,19 @@ body{margin:0;background:var(--bg);color:var(--fg);
 .note{opacity:.95;font-size:18px;line-height:1.6}
 .tts{border:none;border-radius:22px;width:42px;height:42px;background:rgba(0,0,0,.12);cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
 .tts svg{width:22px;height:22px;fill:#111}
-/* example 按钮：取消绝对定位，随布局排在 note 下方，左对齐 */
-#example-btn{position:static;right:auto;bottom:auto;border:none;border-radius:999px;background:var(--p);color:#fff;padding:8px 12px;align-self:flex-start;cursor:pointer}
+#example-btn{
+  position:static;
+  align-self:flex-start;
+  border:none;
+  border-radius:999px;
+  background:var(--p);
+  color:#fff;
+  padding:8px 12px;
+  margin-top:12px;
+  cursor:pointer;
+  font-size:14px;
+  line-height:1.2;
+}
 .examples{margin-top:var(--gap)}
 .examples-inner{background:var(--p);border-radius:var(--radius);padding:6px 10px}
 .example{display:grid;grid-template-columns:1fr 0.95fr auto;gap:18px;align-items:center;padding:12px 8px}
