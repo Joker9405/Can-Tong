@@ -7,8 +7,7 @@
   --g:#333;
   --radius:18px;
   --gap:16px;
-  --fs-en:18px;
-  --fs-chs:14px;
+  --fs-text:20px;
 }
 html,body{height:100%}
 body{
@@ -99,6 +98,8 @@ body{
   font-size:38px;
   line-height:1.2;
 }
+
+/* 变体区 */
 .vars{
   display:flex;
   flex-direction:column;
@@ -108,30 +109,28 @@ body{
   display:flex;
   flex-direction:column;
 }
-/* 统一：En 在上，Chs 在下；所有 En 字体大小一致、Chs 字体大小一致 */
+/* 英文在上、中文在下，字体统一 20px */
 .var-en{
   order:1;
-  font-size:var(--fs-en);
+  font-size:var(--fs-text);
   line-height:1.5;
   font-weight:800;
+  text-transform:capitalize; /* 英文首字母大写（每个单词） */
 }
 .var-zh{
   order:2;
-  font-size:var(--fs-chs);
+  font-size:var(--fs-text);
   opacity:.95;
 }
+
+/* Note 灰卡内正文：中英文统一 20px */
 .note{
   opacity:.95;
+  font-size:var(--fs-text);
   line-height:1.6;
 }
-/* 灰卡中的英文 / 中文说明，与 variants 保持同字号 */
-.note-en{
-  font-size:var(--fs-en);
-  font-weight:400;
-}
-.note-chs{
-  font-size:var(--fs-chs);
-}
+
+/* TTS 按钮 */
 .tts{
   border:none;
   border-radius:22px;
@@ -148,6 +147,8 @@ body{
   height:22px;
   fill:#111;
 }
+
+/* example 扩展按钮：灰卡下方右对齐 */
 #example-btn{
   position:absolute;
   right:20px;
@@ -159,6 +160,8 @@ body{
   color:#fff;
   padding:8px 12px;
 }
+
+/* 展开区域 */
 .examples{margin-top:var(--gap)}
 .examples-inner{
   background:var(--p);
@@ -168,20 +171,21 @@ body{
 .example{
   display:grid;
   grid-template-columns:1fr 0.95fr auto;
-  gap:18px;
+  gap:12px;            /* 从 18px 改为 12px，让 ex_en / ex_chs 更靠左 */
   align-items:center;
   padding:12px 8px;
 }
 .example + .example{border-top:1px solid rgba(255,255,255,.18)}
 .example .yue{font-size:20px}
-/* 例句英文 / 中文字号与 note & variants 保持一致 */
+/* 例句英文 / 中文：统一 20px，英文首字母大写 */
 .example .en{
-  font-size:var(--fs-en);
+  font-size:var(--fs-text);
   font-weight:800;
+  text-transform:capitalize; /* 英文首字母大写（每个单词） */
   margin-bottom:4px;
 }
 .example .chs{
-  font-size:var(--fs-chs);
+  font-size:var(--fs-text);
   opacity:.95;
 }
 .example .btns{
@@ -189,10 +193,13 @@ body{
   gap:8px;
 }
 .example .tts{background:rgba(255,255,255,.28)}
+
 /* 展开 examples 时隐藏 example 按钮 */
 main:has(#examples:not([hidden])) #example-btn{display:none}
 /* 展开 examples 时，grid 去掉额外 padding，这样黄框间距 = 蓝框 gap */
 main:has(#examples:not([hidden])) .grid{padding-bottom:0}
+
+/* 页脚 */
 .foot{
   position:fixed;
   left:0;
@@ -204,6 +211,8 @@ main:has(#examples:not([hidden])) .grid{padding-bottom:0}
   font-size:12px;
   background:transparent;
 }
+
+/* 响应式 */
 @media(max-width:900px){
   .grid{grid-template-columns:1fr}
   .h-title{font-size:56px}
