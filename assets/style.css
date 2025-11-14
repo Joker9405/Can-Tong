@@ -25,8 +25,18 @@ body{margin:0;background:var(--bg);color:var(--fg);
 .row{display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-top:1px solid rgba(0,0,0,.12);font-size:38px;line-height:1.2}
 .vars{display:flex;flex-direction:column;gap:14px}
 .var-row{display:flex;flex-direction:column}
-.var-zh{font-size:26px;line-height:1.5;font-weight:800}
-.var-en{font-size:16px;opacity:.92}
+/* 这里调整顺序：英文在上、中文在下 */
+.var-en{
+  order:1;
+  font-size:26px;
+  line-height:1.5;
+  font-weight:800;
+}
+.var-zh{
+  order:2;
+  font-size:16px;
+  opacity:.92;
+}
 .note{opacity:.95;font-size:18px;line-height:1.6}
 .tts{border:none;border-radius:22px;width:42px;height:42px;background:rgba(0,0,0,.12);cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
 .tts svg{width:22px;height:22px;fill:#111}
