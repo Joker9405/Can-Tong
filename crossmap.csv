@@ -20,21 +20,18 @@ In this way/in that way/this,en,L8,head
 like this/so,en,L9,head
 How,en,L10,head
 怎么/怎么样/如何,chs,L10,head
-要紧/严重事情/重要,chs,L11,head
-crucial/important/vital,en,L11,head
+要紧/重要,chs,L11,head
+important,en,L11,head
 达到一定水平/差不多/大致上/普普通通,chs,L12,head
 approximate/mediocre/nsignificant/unassuming/ordinary ,en,L12,head
-天下沒有免費的午餐/不合理,chs,L13,head
-too good to be true,en,L13,head
-Unbelievable,en,L13,head
+沒有免費的午餐/不合理,chs,L13,head
+too good to be true/It's not that simple.,en,L13,head
 There's no such thing as a free lunch,en,L13,head
-真巧合/这么巧合,chs,L14,head
-coincidentally,en,L14,head
-fortuitously,en,L14,head
-by chance,en,L14,head
+真巧合/这么巧呀/不谋而合/湊巧/说多巧有多巧,chs,L14,head
+coincidentally/fortuitously/by chance,en,L14,head
 歇后语；应该死的不去死/该死不死,chs,L15,head
 "Damn it, yet still alive",en,L15,head
-形容大神在旁边不会?/身边有大神不会?把握?机会,chs,L16,head
+形容大神在旁边不会把握机会/身边有大神不会把握机会,chs,L16,head
 歇后语；不会把握机会,chs,L16,head
 to fail to take advantage of an opportunity,en,L16,head
 这么古板,chs,L17,head
@@ -52,18 +49,12 @@ Stubborn to the end/Not open up/Not mature yet,en,L17,head
 长这么大了还没有成熟起来/这么古板/不开通,chs,L17,head
 长这么大了都还没有成熟起来/这么古板/不开通,chs,L17,head
 长这么大都还没有成熟起来/这么古板/不开通,chs,L17,head
-不好意思/抱歉,chs,L18,
+不好意思/失礼了,chs,L18,
 so sorry,en,L18,
 Ability to go to other places,en,L19,
-有能力到外发展,chs,L19,
-有本事到外发展,chs,L19,
-异地发展,chs,L19,
-比喻有才专华有才能的人才敢想敢拼,chs,L19,
-在外地拼搏,chs,L19,
-在外地谋生,chs,L19,
-怎么卖,chs,L20,
-多少钱,chs,L20,
-怎么算,chs,L20,
+有能力到外/有本身到外/异地发展/在外地拼搏/在外地谋生,chs,L19,
+有本事的到外发展/比喻有才专华有才能的人才敢想敢拼,chs,L19,
+怎么卖/多少钱/怎么算,chs,L20,
 how much/unexpectedly/how was one to know/little did one know/who would have thought,en,L20,
 谁料到/不料/如何得知/怎么知道/没想到/谁想到/哪知道/谁知道,chs,L21,
 怎么办/怎么样才好/如何是好,chs,L22,
@@ -81,16 +72,13 @@ too kind,en,L27,
 点心车/小食车,chs,L28,
 dim sum cart,en,L28,
 找/认错人,chs,L29,
-Mistaken identity,en,L29,
-wrong target,en,L29,
+Mistaken identity/wrong target,en,L29,
 怎么去,chs,L30,
 how to get there,en,L30,
 点到为止,chs,L31,
 Stop here,en,L31,
-有何看法,chs,L32,
+有何看法/怎么样/怎么看,chs,L32,
 有什么想法/看法,chs,L32,
-怎么样,chs,L32,
-怎么看,chs,L32,
 how do you see this?,en,L32,
 怎么样,chs,L33,
 如何,chs,L33,
@@ -231,6 +219,8 @@ One step behind/half a bit slower/obtuse,en,L67,
 ,,L98,
 ,,L99,
 ,,L100,
-,,L101,
-,,L102,
+差不多就是这样/大概就是这样,chs,L103,
+That's about it/That's roughly it,en,L103,
+,,,
+,,,
 ,,,
