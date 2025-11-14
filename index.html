@@ -18,5 +18,30 @@
   </main>
   <footer class="foot">CanTongMVP — Code MIT, Lexicon Closed; data/* CSVs CC BY‑NC‑ND.</footer>
   <script src="/js/app.js"></script>
+  <script>
+    // 把 example 按钮从灰色 note 卡片中移动出来，
+    // 让它作为 grid 的单独一行显示在灰卡下面
+    (function () {
+      var grid = document.getElementById('grid');
+      if (!grid || !('MutationObserver' in window)) return;
+
+      function relocateExampleBtn() {
+        var gray = grid.querySelector('.right-bottom');
+        if (!gray) return;
+        var btn = gray.querySelector('#example-btn');
+        if (!btn) return;
+        // 移动到灰卡后面，成为 grid 的独立子元素
+        gray.insertAdjacentElement('afterend', btn);
+      }
+
+      var observer = new MutationObserver(function () {
+        relocateExampleBtn();
+      });
+      observer.observe(grid, { childList: true, subtree: true });
+
+      // 如果首个结果已经渲染，尝试先移动一次
+      relocateExampleBtn();
+    })();
+  </script>
 </body>
 </html>

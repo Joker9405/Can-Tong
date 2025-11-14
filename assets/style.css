@@ -18,7 +18,7 @@ body{margin:0;background:var(--bg);color:var(--fg);
 .card.gray{background:var(--g);color:#fff}
 .left{grid-column:1;grid-row:1 / span 2}
 .right-top{grid-column:2;grid-row:1}
-.right-bottom{grid-column:2;grid-row:2;position:relative;min-height:92px;display:flex;flex-direction:column;justify-content:flex-start}
+.right-bottom{grid-column:2;grid-row:2;position:relative;min-height:92px}
 .badge{font-size:16px;opacity:.7;margin-bottom:6px}
 .h-head{display:flex;align-items:center;justify-content:space-between;margin:0 0 8px 0}
 .h-title{font-size:78px;line-height:1.06;margin:0;font-weight:900}
@@ -30,18 +30,21 @@ body{margin:0;background:var(--bg);color:var(--fg);
 .note{opacity:.95;font-size:18px;line-height:1.6}
 .tts{border:none;border-radius:22px;width:42px;height:42px;background:rgba(0,0,0,.12);cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
 .tts svg{width:22px;height:22px;fill:#111}
+/* example 扩展按钮：作为 grid 的独立一行，默认在右侧，与粉卡、灰卡间隙统一 */
 #example-btn{
-  position:static;
-  align-self:flex-start;
   border:none;
   border-radius:999px;
   background:var(--p);
   color:#fff;
-  padding:8px 12px;
-  margin-top:12px;
+  padding:8px 16px;
   cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
   font-size:14px;
-  line-height:1.2;
+  /* 在桌面端放在第二列，和右侧卡片对齐 */
+  grid-column:2;
+  justify-self:flex-start;
 }
 .examples{margin-top:var(--gap)}
 .examples-inner{background:var(--p);border-radius:var(--radius);padding:6px 10px}
@@ -53,4 +56,13 @@ body{margin:0;background:var(--bg);color:var(--fg);
 .example .btns{display:flex;gap:8px}
 .example .tts{background:rgba(255,255,255,.28)}
 .foot{position:fixed;left:0;right:0;bottom:0;padding:10px 16px;text-align:center;color:#aaa;font-size:12px;background:transparent}
-@media(max-width:900px){.grid{grid-template-columns:1fr}.h-title{font-size:56px}.row{font-size:30px}.search input{font-size:32px}}
+@media(max-width:900px){
+  .grid{grid-template-columns:1fr}
+  .h-title{font-size:56px}
+  .row{font-size:30px}
+  .search input{font-size:32px}
+  /* 移动端按钮占满一列，跟随内容竖排 */
+  #example-btn{
+    grid-column:1;
+  }
+}
