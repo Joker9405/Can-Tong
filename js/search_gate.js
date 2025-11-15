@@ -1,6 +1,5 @@
-// search_gate.js
-// 让搜索“只认 crossmap 里的内容”
-// 原有 app.js 保持不动；这里在捕获阶段拦截 input / keydown 事件。
+// search_gate.js v2
+// 只允许 crossmap 里的 term 触发「最终搜索」（Enter），不改动原有 app.js 其它逻辑。
 
 (function() {
   const CROSSMAP_URL = '/data/crossmap.csv';
@@ -22,11 +21,9 @@
         const line = lines[i];
         if (!line) continue;
 
-        // 简单 CSV 拆分：按逗号取第 1 列作为查询词
-        // 你的 crossmap 第一列就是「扔/丢东西」「Throwing things」这些 surface。
         const firstComma = line.indexOf(',');
         let surface = firstComma === -1 ? line : line.slice(0, firstComma);
-        // 去掉首尾引号
+
         if (surface.length >= 2 && surface[0] === '"' && surface[surface.length - 1] === '"') {
           surface = surface.slice(1, -1);
         }
@@ -46,39 +43,32 @@
     const input = document.getElementById('q');
     if (!input) return;
 
-    function handler(evt) {
-      const value = normalize(input.value);
+    // 如果 crossmap 没加载成功，就什么都不拦截，恢复原逻辑
+    if (!allowedSet) {
+      console.warn('search_gate: crossmap set is empty, gate disabled.');
+      return;
+    }
 
-      // 没输东西，放行给原逻辑处理（清空等）
+    input.addEventListener('keydown', function(evt) {
+      if (evt.key !== 'Enter' && evt.keyCode !== 13) return;
+
+      const value = normalize(input.value);
       if (!value) return;
 
-      const isEnter = evt.type === 'keydown' && (evt.key === 'Enter' || evt.keyCode === 13);
-
-      // 如果 crossmap 里没有这个词，就拦截，禁止触发原来的搜索逻辑
-      if (!allowedSet || !allowedSet.has(value)) {
-        // 阻止原 app.js 的监听器执行
+      // 只允许 crossmap 里的 term 触发搜索
+      if (!allowedSet.has(value)) {
         evt.stopPropagation();
-        if (evt.stopImmediatePropagation) evt.stopImmediatePropagation();
-        if (isEnter) evt.preventDefault();
+        evt.preventDefault();
 
         // 清空现有结果
         const grid = document.getElementById('grid');
         if (grid) grid.innerHTML = '';
         const examples = document.getElementById('examples');
         if (examples) examples.hidden = true;
-
-        return;
       }
-
-      // 命中 crossmap：不做任何处理，让原 app.js 正常执行
-    }
-
-    // 在捕获阶段监听，优先于 app.js
-    input.addEventListener('input', handler, true);
-    input.addEventListener('keydown', handler, true);
+    }, true); // capture
   }
 
-  // 初始化
   document.addEventListener('DOMContentLoaded', function() {
     loadCrossmapSet().then(setupGate);
   });
