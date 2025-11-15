@@ -9,9 +9,8 @@ Throwing things,en,L2,head
 push,en,L4,head
 a trolley/cart/street vending/set up a stall,en,L5,head
 小贩/摆摊/路边摊,chs,L5,head
-爱面子,chs,L6,head
 Die chicken pushing the rice cooker cover/The dead chicken forcing thelid of the rice pot open,en,L6,head
-明知错不认/不服输,chs,L6,head
+明知错不认/不服输/爱面子,chs,L6,head
 刁钻/怪异/不常见/稀奇古怪,chs,L7,head
 uncommon/rare and strange ,en,L7,head
 这样/那样,chs,L8,head
@@ -34,21 +33,8 @@ coincidentally/fortuitously/by chance,en,L14,head
 形容大神在旁边不会把握机会/身边有大神不会把握机会,chs,L16,head
 歇后语；不会把握机会,chs,L16,head
 to fail to take advantage of an opportunity,en,L16,head
-这么古板,chs,L17,head
-还不开通/没有成熟起来,chs,L17,head
-Stubborn to the end/Not open up/Not mature yet,en,L17,head
-这么大了还这么古板/没有成熟起来/还不开通,chs,L17,head
-这么大还不开通/没有成熟起来/这么古板,chs,L17,head
-这么大一个人还没有成熟起来/这么古板/不开通,chs,L17,head
-人都这么大还没有成熟起来/这么古板/不开通,chs,L17,head
-人都这么大了还这么古板/不开通/没有成熟起来,chs,L17,head
-人都长这么大还这么古板/不开通/没有成熟起来,chs,L17,head
-人长这么大了都还这么古板/不开通/没有成熟起来,chs,L17,head
-人长这么大还这么古板/不开通/没有成熟起来,chs,L17,head
-人长这么大都还这么古板/没有成熟起来/不开通,chs,L17,head
-长这么大了还没有成熟起来/这么古板/不开通,chs,L17,head
-长这么大了都还没有成熟起来/这么古板/不开通,chs,L17,head
-长这么大都还没有成熟起来/这么古板/不开通,chs,L17,head
+narrow-minded/conservatives,en,L17,head
+思想不开通/守旧的人,chs,L17,head
 不好意思/失礼了,chs,L18,
 so sorry,en,L18,
 Ability to go to other places,en,L19,
@@ -56,9 +42,10 @@ Ability to go to other places,en,L19,
 有本事的到外发展/比喻有才专华有才能的人才敢想敢拼,chs,L19,
 怎么卖/多少钱/怎么算,chs,L20,
 how much/unexpectedly/how was one to know/little did one know/who would have thought,en,L20,
-谁料到/不料/如何得知/怎么知道/没想到/谁想到/哪知道/谁知道,chs,L21,
-怎么办/怎么样才好/如何是好,chs,L22,
-What to do/How to do ,en,L22,
+谁料到/不料/如何得知/怎么知道/没想到/谁想到/哪知道/谁知道/竟然,chs,L21,
+unexpectedly/Who knows,chs,L21,
+怎么收场/怎么样才好/怎么救场/如何力挽狂澜,chs,L22,
+How to save the day/How to end it,en,L22,
 点缀,chs,L23,
 to decorate/to adorn,en,L23,
 不止/何止/哪儿止/哪止,chs,L24,
@@ -95,22 +82,12 @@ as you wish,en,L34,
 whatever you say,en,L34,
 你说什么就什么,chs,L34,
 说什么就什么,chs,L34,
-普通朋友,chs,L35,
-没什么交集,chs,L35,
-泛泛之交,chs,L35,
-common friend,en,L35,
-people with little interaction,en,L35,
-casual acquaintances,en,L35,
-nodding acquaintances,en,L35,
-barely know,en,L35,
-存心误导人,chs,L36,
+没什么交集/泛泛之交/普通朋友,chs,L35,
+common friend/people with little interaction/casual acquaintances/nodding acquaintances/barely know,en,L35,
+存心误导人/忽悠/欺骗,chs,L36,
 to mislead someone deliberately,en,L36,
-忽悠,chs,L36,
-欺骗,chs,L36,
-想怎么样,chs,L37,
-想怎样,chs,L37,
-What do you want,en,L37,
-How do you want,en,L37,
+想怎么样/想怎样,chs,L37,
+What do you want/How do you want,en,L37,
 放/丢/扔在一边,chs,L38,
 set it aside,en,L38,
 throw it aside,en,L38,
@@ -122,36 +99,22 @@ shelve it aside,en,L38,
 甩在一边,chs,L39,
 cast it aside,en,L39,
 brush it aside,en,L39,
-set it ,en,L40,
-toss it ,en,L40,
-throw it,en,L40,
-放/丢/扔一边,chs,L40,
+toss it /throw it/set it ,en,L40,
+放一边/丢一边/扔一边,chs,L40,
 甩一边,chs,L41,
 cast it ,en,L41,
-扔/丢垃圾,chs,L42,
-扔/丢掉它,chs,L42,
+扔垃圾/丢垃圾,chs,L42,
 throw it away,en,L42,
 throw out the trash,en,L43,
 倒垃圾,chs,L43,
-倒/扔/丢掉它,chs,L44,
-Pour it out,en,L44,
- Throw it away,en,L44,
-Discard it,en,L44,
-走/起开,chs,L45,
-滚,chs,L45,
-Get out of here,en,L45,
-Get lost,en,L45,
-Fuck off,en,L45,
-Get out of here,en,L45,
+倒掉它/扔掉它/丢掉它,chs,L44,
+Throw it away/Discard it/Pour it out,en,L44,
+走开/起开/滚,chs,L45,
+Get out of here/Fuck off/Get lost/Get out of here,en,L45,
 把东西倒/扔掉,chs,L46,
 Throw things away,en,L46,
-逛街,chs,L47,
-shop,en,L47,
-Shopping,en,L47,
-Go shopping,en,L47,
-Going out,en,L47,
-出门,chs,L47,
-逛街去,chs,L47,
+逛街/出门/逛街去,chs,L47,
+Go shopping/Going out/Shopping/shop,en,L47,
 重重甩/摔在地下,chs,L48,
 甩/摔在地下,chs,L48,
 Thrown heavily to the ground,en,L48,
@@ -187,7 +150,7 @@ shirking responsibility,en,L61,
 推卸责任,chs,L61,
 蠢人/低能者,chs,L62,
 blockhead/moron/nitwit,en,L62,
-傻子/sb/傻乎乎/愚蠢的人,chs,L63,
+傻乎乎/愚蠢的人,chs,L63,
 Stupid/tosser/idiot,en,L63,
 容易上当受骗的人/割韭菜/冤大头,chs,L64,
 milking me dry/fleecing us,en,L64,

@@ -87,7 +87,7 @@ L10,點算好；點好,怎办才好,What should I do?
 L10,點话點好,你说什么就什么,Whatever you say.
 L10,噉點呀？,那又怎么样？；不礼貌很拽,okay
 L10,點都得,怎么样都可以,Anything ok
-L10,點係啊,不敢当,"an expression of courtesy used when someone has done something for you, similar to saying ""it is very nice of you""; ""I don't deserve it""; ""you shouldn't have"""
+L10,點係啊,不敢当,"I dare not accept"
 L10,件衫點著,这件衣服怎么穿,How to wear this outfit?
 L11,你睇，邊個明星咁多保镖，洗唔洗咁緊要啊,你看，是哪个明星需要那么多个保镖啊，需要那么夸张吗,"Look, which celebrity needs so many bodyguards? Is it really necessary to go to such lengths?"
 L11,唔緊要,没关系,It doesn't matter
@@ -114,28 +114,36 @@ L14,我啱諗住整對波鞋，跟住我睇啱果對打折，真系啱晒,我正
 L14,咦 乜咁啱嘅?,咦 怎么这么巧?,What a coincidence!
 L14,咁錯蕩嘅,怎么这么巧；形容这么有空过来我这里坐坐,What a coincidence; describing someone having so much free time to come and sit down here.
 L15,咁多人跳楼唔見你跳楼,这么多人死不见你死；跳楼可以换任何死法,"So many people have died, but you haven't; jumping off a building can lead to any kind of death."
-L16,有得走后門你仲甘搏命？,有捷径不走偏要辛苦自己,"Instead of taking the shortcut, you choose to work hard."
+L16,有得走后門你仲咁搏命？,有捷径不走偏要辛苦自己,"Instead of taking the shortcut, you choose to work hard."
 L16,咁柒近城隍廟都唔求支好籤,有大神在旁边都不会把握机会,to fail to take advantage of an opportunity
 L16,咁鸠近城隍廟都唔求支好籤,有大神在旁边都不会把握机会,to fail to take advantage of an opportunity
 L16,咁鸠近城隍廟都唔撚求支好嘢,有大神在旁边都不会把握机会,to fail to take advantage of an opportunity
-L17,咁柒大個都唔化,这么大一个人别他妈的不开通,Stubborn to the end
-L17,咁撚大個都唔化,这么大一个人别他妈的不开通,Stubborn to the end
-L17,咁鸠大個都唔化,这么大一个人别他妈的不开通,Stubborn to the end
-L17,咁鸠大個都唔鸠撚叱化,这么大一个人别他妈的不开通,Stubborn to the end
+L17,咁柒大個都唔化,这么大一个人别他妈的不开通；歇后语,Stubborn to the end
+L17,咁撚大個都唔化,这么大一个人别他妈的不开通；歇后语,Stubborn to the end
+L17,咁鸠大個都唔化,这么大一个人别他妈的不开通；歇后语,Stubborn to the end
+L17,咁鸠大個都唔鸠撚叱化,这么大一个人别他妈的不开通；歇后语,Stubborn to the end
+L17,咪咁㒼塞啦,别这么古板啊，说又不听,"Don't be so old-fashioned, you never listen to me."
+L17,硬鳩頸,别这么古板啊，说又不听,"Don't be so old-fashioned, you never listen to me."
+L17,古老石山,行事想法落后，不接受新事物的人,"old-fashioned person; literally, ""ancient potted rocky mountain"""
 L17,大個仔啦，唔好甘閪封建,这么大一个人了，不要那么封建,"You're a grown man, don't be so old-fashioned."
 L17,咁閪大個都唔化,这么大一个人别他妈的不开通,Stubborn to the end
 L18,對唔閪住,对不起,I`m so sorry
 L18,對閪唔住,对不起,I`m so sorry
 L18,so鸠rry,对不起,I`m so sorry
-L19,唔係猛龍唔過江,人不够厉害不敢到外地,I'm not good enough to go to other places
+L19,唔係猛龍唔過江唔系豬扒唔化妝,"广东话俗语：象征有实力或魄力的人跨地域闯荡,对相貌不佳者的戏称暗含对外貌与自信的讽刺 ""没有真本事的人不敢出来闯荡，只有不够漂亮的人才需要浓妆艳抹""","A Cantonese proverb: Symbolizing someone with ability or courage venturing out into new regions, it's also a sarcastic term for someone with an unattractive appearance, subtly mocking their looks and self-confidence. ""Those without real talent dare not venture out; only those who aren't pretty enough need heavy makeup."""
 L20,幾錢/幾多錢,多少钱,how much
-L20,條數點計先,这账怎么算,How do I pay the bill?
+L20,條數點計先,这账怎么算？,How do I pay the bill?
 L20,點計數,怎么算,how much
+L20,冚唪唥幾钱 ,全部一共多少钱？,How much is it in total?
+L20,夾埋幾钱/夾夾埋埋幾钱,一共多少钱？,How much in total?
+L20,仲爭幾錢啊,还差多少钱,How much money is still needed?
 L20,幾錢斤,多少一斤；怎么卖,how much
 L21,點不知衰收尾,谁知道是个坏结局,Who knew It's a bad ending
 L21,點先算,什么才是…？,What is...?
 L21,點知嗟,我怎么知道；发脾气,How would I know; losing my temper
 L21,點估到/點估計到,没想到；根據上下文翻譯成 （猜測）,How to estimate
+L21,冇閪諗到；冇諗閪到；諗閪唔到；諗唔閪到,真他妈没想到,I never expected this.
+L21,原本以為佢要競選到底，點不知佢退選,原本还表示要竞选到底的他，后来却出乎意料地宣布退选。,"He had originally declared his intention to run to the end, but unexpectedly announced his withdrawal from the race."
 L22,搞出個大頭佛你話點收科,惹出大麻煩，你说怎么办,What do you suggest we do if we get into big trouble?
 L24,開會嘅人點止咁少人啊？,还会不止这么少人吧？,Not only these few people are attending this meeting.
 L24,點止咁簡單,没那么简单,it's not so simple 
@@ -212,9 +220,8 @@ L49,飛對拖鞋過嚟,扔一样东西来，扔过来速度很快，（對拖鞋
 L49,啲消息飛离飛去,消息传来传去,Too many messages
 L50,俾人割韭菜，佢揼春咯,给人割韭菜了，她后悔莫及,She regretted betraying her friends and exploiting them.
 L50,隻股票今朝升到叭叭聲，早知尋日入定貨啦，真係揼春。,真后悔，那只股票今天涨了，早知道昨天加仓,I really regret it; that stock went up today. I should have bought more yesterday.
-L51,包㩉,剪刀石头布简称,Rock Paper Scissors
-L52,桑拿㩉骨,桑拿按摩,Sauna and Massage
-L53,畀人㩉兵,被抢劫,Robbed
+L52,桑拿𢱕骨,桑拿按摩,Sauna and Massage
+L53,畀人𢱕兵,被抢劫,Robbed
 L54,俾啲颜色佢睇下,给她/他点颜色看看,Show him/her what's what.
 L54,整鍋杰噶佢嘆下/整鋪杰噶佢嘆下,给她/他点颜色看看,Show him/her what's what.
 L54,俾佢試下你有几打得,给她/他看看你有多能打,Show her/him how good you are at fighting
@@ -222,7 +229,7 @@ L55,呢碟餸都几揼功夫,这道菜都挺多工序的,This dish involves quit
 L55,俾多三日時間你，咪再揼功夫窝,再给你三天时间，别再延迟时间了,I'll give you three more days. Don't delay any longer.
 L56,揼低佢重新出发好過啦,抛弃他/她重新出发,Abandon him/her and start over
 L56,揼得低佢咩,你能放下，忘记他/她吗,Can you let go and forget him/her?
-L57,几有吉屎,挺有本事,Quite capable
+L57,幾有吉屎,挺有本事,Quite capable
 L58,唔點下佢唔識醒,不提醒一下他/她不聪明,He/She isn't smart if I don't remind him/her.
 L59,呃鬼食豆腐,用低级容易失传的谎言佢哄骗人, to deceive somebody using a poor excuse or lies that are easily seen through; lterally: to trick a ghost to eat bean curd
 L59,老點我你就叻,骗我你就厉害；形容当事人比较单纯经常被骗,"""You're amazing if you lie to me"" describes someone who is naive and easily deceived."
