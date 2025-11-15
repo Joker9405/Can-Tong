@@ -171,7 +171,7 @@ body{
 .example{
   display:grid;
   grid-template-columns:1fr 0.95fr auto;
-  gap:12px;            /* 从 18px 改为 12px，让 ex_en / ex_chs 更靠左 */
+  gap:12px;            /* ex_en / ex_chs 更靠左 */
   align-items:center;
   padding:12px 8px;
 }
@@ -181,7 +181,7 @@ body{
 .example .en{
   font-size:var(--fs-text);
   font-weight:800;
-  text-transform:capitalize; /* 英文首字母大写（每个单词） */
+  text-transform:capitalize;
   margin-bottom:4px;
 }
 .example .chs{

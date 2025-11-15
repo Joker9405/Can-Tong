@@ -1,6 +1,8 @@
 // search_gate.js
-// 只允许搜索 crossmap 第一列里存在的内容；否则清空结果。
-// 不改动 app.js，只在“事后”做二次过滤。
+// 让搜索“只认 crossmap 里的 term”，严格按 term → target_id → lexeme 的逻辑走。
+// 这里做的事情是：如果输入的内容不在 crossmap 第一列 term 中，直接拦截事件，
+// 不再让原来的 app.js 去做模糊英文搜索。
+// 注意：真正的 term -> target_id -> 词条 展示，还是由你原来的 app.js 完成。
 
 (function() {
   const CROSSMAP_URL = '/data/crossmap.csv';
@@ -12,79 +14,71 @@
   async function loadCrossmapSet() {
     try {
       const resp = await fetch(CROSSMAP_URL);
-      if (!resp.ok) throw new Error('crossmap fetch error: ' + resp.status);
+      if (!resp.ok) throw new Error('crossmap fetch error');
       const text = await resp.text();
       const lines = text.split(/\r?\n/);
 
       const set = new Set();
 
       for (let i = 0; i < lines.length; i++) {
-        const line = lines[i].trim();
+        const line = lines[i];
         if (!line) continue;
 
-        // 拿第一列作为可搜索词
-        let firstComma = line.indexOf(',');
-        let surface = firstComma === -1 ? line : line.slice(0, firstComma);
-
-        // 去掉包裹引号
-        if (surface.length >= 2 && surface[0] === '"' && surface[surface.length - 1] === '"') {
-          surface = surface.slice(1, -1);
+        // 简单 CSV 拆分：按逗号取第 1 列作为 term
+        const firstComma = line.indexOf(',');
+        let term = firstComma === -1 ? line : line.slice(0, firstComma);
+        // 去掉首尾引号
+        if (term.length >= 2 && term[0] === '"' && term[term.length - 1] === '"') {
+          term = term.slice(1, -1);
         }
 
-        const key = normalize(surface);
+        const key = normalize(term);
         if (key) set.add(key);
       }
 
-      console.log('[search_gate] crossmap loaded, size =', set.size);
       return set;
     } catch (err) {
-      console.error('[search_gate] failed to load crossmap:', err);
+      console.error('Failed to load crossmap for search gate:', err);
       return null;
     }
   }
 
-  function applyFilter(allowedSet) {
+  function setupGate(allowedSet) {
     const input = document.getElementById('q');
-    const grid = document.getElementById('grid');
-    const examples = document.getElementById('examples');
+    if (!input) return;
 
-    if (!input || !grid) {
-      console.warn('[search_gate] missing #q or #grid');
-      return;
-    }
+    function handler(evt) {
+      const value = normalize(input.value);
 
-    function filterNow() {
-      const q = normalize(input.value);
+      // 空值，放行给原逻辑（用于清空结果等）
+      if (!value) return;
 
-      // 为空时交给原逻辑处理（清空/初始状态），这里不干预
-      if (!q) return;
+      const isEnter = evt.type === 'keydown' && (evt.key === 'Enter' || evt.keyCode === 13);
 
-      // 如果 crossmap 文件没加载成功，保守起见：直接清空，避免乱匹配
-      if (!allowedSet) {
-        grid.innerHTML = '';
+      // 如果 crossmap 里没有这个 term，就拦截，禁止触发原来的搜索逻辑
+      if (!allowedSet || !allowedSet.has(value)) {
+        evt.stopPropagation();
+        if (evt.stopImmediatePropagation) evt.stopImmediatePropagation();
+        if (isEnter) evt.preventDefault();
+
+        // 清空现有结果
+        const grid = document.getElementById('grid');
+        if (grid) grid.innerHTML = '';
+        const examples = document.getElementById('examples');
         if (examples) examples.hidden = true;
+
         return;
       }
 
-      // 如果当前查询词不在 crossmap 里：清空结果
-      if (!allowedSet.has(q)) {
-        grid.innerHTML = '';
-        if (examples) examples.hidden = true;
-      }
-      // 在 crossmap 里就不管，让 app.js 渲染的内容保留
+      // 命中 crossmap term：不处理，交给原 app.js 根据 target_id 精准取词条
     }
 
-    // 在冒泡阶段监听，而且是“后挂载”，保证在 app.js 的监听之后触发
-    input.addEventListener('input', filterNow, false);
-    input.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter' || e.keyCode === 13) {
-        // 让 app.js 先跑完，再过滤
-        setTimeout(filterNow, 0);
-      }
-    }, false);
+    // 在捕获阶段监听，优先于 app.js
+    input.addEventListener('input', handler, true);
+    input.addEventListener('keydown', handler, true);
   }
 
   document.addEventListener('DOMContentLoaded', function() {
-    loadCrossmapSet().then(applyFilter);
+    loadCrossmapSet().then(setupGate);
   });
 })();
