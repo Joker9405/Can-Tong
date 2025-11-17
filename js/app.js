@@ -1,10 +1,10 @@
-// Can-Tong front-end (crossmap-based search version)
-// 仅根据 crossmap.csv 的 term 精确匹配来找到 target_id，再用 lexeme.csv 渲染。
+// Can-Tong 前端：仅根据 crossmap.csv 的 term 精确匹配搜索
+// 保持简单稳健，防止白屏：所有 DOM 操作都做 null 判断，不会抛异常。
 
 (function () {
   'use strict';
 
-  // ----------- 工具函数 -----------
+  // ---------- 工具 ----------
 
   function normalizeTerm(str) {
     return (str || '').trim().toLowerCase();
@@ -63,6 +63,7 @@
       }
       rows.push(row);
     }
+
     return rows;
   }
 
@@ -76,16 +77,16 @@
     return '';
   }
 
-  // ----------- 状态 -----------
+  // ---------- 状态 ----------
 
   const state = {
-    lexemeById: new Map(),
-    termToTargetId: new Map(),
-    examplesByTarget: new Map(),
+    lexemeById: new Map(),   // id -> lexeme row
+    termToTargetId: new Map(), // term 单元 -> target_id
+    examplesByTarget: new Map(), // target_id -> example rows[]
     dataReady: false,
   };
 
-  // ----------- DOM -----------
+  // ---------- DOM ----------
 
   const dom = {};
 
@@ -106,33 +107,38 @@
     dom.examplesList = document.getElementById('examplesList');
   }
 
-  // ----------- 数据加载 -----------
+  // ---------- 数据索引 ----------
 
   function buildIndexes(lexemeRows, crossmapRows, exampleRows) {
-    // lexeme 索引
     state.lexemeById.clear();
+    state.termToTargetId.clear();
+    state.examplesByTarget.clear();
+
+    // lexeme: id / lexeme_id
     lexemeRows.forEach(row => {
       const id = pick(row, ['id', 'lexeme_id']);
       if (!id) return;
       state.lexemeById.set(String(id), row);
     });
 
-    // crossmap term -> target_id
-    state.termToTargetId.clear();
+    // crossmap: term -> target_id
     crossmapRows.forEach(row => {
       const targetId = pick(row, ['target_id', 'lexeme_id']);
       const termCell = pick(row, ['term', 'terms']);
       if (!targetId || !termCell) return;
 
-      termCell.split('/').map(normalizeTerm).filter(Boolean).forEach(t => {
-        if (!state.termToTargetId.has(t)) {
-          state.termToTargetId.set(t, String(targetId));
-        }
-      });
+      termCell
+        .split('/')
+        .map(normalizeTerm)
+        .filter(Boolean)
+        .forEach(t => {
+          if (!state.termToTargetId.has(t)) {
+            state.termToTargetId.set(t, String(targetId));
+          }
+        });
     });
 
-    // examples target_id -> rows[]
-    state.examplesByTarget.clear();
+    // examples: 针对你的 examples.csv 结构：lexeme_id, ex_zhh, ex_chs
     exampleRows.forEach(row => {
       const tid = pick(row, ['target_id', 'lexeme_id', 'id']);
       if (!tid) return;
@@ -147,26 +153,26 @@
   }
 
   function loadAllData() {
-    // 默认路径：/data/lexeme.csv /data/crossmap.csv /data/examples.csv
-    const lexemePromise = fetch('data/lexeme.csv').then(r => r.text());
-    const crossmapPromise = fetch('data/crossmap.csv').then(r => r.text());
-    const examplesPromise = fetch('data/examples.csv')
+    // 路径保持与你仓库一致：data/lexeme.csv、data/crossmap.csv、data/examples.csv
+    const pLexeme = fetch('data/lexeme.csv').then(r => r.text());
+    const pCross = fetch('data/crossmap.csv').then(r => r.text());
+    const pEx = fetch('data/examples.csv')
       .then(r => (r.ok ? r.text() : ''))
       .catch(() => '');
 
-    return Promise.all([lexemePromise, crossmapPromise, examplesPromise])
-      .then(([lexemeText, crossmapText, examplesText]) => {
+    return Promise.all([pLexeme, pCross, pEx])
+      .then(([lexemeText, crossText, exText]) => {
         const lexemeRows = parseCSV(lexemeText);
-        const crossmapRows = parseCSV(crossmapText);
-        const exampleRows = parseCSV(examplesText);
-        buildIndexes(lexemeRows, crossmapRows, exampleRows);
+        const crossRows = parseCSV(crossText);
+        const exampleRows = parseCSV(exText);
+        buildIndexes(lexemeRows, crossRows, exampleRows);
       })
       .catch(err => {
-        console.error('加载 CSV 失败：', err);
+        console.error('加载 CSV 出错：', err);
       });
   }
 
-  // ----------- 渲染 -----------
+  // ---------- 渲染 ----------
 
   function clearEntryView() {
     if (dom.zhhMainText) dom.zhhMainText.textContent = '—';
@@ -176,8 +182,8 @@
     if (dom.noteEn) dom.noteEn.textContent = '';
     if (dom.noteChs) dom.noteChs.textContent = '';
     if (dom.examplesList) dom.examplesList.innerHTML = '';
-    if (dom.examplesPanel) dom.examplesPanel.classList.add('hidden');
     if (dom.examplesToggle) dom.examplesToggle.classList.add('hidden');
+    if (dom.examplesPanel) dom.examplesPanel.classList.add('hidden');
   }
 
   function renderEntry(lexemeRow, exampleRows) {
@@ -186,8 +192,8 @@
       return;
     }
 
-    // 左侧主词
-    const mainYue = pick(lexemeRow, ['zhh', 'yue', 'lexeme_zhh']);
+    // 左侧主词与别写
+    const mainYue = pick(lexemeRow, ['zhh', 'lexeme_zhh', 'yue']);
     const aliasYue = pick(lexemeRow, ['alias_zhh', 'yue_alias']);
 
     if (dom.zhhMainText) {
@@ -196,12 +202,15 @@
 
     if (dom.zhhVariants) {
       dom.zhhVariants.innerHTML = '';
+
       const variants = [];
       if (aliasYue) {
-        aliasYue.split('/').map(s => s.trim()).filter(Boolean).forEach(v => variants.push(v));
+        aliasYue
+          .split('/')
+          .map(s => s.trim())
+          .filter(Boolean)
+          .forEach(v => variants.push(v));
       }
-      const extraVariants = pick(lexemeRow, ['variants_chs', 'variants_en']);
-      // 这里只是占位，不做特别处理
 
       variants.forEach(text => {
         const li = document.createElement('li');
@@ -229,86 +238,79 @@
     const chs = pick(lexemeRow, ['chs', 'zh_chs', 'meaning_chs']);
     const en = pick(lexemeRow, ['en', 'meaning_en']);
 
-    if (dom.summaryTitle) {
-      dom.summaryTitle.textContent = chs || '';
-    }
-    if (dom.summarySubtitle) {
-      dom.summarySubtitle.textContent = en || '';
-    }
+    if (dom.summaryTitle) dom.summaryTitle.textContent = chs || '';
+    if (dom.summarySubtitle) dom.summarySubtitle.textContent = en || '';
 
     // note
     const noteChs = pick(lexemeRow, ['note_chs', 'desc_chs']);
     const noteEn = pick(lexemeRow, ['note_en', 'desc_en']);
 
-    if (dom.noteChs) {
-      dom.noteChs.textContent = noteChs || '';
-    }
-    if (dom.noteEn) {
-      dom.noteEn.textContent = noteEn || '';
-    }
+    if (dom.noteChs) dom.noteChs.textContent = noteChs || '';
+    if (dom.noteEn) dom.noteEn.textContent = noteEn || '';
 
     // examples
-    if (dom.examplesList && dom.examplesToggle) {
-      dom.examplesList.innerHTML = '';
-      const rows = Array.isArray(exampleRows) ? exampleRows : [];
-      if (!rows.length) {
-        dom.examplesToggle.classList.add('hidden');
-        dom.examplesPanel.classList.add('hidden');
-      } else {
-        rows.forEach(row => {
-          const yue = pick(row, ['zhh', 'yue', 'example_zhh']);
-          const chsExample = pick(row, ['chs', 'example_chs']);
-          const enExample = pick(row, ['en', 'example_en']);
+    if (!dom.examplesList || !dom.examplesToggle || !dom.examplesPanel) return;
 
-          const li = document.createElement('li');
-          li.className = 'example-row';
+    dom.examplesList.innerHTML = '';
+    const rows = Array.isArray(exampleRows) ? exampleRows : [];
 
-          const ySpan = document.createElement('span');
-          ySpan.className = 'example-yue';
-          ySpan.textContent = yue;
-
-          const enSpan = document.createElement('span');
-          enSpan.className = 'example-en';
-          enSpan.textContent = enExample;
-
-          const chsSpan = document.createElement('span');
-          chsSpan.className = 'example-chs';
-          chsSpan.textContent = chsExample;
-
-          const btn = document.createElement('button');
-          btn.type = 'button';
-          btn.className = 'example-audio-btn';
-          btn.textContent = '🔊';
-          btn.addEventListener('click', () => {
-            playTTS(yue);
-          });
-
-          li.appendChild(ySpan);
-          li.appendChild(enSpan);
-          li.appendChild(chsSpan);
-          li.appendChild(btn);
-
-          dom.examplesList.appendChild(li);
-        });
-
-        dom.examplesToggle.classList.remove('hidden');
-        // 默认折叠
-        dom.examplesPanel.classList.add('hidden');
-      }
+    if (!rows.length) {
+      dom.examplesToggle.classList.add('hidden');
+      dom.examplesPanel.classList.add('hidden');
+      return;
     }
+
+    rows.forEach(row => {
+      const yue = pick(row, ['ex_zhh', 'zhh', 'yue', 'example_zhh']);
+      const chsExample = pick(row, ['ex_chs', 'chs', 'example_chs']);
+      const enExample = pick(row, ['ex_en', 'en', 'example_en']);
+
+      const li = document.createElement('li');
+      li.className = 'example-row';
+
+      const ySpan = document.createElement('span');
+      ySpan.className = 'example-yue';
+      ySpan.textContent = yue;
+
+      const enSpan = document.createElement('span');
+      enSpan.className = 'example-en';
+      enSpan.textContent = enExample;
+
+      const chsSpan = document.createElement('span');
+      chsSpan.className = 'example-chs';
+      chsSpan.textContent = chsExample;
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'example-audio-btn';
+      btn.textContent = '🔊';
+      btn.addEventListener('click', () => {
+        playTTS(yue);
+      });
+
+      li.appendChild(ySpan);
+      li.appendChild(enSpan);
+      li.appendChild(chsSpan);
+      li.appendChild(btn);
+
+      dom.examplesList.appendChild(li);
+    });
+
+    dom.examplesToggle.classList.remove('hidden');
+    dom.examplesPanel.classList.add('hidden'); // 默认折叠
   }
 
   function renderNoResult(query) {
     clearEntryView();
-    if (dom.summaryTitle) {
-      dom.summaryTitle.textContent = '未找到匹配的 term';
-    }
+    if (dom.summaryTitle) dom.summaryTitle.textContent = '未找到匹配的 term';
     if (dom.summarySubtitle) {
-      dom.summarySubtitle.textContent = query ? '请确认与 crossmap.csv 中的 term 单元完全一致。' : '';
+      dom.summarySubtitle.textContent = query
+        ? '请确认输入内容与 crossmap.csv 的某个 term 单元完全一致。'
+        : '';
     }
   }
 
-  // ----------- 搜索 -----------
+  // ---------- 搜索 ----------
 
   function searchByQuery(rawQuery) {
     const q = normalizeTerm(rawQuery);
@@ -316,10 +318,7 @@
       clearEntryView();
       return;
     }
-
-    if (!state.dataReady) {
-      return;
-    }
+    if (!state.dataReady) return;
 
     const targetId = state.termToTargetId.get(q);
     if (!targetId) {
@@ -332,63 +331,55 @@
     renderEntry(lexemeRow, examples);
   }
 
-  // ----------- TTS -----------
+  // ---------- TTS ----------
 
   let sharedAudio = null;
 
   function playTTS(text) {
     if (!text) return;
     try {
-      if (!sharedAudio) {
-        sharedAudio = new Audio();
-      }
+      if (!sharedAudio) sharedAudio = new Audio();
       const url = '/api/tts?text=' + encodeURIComponent(text);
       sharedAudio.src = url;
-      sharedAudio.play().catch(function (err) {
-        console.warn('TTS 播放失败：', err);
+      sharedAudio.play().catch(err => {
+        console.warn('TTS 播放失败:', err);
       });
     } catch (err) {
-      console.warn('创建 Audio 失败：', err);
+      console.warn('创建 Audio 失败:', err);
     }
   }
 
-  // ----------- 事件绑定 -----------
+  // ---------- 事件 ----------
 
   function bindEvents() {
     if (dom.searchInput) {
-      dom.searchInput.addEventListener('keydown', function (ev) {
+      dom.searchInput.addEventListener('keydown', ev => {
         if (ev.key === 'Enter') {
-          searchByQuery(ev.target.value);
-        }
-      });
-      dom.searchInput.addEventListener('blur', function (ev) {
-        // 防止只按一次 Enter 没触发的情况，失焦时再搜一遍
-        if (ev.target.value) {
           searchByQuery(ev.target.value);
         }
       });
     }
 
     if (dom.zhhMainAudio && dom.zhhMainText) {
-      dom.zhhMainAudio.addEventListener('click', function () {
+      dom.zhhMainAudio.addEventListener('click', () => {
         const text = dom.zhhMainText.textContent || '';
         playTTS(text);
       });
     }
 
     if (dom.examplesToggle && dom.examplesPanel) {
-      dom.examplesToggle.addEventListener('click', function () {
+      dom.examplesToggle.addEventListener('click', () => {
         dom.examplesPanel.classList.toggle('hidden');
       });
     }
   }
 
-  // ----------- 初始化 -----------
+  // ---------- 初始化 ----------
 
-  document.addEventListener('DOMContentLoaded', function () {
+  document.addEventListener('DOMContentLoaded', () => {
     cacheDom();
     bindEvents();
-    loadAllData().then(function () {
+    loadAllData().then(() => {
       console.log('CSV 数据加载完成');
     });
   });
