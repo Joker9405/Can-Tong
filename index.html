@@ -1,74 +1,70 @@
-<!DOCTYPE html>
-<html lang="zh-Hans">
+<!doctype html>
+<html lang="zh-HK">
 <head>
-  <meta charset="UTF-8" />
-  <title>Can-Tong MVP</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="./style.css" />
+  <meta charset="utf-8">
+  <title>Can-Tong · chs-zhh-en</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="page">
-    <header class="top-bar">
+  <div class="app-shell">
+    <header class="app-header">
       <div class="brand">
-        <span class="brand-text">Can-Tong</span>
+        <span class="brand-name">Can-Tong</span>
         <span class="brand-dot">•</span>
       </div>
       <div class="lang-tag">chs-zhh-en</div>
     </header>
 
-    <main class="main">
+    <main class="app-main">
       <section class="search-section">
-        <input
-          id="search-input"
-          class="search-input"
-          type="text"
-          autocomplete="off"
-          placeholder="输入 crossmap.csv 里的 term（/ 分隔的其中一个即可），然后按 Enter"
-        />
+        <input id="searchInput" class="search-input" type="text" placeholder="输入 term（与 crossmap.csv 的 term 单元一致）">
       </section>
 
-      <section id="no-result" class="no-result hidden">
-        <div class="no-result-text">
-          暂未在 crossmap.csv 中找到该 term，请确认在 term 列中是否有完整单元。
-        </div>
-      </section>
+      <section class="results-grid">
+        <section class="zhh-column">
+          <div class="zhh-label">粵語 zhh :</div>
+          <div id="zhhMain" class="card zhh-main">
+            <div class="zhh-main-text" id="zhhMainText">—</div>
+            <button class="audio-btn" id="zhhMainAudio" type="button" aria-label="播放粵語發音">🔊</button>
+          </div>
+          <ul id="zhhVariants" class="zhh-variants">
+            <!-- smaller variants injected here -->
+          </ul>
+        </section>
 
-      <section id="result-layout" class="result-layout hidden">
-        <div class="col-left">
-          <article id="card-main" class="card card-lime">
-            <!-- 主词与别名，由 app.js 渲染 -->
-          </article>
-        </div>
-
-        <div class="col-right">
-          <article id="card-pattern" class="card card-pink">
-            <!-- 用法模式，由 app.js 渲染 -->
-          </article>
-
-          <article id="card-note" class="card card-note">
-            <!-- 说明 note，由 app.js 渲染 -->
+        <section class="detail-column">
+          <article id="summaryCard" class="card card-hot">
+            <h2 class="card-title" id="summaryTitle">—</h2>
+            <p class="card-subtitle" id="summarySubtitle"></p>
           </article>
 
-          <!-- 按钮现在固定在灰 note 下方 -->
-          <button id="examples-toggle" class="btn-pill examples-toggle">
-            example 扩展
+          <article id="noteCard" class="card card-note">
+            <p class="note-en" id="noteEn"></p>
+            <p class="note-chs" id="noteChs"></p>
+          </article>
+
+          <button id="examplesToggle" class="btn-pill examples-toggle hidden" type="button">
+            examples 扩展
           </button>
-        </div>
+        </section>
       </section>
 
-      <!-- 展开后的整块 examples，保持原来的状态，只改按钮位置 -->
-      <section id="examples-panel" class="examples-panel hidden">
+      <section id="examplesPanel" class="examples-panel hidden">
         <div class="examples-inner">
-          <!-- 例句由 app.js 渲染 -->
+          <h3 class="examples-title">Examples</h3>
+          <ul id="examplesList" class="examples-list">
+            <!-- example rows -->
+          </ul>
         </div>
       </section>
     </main>
 
-    <footer class="footer">
-      <span>CanTongMVP — Code MIT, Lexicon Closed; data/* CSVs CC BY-NC-ND.</span>
+    <footer class="app-footer">
+      <small>CanTongMVP — Code MIT, Lexicon Closed; data/* CSVs CC BY-NC-ND.</small>
     </footer>
   </div>
 
-  <script src="./app.js" defer></script>
+  <script src="app.js"></script>
 </body>
 </html>
