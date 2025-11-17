@@ -1,94 +1,22 @@
 <!doctype html>
-<html lang="zh-HK">
+<html lang="zh-Hans">
 <head>
   <meta charset="utf-8">
-  <title>Can-Tong · chs-zhh-en</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- 保持与原项目一致的路径：assets/style.css -->
-  <link rel="stylesheet" href="assets/style.css">
+  <title>Can-Tong — 粤语查询</title>
+  <link rel="stylesheet" href="/assets/style.css">
 </head>
 <body>
-  <div class="app-shell">
-    <header class="app-header">
-      <div class="brand">
-        <span class="brand-name">Can-Tong</span>
-        <span class="brand-dot">•</span>
-      </div>
-      <div class="lang-tag">chs-zhh-en</div>
-    </header>
-
-    <main class="app-main">
-      <section class="search-section">
-        <input
-          id="searchInput"
-          class="search-input"
-          type="text"
-          placeholder="输入 term（需与 crossmap.csv 里的某个单元完全一致）"
-        >
-      </section>
-
-      <section class="results-grid">
-        <!-- 左侧粵語 -->
-        <section class="zhh-column">
-          <div class="zhh-label">粵語 zhh :</div>
-
-          <article id="zhhMainCard" class="card zhh-main">
-            <div class="zhh-main-text" id="zhhMainText">—</div>
-            <button
-              class="audio-btn"
-              id="zhhMainAudio"
-              type="button"
-              aria-label="播放粵語讀音"
-            >
-              🔊
-            </button>
-          </article>
-
-          <ul id="zhhVariants" class="zhh-variants">
-            <!-- variants injected -->
-          </ul>
-        </section>
-
-        <!-- 右侧解释 + note + example 按钮 -->
-        <section class="detail-column">
-          <article id="summaryCard" class="card card-hot">
-            <h2 class="card-title" id="summaryTitle">—</h2>
-            <p class="card-subtitle" id="summarySubtitle"></p>
-          </article>
-
-          <article id="noteCard" class="card card-note">
-            <p class="note-en" id="noteEn"></p>
-            <p class="note-chs" id="noteChs"></p>
-          </article>
-
-          <!-- 例句按钮：放在灰色 note 下方 -->
-          <button
-            id="examplesToggle"
-            class="btn-pill examples-toggle hidden"
-            type="button"
-          >
-            examples 扩展
-          </button>
-        </section>
-      </section>
-
-      <!-- 下面整块粉色 examples 区域（图三效果） -->
-      <section id="examplesPanel" class="examples-panel hidden">
-        <div class="examples-inner">
-          <h3 class="examples-title">Examples</h3>
-          <ul id="examplesList" class="examples-list">
-            <!-- example rows injected here -->
-          </ul>
-        </div>
-      </section>
-    </main>
-
-    <footer class="app-footer">
-      <small>CanTongMVP — Code MIT, Lexicon Closed; data/* CSVs CC BY-NC-ND.</small>
-    </footer>
-  </div>
-
-  <!-- JS 路径保持与原项目一致：js/app.js -->
-  <script src="js/app.js"></script>
+  <header class="topbar">
+    <div class="brand">Can-Tong <span class="dot">•</span></div>
+    <div class="lang">chs-zhh-en</div>
+  </header>
+  <main class="container">
+    <div class="search"><input id="q" type="text" placeholder="" autocomplete="off" /></div>
+    <section id="grid" class="grid"></section>
+    <section id="examples" class="examples" hidden><div class="examples-inner" id="examples-list"></div></section>
+  </main>
+  <footer class="foot">CanTongMVP — Code MIT, Lexicon Closed; data/* CSVs CC BY-NC-ND.</footer>
+  <script src="/js/app.js"></script>
 </body>
 </html>
