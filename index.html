@@ -1,22 +1,74 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-Hans">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Can-Tong — 粤语查询</title>
-  <link rel="stylesheet" href="/assets/style.css">
+  <meta charset="UTF-8" />
+  <title>Can-Tong MVP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand">Can-Tong <span class="dot">•</span></div>
-    <div class="lang">chs-zhh-en</div>
-  </header>
-  <main class="container">
-    <div class="search"><input id="q" type="text" placeholder="" autocomplete="off" /></div>
-    <section id="grid" class="grid"></section>
-    <section id="examples" class="examples" hidden><div class="examples-inner" id="examples-list"></div></section>
-  </main>
-  <footer class="foot">CanTongMVP — Code MIT, Lexicon Closed; data/* CSVs CC BY-NC-ND.</footer>
-  <script src="/js/app.js"></script>
+  <div class="page">
+    <header class="top-bar">
+      <div class="brand">
+        <span class="brand-text">Can-Tong</span>
+        <span class="brand-dot">•</span>
+      </div>
+      <div class="lang-tag">chs-zhh-en</div>
+    </header>
+
+    <main class="main">
+      <section class="search-section">
+        <input
+          id="search-input"
+          class="search-input"
+          type="text"
+          autocomplete="off"
+          placeholder="输入 crossmap.csv 里的 term（/ 分隔的其中一个即可），然后按 Enter"
+        />
+      </section>
+
+      <section id="no-result" class="no-result hidden">
+        <div class="no-result-text">
+          暂未在 crossmap.csv 中找到该 term，请确认在 term 列中是否有完整单元。
+        </div>
+      </section>
+
+      <section id="result-layout" class="result-layout hidden">
+        <div class="col-left">
+          <article id="card-main" class="card card-lime">
+            <!-- 主词与别名，由 app.js 渲染 -->
+          </article>
+        </div>
+
+        <div class="col-right">
+          <article id="card-pattern" class="card card-pink">
+            <!-- 用法模式，由 app.js 渲染 -->
+          </article>
+
+          <article id="card-note" class="card card-note">
+            <!-- 说明 note，由 app.js 渲染 -->
+          </article>
+
+          <!-- 按钮现在固定在灰 note 下方 -->
+          <button id="examples-toggle" class="btn-pill examples-toggle">
+            example 扩展
+          </button>
+        </div>
+      </section>
+
+      <!-- 展开后的整块 examples，保持原来的状态，只改按钮位置 -->
+      <section id="examples-panel" class="examples-panel hidden">
+        <div class="examples-inner">
+          <!-- 例句由 app.js 渲染 -->
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>CanTongMVP — Code MIT, Lexicon Closed; data/* CSVs CC BY-NC-ND.</span>
+    </footer>
+  </div>
+
+  <script src="./app.js" defer></script>
 </body>
 </html>
