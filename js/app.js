@@ -1,46 +1,386 @@
-const PATH='/data/'; let CROSS=[], LEX={}, EXMAP={};
-function parseCSV(t){const lines=t.split(/\r?\n/).filter(Boolean);const head=lines.shift().split(',').map(s=>s.trim());return lines.map(line=>{const cells=[];let cur='',inQ=false;for(let i=0;i<line.length;i++){const ch=line[i];if(ch=='"'){inQ=!inQ;continue}if(ch==','&&!inQ){cells.push(cur);cur=''}else{cur+=ch}}cells.push(cur);const obj={};head.forEach((k,i)=>obj[k]=(cells[i]||'').trim());return obj})}
-async function loadCSV(name){const r=await fetch(PATH+name,{cache:'no-store'});if(!r.ok) throw new Error('load '+name+' failed');return parseCSV(await r.text())}
-function norm(s){return (s||'').toLowerCase().replace(/\s+/g,'')}
-function fuzzy(text,q){text=norm(text);q=norm(q);if(!q)return false;let i=0;for(const c of text){if(c===q[i])i++}return i===q.length||text.includes(q)}
-let VOICE=null;function pickVoice(){const L=speechSynthesis.getVoices();VOICE=L.find(v=>/yue|Cantonese|zh[-_]HK/i.test(v.lang+v.name))||L.find(v=>/zh[-_]HK/i.test(v.lang))||L.find(v=>/zh/i.test(v.lang))||null}if('speechSynthesis'in window){speechSynthesis.onvoiceschanged=pickVoice;pickVoice()}
-function speak(t){if(!('speechSynthesis'in window)||!t)return;const u=new SpeechSynthesisUtterance(t);if(VOICE)u.voice=VOICE;u.lang=VOICE?.lang||'zh-HK';speechSynthesis.cancel();speechSynthesis.speak(u)}
-const ICON=`<svg viewBox="0 0 24 24"><path d="M3 10v4h4l5 4V6L7 10H3zm13.5 2a3.5 3.5 0 0 0-2.5-3.34v6.68A3.5 3.5 0 0 0 16.5 12zm0-7a9.5 9.5 0 0 1 0 14l1.5 1.5A11.5 11.5 0 0 0 18 3.5L16.5 5z"/></svg>`;
-async function boot(){const[cm,lx,ex]=await Promise.all([loadCSV('crossmap.csv'),loadCSV('lexeme.csv'),loadCSV('examples.csv')]);CROSS=cm;lx.forEach(r=>LEX[r.id]=r);EXMAP=ex.reduce((m,r)=>{(m[r.lexeme_id]||(m[r.lexeme_id]=[])).push(r);return m},{})}
-function findLexemeIds(q){const nq=norm(q);if(!nq)return[];const set=new Set();CROSS.forEach(r=>{if(fuzzy(r.term,nq))set.add(r.target_id)});Object.values(LEX).forEach(r=>{if(fuzzy(r.zhh,nq)||fuzzy(r.en,nq)||fuzzy(r.alias_zhh||'',nq))set.add(r.id)});return Array.from(set)}
-const grid=document.getElementById('grid');const examples=document.getElementById('examples');const examplesList=document.getElementById('examples-list');
-function resetUI(){grid.innerHTML='';examples.hidden=true;examplesList.innerHTML=''}
-function renderEmpty(){resetUI()}
-function pairedVariants(chs,en){const A=(chs||'').split(/[;；]/).map(s=>s.trim()).filter(Boolean);const B=(en||'').split(/[;；]/).map(s=>s.trim()).filter(Boolean);const n=Math.max(A.length,B.length);const out=[];for(let i=0;i<n;i++){out.push({zh:A[i]||'',en:B[i]||''})}return out}
-function renderPhased(lex){resetUI();
-  const aliases=(lex.alias_zhh||'').split(/[;；]/).map(s=>s.trim()).filter(Boolean);
-  const variants=pairedVariants(lex.variants_chs, lex.variants_en);
-  const note=(lex.note_en||'')+(lex.note_chs?('<br>'+lex.note_chs):'');
-  const left=document.createElement('div');left.className='card yellow left';
-  left.innerHTML=`<div class="badge">粤语zhh：</div>
-    <div class="h-head"><div class="h-title">${lex.zhh||'—'}</div><button class="tts t-head" title="发音">${ICON}</button></div>
-    ${aliases.map(a=>`<div class="row"><div class="alias">${a}</div><button class="tts">${ICON}</button></div>`).join('')}`;
-  grid.appendChild(left);requestAnimationFrame(()=>left.classList.add('show'));
-  left.querySelector('.t-head').onclick=()=>speak(lex.zhh||''); left.querySelectorAll('.row .tts').forEach((b,i)=>b.onclick=()=>speak(aliases[i]));
-  setTimeout(()=>{
-    const rt=document.createElement('div');rt.className='card pink right-top';
-    rt.innerHTML=`<div class="vars">${variants.map(v=>`<div class="var-row"><div class="var-zh">${v.zh}</div>${v.en?`<div class="var-en">${v.en}</div>`:''}</div>`).join('')}</div>`;
-    grid.appendChild(rt);requestAnimationFrame(()=>rt.classList.add('show'));
-    const rb=document.createElement('div');rb.className='card gray right-bottom';
-    rb.innerHTML=`<div class="note">${note||''}</div><button id="example-btn">example 扩展</button>`;grid.appendChild(rb);requestAnimationFrame(()=>rb.classList.add('show'));
-    rb.querySelector('#example-btn').onclick=()=>toggleExamples(lex, rb.querySelector('#example-btn'));
-  },120);
+// CanTong MVP front-end patch
+// 目标：
+// 1）搜索时仅依赖 data/crossmap.csv 里的 term 列（/ 分隔为多个单元）。
+// 2）根据匹配到的 target_id，去 data/lexeme.csv 里取出对应词条并渲染。
+// 3）保留原有 examples 展开效果，只把按钮位置调整到灰色 note 卡片下方。
+
+const state = {
+  lexemeById: new Map(),
+  crossmapIndex: new Map(), // term(normalized) -> target_id
+  lastLexeme: null,
+};
+
+// ---------- 工具：CSV 解析 ----------
+function parseCsv(text) {
+  const lines = text.split(/\r?\n/).filter((l) => l.trim().length > 0);
+  if (!lines.length) return [];
+  const header = parseCsvRow(lines[0]);
+  const rows = [];
+  for (let i = 1; i < lines.length; i++) {
+    const rowCells = parseCsvRow(lines[i]);
+    if (!rowCells.length) continue;
+    const obj = {};
+    header.forEach((h, idx) => {
+      obj[h] = rowCells[idx] ?? "";
+    });
+    rows.push(obj);
+  }
+  return rows;
 }
-function toggleExamples(lex, btn){const exs=EXMAP[lex.id]||[];if(!exs.length)return;
-  if(examples.hidden){
-    examplesList.innerHTML='';
-    exs.forEach(e=>{const row=document.createElement('div');row.className='example';
-      row.innerHTML=`<div class="yue">${e.ex_zhh||''}</div>
-        <div class="right"><div class="en">${e.ex_en||''}</div><div class="chs">${e.ex_chs||''}</div></div>
-        <div class="btns"><button class="tts" title="粤语">${ICON}</button></div>`;
-      row.querySelector('.tts').onclick=()=>speak(e.ex_zhh||'');examplesList.appendChild(row)});
-    examples.hidden=false; btn.remove();
-  }else{examples.hidden=true;}
+
+function parseCsvRow(line) {
+  const result = [];
+  let current = "";
+  let inQuotes = false;
+
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+
+    if (inQuotes) {
+      if (ch === '"') {
+        if (line[i + 1] === '"') {
+          current += '"';
+          i++;
+        } else {
+          inQuotes = false;
+        }
+      } else {
+        current += ch;
+      }
+    } else {
+      if (ch === '"') {
+        inQuotes = true;
+      } else if (ch === ",") {
+        result.push(current);
+        current = "";
+      } else {
+        current += ch;
+      }
+    }
+  }
+  result.push(current);
+  return result;
 }
-document.getElementById('q').addEventListener('input',e=>{const q=e.target.value; if(!q){renderEmpty();return} const ids=findLexemeIds(q); if(!ids.length){renderEmpty();return} renderPhased(LEX[ids[0]])});
-boot();
+
+async function loadCsv(path) {
+  const res = await fetch(path);
+  if (!res.ok) {
+    console.error("Failed to load", path, res.status);
+    return [];
+  }
+  const text = await res.text();
+  return parseCsv(text);
+}
+
+function normalizeTerm(str) {
+  return str.trim().toLowerCase();
+}
+
+// ---------- 索引构建 ----------
+function buildLexemeIndex(rows) {
+  rows.forEach((row) => {
+    const id = row.id || row.lexeme_id || row.target_id;
+    if (!id) return;
+    state.lexemeById.set(String(id), row);
+  });
+}
+
+function buildCrossmapIndex(rows) {
+  rows.forEach((row) => {
+    const targetId = row.target_id || row.lexeme_id || row.id;
+    const termCell = row.term || "";
+    if (!targetId || !termCell) return;
+
+    const terms = termCell
+      .split("/")
+      .map((t) => normalizeTerm(t))
+      .filter(Boolean);
+
+    terms.forEach((t) => {
+      state.crossmapIndex.set(t, String(targetId));
+    });
+  });
+}
+
+// ---------- 搜索逻辑：只看 crossmap ----------
+function findLexemeByQuery(query) {
+  const key = normalizeTerm(query);
+  if (!key) return null;
+  const targetId = state.crossmapIndex.get(key);
+  if (!targetId) return null;
+  const lexeme = state.lexemeById.get(targetId);
+  return lexeme || null;
+}
+
+function handleSearch(query) {
+  const trimmed = query.trim();
+  const noResultBlock = document.getElementById("no-result");
+  const layout = document.getElementById("result-layout");
+  const examplesPanel = document.getElementById("examples-panel");
+
+  if (!trimmed) {
+    noResultBlock.classList.add("hidden");
+    layout.classList.add("hidden");
+    examplesPanel.classList.add("hidden");
+    state.lastLexeme = null;
+    return;
+  }
+
+  const lexeme = findLexemeByQuery(trimmed);
+  if (!lexeme) {
+    noResultBlock.classList.remove("hidden");
+    layout.classList.add("hidden");
+    examplesPanel.classList.add("hidden");
+    state.lastLexeme = null;
+    return;
+  }
+
+  noResultBlock.classList.add("hidden");
+  layout.classList.remove("hidden");
+
+  state.lastLexeme = lexeme;
+  renderLexeme(lexeme);
+
+  // 默认收起 examples
+  examplesPanel.classList.add("hidden");
+}
+
+// ---------- 渲染 ----------
+function renderLexeme(row) {
+  renderMainCard(row);
+  renderPatternCard(row);
+  renderNoteCard(row);
+  renderExamples(row);
+}
+
+function getField(row, keys, fallback = "") {
+  for (const k of keys) {
+    if (row[k] && String(row[k]).trim() !== "") {
+      return String(row[k]);
+    }
+  }
+  return fallback;
+}
+
+function renderMainCard(row) {
+  const card = document.getElementById("card-main");
+  if (!card) return;
+
+  const mainZhh = getField(row, ["zhh", "head_zhh", "main_zhh", "lexeme_zhh"]);
+  const variants = getField(row, ["variants_zhh", "alias_zhh", "aliases_zhh"]);
+  const items = [];
+
+  if (mainZhh) items.push(mainZhh);
+
+  if (variants) {
+    variants
+      .split("/")
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .forEach((v) => items.push(v));
+  }
+
+  if (!items.length) {
+    card.innerHTML = "<div>（该词条缺少 zhh 字段）</div>";
+    return;
+  }
+
+  let html = `<div class="card-main-title">${escapeHtml(items[0])}</div>`;
+
+  const rest = items.slice(1);
+  if (rest.length) {
+    html += rest
+      .map(
+        (t) => `
+      <div class="card-main-variant">
+        <div>${escapeHtml(t)}</div>
+        <button class="icon-sound-btn" data-say="${escapeAttr(t)}">
+          <span class="icon-sound">🔊</span>
+        </button>
+      </div>`
+      )
+      .join("");
+  }
+
+  card.innerHTML = html;
+}
+
+function renderPatternCard(row) {
+  const card = document.getElementById("card-pattern");
+  if (!card) return;
+
+  const chs = getField(row, ["pattern_chs", "chs_pattern", "chs"]);
+  const en = getField(row, ["pattern_en", "en_pattern", "en"]);
+
+  if (!chs && !en) {
+    card.innerHTML = "<div class='card-pink-title'>（该词条暂无用法说明）</div>";
+    return;
+  }
+
+  card.innerHTML = `
+    <div class="card-pink-title">${escapeHtml(chs || "")}</div>
+    <div class="card-pink-sub">${escapeHtml(en || "")}</div>
+  `;
+}
+
+function renderNoteCard(row) {
+  const card = document.getElementById("card-note");
+  if (!card) return;
+
+  const en = getField(row, ["note_en", "def_en", "explain_en"]);
+  const chs = getField(row, ["note_chs", "def_chs", "explain_chs"]);
+
+  if (!en && !chs) {
+    card.innerHTML =
+      "<div class='card-note-title'>（该词条暂无详细说明）</div>";
+    return;
+  }
+
+  card.innerHTML = `
+    <div class="card-note-title">${escapeHtml(en || "")}</div>
+    <div class="card-note-sub">${escapeHtml(chs || "")}</div>
+  `;
+}
+
+// 假设 examples_zhh / examples_en / examples_chs 用 || 分隔多条
+function renderExamples(row) {
+  const panel = document.getElementById("examples-panel");
+  const inner = document.querySelector("#examples-panel .examples-inner");
+  if (!panel || !inner) return;
+
+  const zhhRaw = getField(row, ["examples_zhh", "example_zhh", "ex_zhh"]);
+  const enRaw = getField(row, ["examples_en", "example_en", "ex_en"]);
+  const chsRaw = getField(row, ["examples_chs", "example_chs", "ex_chs"]);
+
+  const zList = zhhRaw.split("||").map((s) => s.trim()).filter(Boolean);
+  const eList = enRaw.split("||").map((s) => s.trim());
+  const cList = chsRaw.split("||").map((s) => s.trim());
+
+  const maxLen = Math.max(zList.length, eList.length, cList.length);
+
+  if (!maxLen) {
+    inner.innerHTML = "<div>暂无例句</div>";
+    return;
+  }
+
+  const rows = [];
+  for (let i = 0; i < maxLen; i++) {
+    const z = zList[i] || "";
+    const e = eList[i] || "";
+    const c = cList[i] || "";
+    rows.push(`
+      <div class="examples-row">
+        <div class="examples-row-main">${escapeHtml(z)}</div>
+        <div>
+          <div class="examples-row-en">${escapeHtml(e)}</div>
+          <div class="examples-row-chs">${escapeHtml(c)}</div>
+        </div>
+        <button class="icon-sound-btn" data-say="${escapeAttr(z)}">
+          <span class="icon-sound">🔊</span>
+        </button>
+      </div>
+    `);
+  }
+
+  inner.innerHTML = rows.join("");
+}
+
+// ---------- 例句展开按钮 ----------
+function toggleExamples() {
+  const panel = document.getElementById("examples-panel");
+  if (!panel || !state.lastLexeme) return;
+  panel.classList.toggle("hidden");
+}
+
+// ---------- TTS ----------
+let cachedVoices = [];
+
+function loadVoices() {
+  cachedVoices = window.speechSynthesis
+    ? window.speechSynthesis.getVoices()
+    : [];
+}
+
+if (window.speechSynthesis) {
+  window.speechSynthesis.onvoiceschanged = loadVoices;
+  loadVoices();
+}
+
+function pickYueVoice() {
+  if (!cachedVoices.length) return null;
+  const lower = (v) => v.lang.toLowerCase();
+  let voice =
+    cachedVoices.find((v) => lower(v).includes("yue")) ||
+    cachedVoices.find((v) => lower(v).includes("zh-hk")) ||
+    cachedVoices.find((v) => lower(v).includes("zh")) ||
+    cachedVoices[0];
+  return voice || null;
+}
+
+function speak(text) {
+  if (!window.speechSynthesis || !text) return;
+  const u = new SpeechSynthesisUtterance(text);
+  const voice = pickYueVoice();
+  if (voice) u.voice = voice;
+  u.rate = 1;
+  u.pitch = 1;
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(u);
+}
+
+// 统一事件代理：所有带 data-say 的按钮，都用粤语读出来
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest("[data-say]");
+  if (!btn) return;
+  const text = btn.getAttribute("data-say") || "";
+  speak(text);
+});
+
+// ---------- HTML 转义 ----------
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function escapeAttr(str) {
+  return escapeHtml(str).replace(/'/g, "&#39;");
+}
+
+// ---------- 初始化 ----------
+async function init() {
+  const input = document.getElementById("search-input");
+  const examplesToggle = document.getElementById("examples-toggle");
+
+  if (!input) {
+    console.error("缺少 #search-input 元素");
+    return;
+  }
+
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      handleSearch(input.value);
+    }
+  });
+
+  examplesToggle?.addEventListener("click", toggleExamples);
+
+  try {
+    const [lexemeRows, crossmapRows] = await Promise.all([
+      loadCsv("./data/lexeme.csv"),
+      loadCsv("./data/crossmap.csv"),
+    ]);
+
+    buildLexemeIndex(lexemeRows);
+    buildCrossmapIndex(crossmapRows);
+    console.log("CSV loaded: lexeme =", lexemeRows.length, "crossmap =", crossmapRows.length);
+  } catch (err) {
+    console.error("CSV 加载失败", err);
+  }
+
+  input.focus();
+}
+
+document.addEventListener("DOMContentLoaded", init);
