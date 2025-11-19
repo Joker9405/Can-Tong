@@ -1,31 +1,31 @@
-﻿term,lang,target_id,kind
+term,lang,target_id,kind
+Delaying time/Wasting time/stall for time ,en,L1,head
 拖延时间/耽误时间/磨洋工,chs,L1,head
-Delaying time/Wasting time/stall for time,en,L1,head
-扔/丢东西,chs,L2,head
+扔东西/丢东西,chs,L2,head
 Throwing things,en,L2,head
-丢东西过来,chs,L3,head
+扔东西过来/丢东西过来,chs,L3,head
 "Throw/Toss it over here, quick!",en,L3,head
 推,chs,L4,head
 push,en,L4,head
-小贩/摆摊/路边摊,chs,L5,head
 a trolley/cart/street vending/set up a stall,en,L5,head
-明知错不认/不服输/爱面子,chs,L6,head
+小贩/摆摊/路边摊,chs,L5,head
 Die chicken pushing the rice cooker cover/The dead chicken forcing thelid of the rice pot open,en,L6,head
+明知错不认/不服输/爱面子,chs,L6,head
 刁钻/怪异/不常见/稀奇古怪,chs,L7,head
-uncommon/rare and strange,en,L7,head
+uncommon/rare and strange ,en,L7,head
 这样/那样,chs,L8,head
 In this way/in that way/this,en,L8,head
 这么/那么,chs,L9,head
 like this/so,en,L9,head
+How/how,en,L10,head
 怎么/怎么样/如何,chs,L10,head
-How,en,L10,head
 要紧/重要,chs,L11,head
 important,en,L11,head
 达到一定水平/差不多/大致上/普普通通,chs,L12,head
-approximate/mediocre/nsignificant/unassuming/ordinary,en,L12,head
-沒有免費的午餐/不合理,chs,L13,head
-There's no such thing as a free lunch,en,L13,head
+approximate/mediocre/nsignificant/unassuming/ordinary ,en,L12,head
+沒有免費的午餐,chs,L13,head
 too good to be true/It's not that simple.,en,L13,head
+There's no such thing as a free lunch,en,L13,head
 真巧合/这么巧呀/不谋而合/湊巧/说多巧有多巧,chs,L14,head
 coincidentally/fortuitously/by chance,en,L14,head
 歇后语；应该死的不去死/歇后语；该死不死,chs,L15,head
@@ -33,21 +33,21 @@ coincidentally/fortuitously/by chance,en,L14,head
 形容大神在旁边不会把握机会/身边有大神不会把握机会,chs,L16,head
 歇后语；不会把握机会,chs,L16,head
 to fail to take advantage of an opportunity,en,L16,head
-思想不开通/守旧的人,chs,L17,head
 narrow-minded/conservatives,en,L17,head
+思想不开通/守旧的人,chs,L17,head
 不好意思/失礼了,chs,L18,
 so sorry,en,L18,
-有本事的到外发展/比喻有才专华有才能的人才敢想敢拼,chs,L19,
-有能力到外/有本身到外/异地发展/在外地拼搏/在外地谋生,chs,L19,
 Ability to go to other places,en,L19,
+有能力到外/有本身到外/异地发展/在外地拼搏/在外地谋生,chs,L19,
+有本事的到外发展/比喻有才专华有才能的人才敢想敢拼,chs,L19,
 怎么卖/多少钱/怎么算,chs,L20,
 how much/unexpectedly/how was one to know/little did one know/who would have thought,en,L20,
-unexpectedly/Who knows,chs,L21,
 谁料到/不料/如何得知/怎么知道/没想到/谁想到/哪知道/谁知道/竟然,chs,L21,
+unexpectedly/Who knows,chs,L21,
 怎么收场/怎么样才好/怎么救场/如何力挽狂澜,chs,L22,
 How to save the day/How to end it,en,L22,
-点缀,chs,L23,
-to decorate/embellishment,en,L23,
+骗,chs,L23,
+cheat,en,L23,
 不止/何止/哪儿止/哪止,chs,L24,
 not only/incessantly/without end,en,L24,
 不论怎么说/不管怎样/无论如何,chs,L25,
@@ -64,11 +64,11 @@ Mistaken identity/wrong target,en,L29,
 how to get there,en,L30,
 点到为止,chs,L31,
 Stop here,en,L31,
+有何看法/怎么样/怎么看,chs,L32,
 有什么想法/有什么看法,chs,L32,
-有何看法/怎么看,chs,L32,
 how do you see this?,en,L32,
-怎样/询问,chs,L33,
-how？/ask/what way,en,L33,
+怎样/询问/如何/怎么样,chs,L33,
+how/ask/what way,en,L33,
 怎么都可以/怎样说都可以/怎么说就怎么办/你说什么就什么/说什么就什么,chs,L34,
 up to you/as you wish/whatever you say,en,L34,
 没什么交集/泛泛之交/普通朋友,chs,L35,
@@ -81,28 +81,28 @@ What do you want/How do you want,en,L37,
 set it aside/throw it aside/chuck it to one side/put it aside/toss it aside/shelve it aside,en,L38,
 甩在一边,chs,L39,
 cast it aside/brush it aside,en,L39,
+toss it /throw it/set it ,en,L40,
 放一边/丢一边/扔一边,chs,L40,
-toss it/throw it/set it,en,L40,
 甩一边,chs,L41,
-cast it,en,L41,
+cast it ,en,L41,
 扔垃圾/丢垃圾,chs,L42,
 throw it away,en,L42,
-倒垃圾,chs,L43,
 throw out the trash,en,L43,
+倒垃圾,chs,L43,
 倒掉它/扔掉它/丢掉它,chs,L44,
-Discard it/Pour it out,en,L44,
+Throw it away/Discard it/Pour it out,en,L44,
 走开/起开/滚,chs,L45,
 Get out of here/Fuck off/Get lost/Get out of here,en,L45,
 把东西倒/扔掉,chs,L46,
 Throw things away,en,L46,
 逛街/出门/逛街去,chs,L47,
 Go shopping/Going out/Shopping/shop,en,L47,
-甩在地下/摔在地下,chs,L48,
 重重甩/摔在地下,chs,L48,
+甩在地下/摔在地下,chs,L48,
 Thrown heavily to the ground/slammed to the ground,en,L48,
 用很快速度扔一些东西过来,chs,L49,
-后悔莫及/极度失望,chs,L50,
 Throw something over very quickly/Too late to regret,en,L50,
+后悔莫及/极度失望,chs,L50,
 剪刀石头布,chs,L51,
 Rock Paper Scissors,en,L51,
 捶背/按摩,chs,L52,
@@ -119,14 +119,14 @@ It takes a long time,en,L55,
 Abandon him/her,en,L56,
 大胆/胆子大/不怕死,chs,L57,
 Bold/daring/fearless,en,L57,
+Give him/her some pointers,en,L58,
 指点一下他/她,chs,L58,
-her some pointers,en,L58,
-糊弄/瞎骗,chs,L59,
+欺骗/糊弄/瞎骗,chs,L59,
 to trick/to fool,en,L59,
-当我是傻子/你当我好骗吗,chs,L60,
 to lie to a ghost to eat tofu/Do you think I'm easy to fool?,en,L60,
-推卸责任,chs,L61,
+当我是傻子/你当我好骗吗,chs,L60,
 shirking responsibility,en,L61,
+推卸责任,chs,L61,
 蠢人/低能者,chs,L62,
 blockhead/moron/nitwit,en,L62,
 傻乎乎/愚蠢的人,chs,L63,
@@ -134,10 +134,35 @@ Stupid/tosser/idiot,en,L63,
 容易上当受骗的人/割韭菜/冤大头,chs,L64,
 milking me dry/fleecing us,en,L64,
 笨到极致/傻到一个点,chs,L65,
-boneheaded,en,L65,
+moron/boneheaded ,en,L65,
 沙雕/傻屌/傻叼,chs,L66,
 dunce/Stupid dick,en,L66,
 呆瓜/糊里糊涂/反应迟钝/慢半拍,chs,L67,
 One step behind/half a bit slower/obtuse,en,L67,
+,,L79,
+,,L80,
+,,L81,
+,,L82,
+,,L83,
+,,L84,
+,,L85,
+,,L86,
+,,L87,
+,,L88,
+,,L89,
+,,L90,
+,,L91,
+,,L92,
+,,L93,
+,,L94,
+,,L95,
+,,L96,
+,,L97,
+,,L98,
+,,L99,
+,,L100,
 差不多就是这样/大概就是这样,chs,L103,
 That's about it/That's roughly it,en,L103,
+,,,
+,,,
+,,,
