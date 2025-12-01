@@ -1,10 +1,10 @@
 // api/translate.js
-// v20251201_case_insensitive
+// v20251201_case_insensitive_final
 //
 // 功能：
 // - 只根据 data/crossmap.csv 里的 term/terms/keyword 精确匹配
 // - 每个单元用 "/" 分隔为独立关键词
-// - 英文大小写完全忽略（how / HOW / How 视为同一个）
+// - 英文大小写完全忽略（go shopping / Go shopping / GO SHOPPING 视为同一个）
 // - 命中后通过 lexeme.csv 拿词条，通过 examples.csv 挂例句
 //
 // 返回：
@@ -18,15 +18,12 @@ const url = require('url');
 // 数据缓存，避免每次请求都重新读 CSV
 let CACHE = null;
 
-/**
- * 简单 CSV 解析：按逗号分列（不处理引号复杂情况）
- */
+/** 简单 CSV 解析 */
 function parseCsvSimple(csvText) {
   if (!csvText) return [];
   const lines = csvText.split(/\r?\n/).filter((l) => l.trim().length > 0);
   if (!lines.length) return [];
 
-  // 去掉 BOM
   const headerLine = lines[0].replace(/^\uFEFF/, '');
   const headers = headerLine.split(',').map((h) => h.trim());
 
@@ -40,23 +37,13 @@ function parseCsvSimple(csvText) {
   });
 }
 
-/**
- * 规范化 term / 查询：
- * - 去掉首尾空格
- * - 全部转小写（只影响英文字母，中文不会变）
- * => 实现英文大小写不敏感搜索
- */
+/** 规范化：去空格 + 转小写（只影响英文） */
 function normaliseTerm(str) {
   if (!str) return '';
   return str.trim().toLowerCase();
 }
 
-/**
- * 构建内存索引：
- * - termIndex: Map<lowercasedTerm, Set<target_id>>
- * - lexemeById: Map<id, lexemeRow>
- * - examplesByLexemeId: { [id]: exampleRow[] }
- */
+/** 构建内存索引 */
 function buildData() {
   if (CACHE) return CACHE;
 
@@ -91,19 +78,14 @@ function buildData() {
       (row.target_id || row.targetId || row.lexeme_id || '').trim();
     if (!targetId) continue;
 
-    // ✅ 只把这些字段当成“搜索关键词”：term / terms / keyword
-    const rawFields = [
-      row.term,
-      row.terms,
-      row.keyword,
-    ];
+    // 只把 term / terms / keyword 当成“可搜索关键词”
+    const rawFields = [row.term, row.terms, row.keyword];
 
     const units = [];
-
     for (const field of rawFields) {
       if (!field) continue;
       field
-        .split('/') // "how/点样/點樣" -> ["how","点样","點樣"]
+        .split('/')
         .map((t) => t.trim())
         .filter(Boolean)
         .forEach((t) => units.push(t));
@@ -112,7 +94,7 @@ function buildData() {
     if (!units.length) continue;
 
     for (const unit of units) {
-      const key = normaliseTerm(unit); // ✅ 建索引时统一小写
+      const key = normaliseTerm(unit); // ✅ 索引统一转小写
       if (!key) continue;
       if (!termIndex.has(key)) termIndex.set(key, new Set());
       termIndex.get(key).add(targetId);
@@ -141,11 +123,8 @@ function buildData() {
   return CACHE;
 }
 
-/**
- * 读取 JSON body（POST 用）
- */
+/** 读取 JSON body（POST 用） */
 async function readJsonBody(req) {
-  // 如果框架已经解析了 req.body（对象），直接用
   if (req.body && typeof req.body === 'object') return req.body;
 
   return new Promise((resolve, reject) => {
@@ -166,16 +145,11 @@ async function readJsonBody(req) {
   });
 }
 
-/**
- * 精确查 crossmap：
- * - 用户输入 query 经过 normaliseTerm -> key
- * - 在 termIndex 里取出对应的 target_id 集合
- * - 再从 lexemeById 里拿到真正的词条
- */
+/** 精确查 crossmap */
 function exactSearchByCrossmap(query) {
   const { termIndex, lexemeById, examplesByLexemeId } = buildData();
 
-  const key = normaliseTerm(query); // ✅ 输入也统一小写
+  const key = normaliseTerm(query); // ✅ 输入再统一转小写
   if (!key) return { normalized: '', items: [] };
 
   const idSet = termIndex.get(key);
@@ -185,9 +159,7 @@ function exactSearchByCrossmap(query) {
   for (const id of idSet) {
     const lexeme = lexemeById.get(id);
     if (!lexeme) continue;
-
-    const item = Object.assign({}, lexeme);
-    item.examples = examplesByLexemeId[id] || [];
+    const item = { ...lexeme, examples: examplesByLexemeId[id] || [] };
     result.push(item);
   }
   return { normalized: key, items: result };
@@ -199,7 +171,6 @@ module.exports = async (req, res) => {
     let rawQuery = '';
 
     if (req.method === 'GET') {
-      // ✅ 兼容 GET：/api/translate?term=xxx
       const parsed = url.parse(req.url, true);
       rawQuery =
         (parsed.query.q ||
@@ -249,8 +220,8 @@ module.exports = async (req, res) => {
       JSON.stringify({
         ok: true,
         from: 'crossmap-exact',
-        query,
-        normalized_query: normalized, // ✅ 这里你可以在前端看到真正参与匹配的小写词
+        query,             // 用户原始输入（可能有大写）
+        normalized_query: normalized, // 实际参与匹配的小写
         count: items.length,
         items,
       }),
