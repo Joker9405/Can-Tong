@@ -1,17 +1,17 @@
 // api/translate.js
-// 精准匹配版：只根据 data/crossmap.csv 里的关键词精确匹配，
+// 精准匹配版：根据 data/crossmap.csv 里的关键词精确匹配，
 // 每个关键词用 “/” 分隔为一个独立关键词，输入完整匹配其中任意一个时，
 // 返回对应 target_id 的词条内容。
 //
 // 说明：
-// - 仅使用 crossmap.csv 里的 term/terms/keyword/en -> target_id 做检索，不再做模糊搜索。
+// - 使用 crossmap.csv 里的 term/terms/keyword/en -> target_id 做检索（都参与索引）。
 // - lexeme.csv 只用来根据 target_id 取具体词条内容。
 // - examples.csv（如果存在）用来挂载例句。
 // - 返回结构为 { ok, from, query, count, items }，items 里每条是：
 //   { id, zhh, zhh_pron, alias_zhh, chs, en, note_chs, note_en, variants_chs, variants_en, examples }
 //
-// 大小写规则：
-// - crossmap.csv 里的 term / terms / keyword / en 在建索引时统一用 normaliseTerm() 处理：trim + toLowerCase()
+// 大小写规则（重点）：
+// - crossmap.csv 里的 term / terms / keyword / en 在建索引时统一用 normaliseTerm()：trim + toLowerCase()
 // - 用户输入 query 也用 normaliseTerm() 处理
 // => 英文大小写自动忽略（how / HOW / How 都视为同一个 key），中文不受影响。
 
@@ -85,12 +85,12 @@ function buildData() {
       (row.target_id || row.targetId || row.lexeme_id || '').trim();
     if (!targetId) continue;
 
-    // 可用来搜索的几个字段：term / terms / keyword / en
+    // ✅ 所有可以作为“搜索关键词”的字段：
     const rawFields = [
       row.term,
       row.terms,
       row.keyword,
-      row.en, // ✅ en 也参与搜索
+      row.en, // 把 crossmap.csv 里的英文 en 也一起拿来索引
     ];
 
     const units = [];
@@ -98,7 +98,7 @@ function buildData() {
     for (const field of rawFields) {
       if (!field) continue;
       field
-        .split('/')
+        .split('/')               // 支持 "how/怎么样/点样" 这种写法
         .map((t) => t.trim())
         .filter(Boolean)
         .forEach((t) => units.push(t));
