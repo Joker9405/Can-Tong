@@ -88,11 +88,13 @@ async function boot() {
   }, {});
 }
 
-// ⭐⭐ 核心修改：只按 crossmap.term 精确匹配 ⭐⭐
+// ⭐⭐ 核心修改：只按 crossmap.term 精确匹配 + 忽略英文大小写 ⭐⭐
 function findLexemeIds(q) {
-  // 用户输入，去掉前后空格；不转小写、不改标点
-  const query = (q || '').trim();
-  if (!query) return [];
+  const queryRaw = (q || '').trim();
+  if (!queryRaw) return [];
+
+  // 用于比较的版本：只做 toLowerCase，不删空格、不改标点
+  const query = queryRaw.toLowerCase();
 
   const set = new Set();
 
@@ -100,18 +102,17 @@ function findLexemeIds(q) {
     const rawTerm = (r.term || '').trim();
     if (!rawTerm) return;
 
-    // 按 "/" 分成多个单元
     const parts = rawTerm
       .split('/')
       .map(s => s.trim())
       .filter(Boolean);
 
     for (const p of parts) {
-      // 必须完全一样（包含中文、英文、空格、标点、大小写）
-      if (p === query) {
+      // 这里改成大小写不敏感比较
+      if (p.toLowerCase() === query) {
         const id = (r.target_id || '').trim();
         if (id) set.add(id);
-        break; // 同一行命中一次就够了
+        break; // 同一行命中一次就够
       }
     }
   });
