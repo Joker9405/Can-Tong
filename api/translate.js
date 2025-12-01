@@ -1,19 +1,19 @@
 // api/translate.js
-// 精准匹配版：只根据 data/crossmap.csv 里的 term 精确匹配，
-// 每个 term 用 “/” 分隔为一个独立关键词，输入完整匹配其中任意一个时，
+// 精准匹配版：只根据 data/crossmap.csv 里的关键词精确匹配，
+// 每个关键词用 “/” 分隔为一个独立关键词，输入完整匹配其中任意一个时，
 // 返回对应 target_id 的词条内容。
 //
 // 说明：
-// - 仅使用 crossmap.csv 里的 term -> target_id 做检索，不再做模糊搜索。
+// - 仅使用 crossmap.csv 里的 term/terms/keyword/en -> target_id 做检索，不再做模糊搜索。
 // - lexeme.csv 只用来根据 target_id 取具体词条内容。
 // - examples.csv（如果存在）用来挂载例句，保留你现在的例句结构能力。
 // - 返回结构为 { ok, from, query, count, items }，items 里每条是：
 //   { id, zhh, zhh_pron, alias_zhh, chs, en, note_chs, note_en, variants_chs, variants_en, examples }
 //
 // 大小写规则：
-// - crossmap.csv 里的 term 在建索引时统一用 normaliseTerm() 做处理：trim + toLowerCase()
+// - crossmap.csv 里的 term / en 在建索引时统一用 normaliseTerm() 处理：trim + toLowerCase()
 // - 用户输入 query 也用 normaliseTerm() 处理
-// => 这样英文大小写自动忽略（how / HOW / How 都视为同一个 key），中文不受影响。
+// => 英文大小写自动忽略（how / HOW / How 都视为同一个 key），中文不受影响。
 
 const fs = require('fs');
 const path = require('path');
@@ -48,7 +48,6 @@ function parseCsvSimple(csvText) {
  */
 function normaliseTerm(str) {
   if (!str) return '';
-  // 英文大小写不敏感，中文和其他不变
   return str.trim().toLowerCase();
 }
 
@@ -80,23 +79,36 @@ function buildData() {
 
   // term -> Set<target_id>
   const termIndex = new Map();
+
   for (const row of crossmapRows) {
-    // crossmap 支持多种列名：term / terms / keyword
-    const rawTermField =
-      row.term || row.terms || row.keyword || ''; // 支持几种可能的列名
     const targetId =
       (row.target_id || row.targetId || row.lexeme_id || '').trim();
+    if (!targetId) continue;
 
-    if (!rawTermField || !targetId) continue;
+    // 可用来搜索的几个字段：term / terms / keyword / en
+    const rawFields = [
+      row.term,
+      row.terms,
+      row.keyword,
+      row.en, // ✅ 新增：en 字段也参与搜索
+    ];
 
-    // 一个单元格可能是 "how/怎样/点样" 这种，用 "/" 分开
-    const units = rawTermField
-      .split('/')
-      .map((t) => t.trim())
-      .filter(Boolean);
+    const units = [];
+
+    for (const field of rawFields) {
+      if (!field) continue;
+      field
+        .split('/')
+        .map((t) => t.trim())
+        .filter(Boolean)
+        .forEach((t) => units.push(t));
+    }
+
+    if (!units.length) continue;
 
     for (const unit of units) {
-      const key = normaliseTerm(unit); // 这里统一做大小写处理
+      const key = normaliseTerm(unit); // ✅ 大小写统一处理
+      if (!key) continue;
       if (!termIndex.has(key)) termIndex.set(key, new Set());
       termIndex.get(key).add(targetId);
     }
