@@ -10,7 +10,10 @@
 // - 返回结构为 { ok, from, query, count, items }，items 里每条是：
 //   { id, zhh, zhh_pron, alias_zhh, chs, en, note_chs, note_en, variants_chs, variants_en, examples }
 //
-// 如果你原来的前端对返回结构有特殊要求，可以在这里做适配。
+// 大小写规则：
+// - crossmap.csv 里的 term 在建索引时统一用 normaliseTerm() 做处理：trim + toLowerCase()
+// - 用户输入 query 也用 normaliseTerm() 处理
+// => 这样英文大小写自动忽略（how / HOW / How 都视为同一个 key），中文不受影响。
 
 const fs = require('fs');
 const path = require('path');
@@ -20,12 +23,12 @@ let CACHE = null;
 
 function parseCsvSimple(csvText) {
   if (!csvText) return [];
-  const lines = csvText.split(/\r?\n/).filter(l => l.trim().length > 0);
+  const lines = csvText.split(/\r?\n/).filter((l) => l.trim().length > 0);
   if (!lines.length) return [];
 
   // 去掉 BOM
   const headerLine = lines[0].replace(/^\uFEFF/, '');
-  const headers = headerLine.split(',').map(h => h.trim());
+  const headers = headerLine.split(',').map((h) => h.trim());
 
   return lines.slice(1).map((line) => {
     const cols = line.split(',');
@@ -37,6 +40,12 @@ function parseCsvSimple(csvText) {
   });
 }
 
+/**
+ * 规范化 term：
+ * - 去掉首尾空格
+ * - 全部转小写（只影响英文 / 拉丁字母，中文不会变）
+ * => 实现英文大小写不敏感搜索
+ */
 function normaliseTerm(str) {
   if (!str) return '';
   // 英文大小写不敏感，中文和其他不变
@@ -72,6 +81,7 @@ function buildData() {
   // term -> Set<target_id>
   const termIndex = new Map();
   for (const row of crossmapRows) {
+    // crossmap 支持多种列名：term / terms / keyword
     const rawTermField =
       row.term || row.terms || row.keyword || ''; // 支持几种可能的列名
     const targetId =
@@ -79,13 +89,14 @@ function buildData() {
 
     if (!rawTermField || !targetId) continue;
 
+    // 一个单元格可能是 "how/怎样/点样" 这种，用 "/" 分开
     const units = rawTermField
       .split('/')
       .map((t) => t.trim())
       .filter(Boolean);
 
     for (const unit of units) {
-      const key = normaliseTerm(unit);
+      const key = normaliseTerm(unit); // 这里统一做大小写处理
       if (!termIndex.has(key)) termIndex.set(key, new Set());
       termIndex.get(key).add(targetId);
     }
@@ -135,6 +146,12 @@ async function readJsonBody(req) {
   });
 }
 
+/**
+ * 精确查 crossmap：
+ * - 用户输入 query 经过 normaliseTerm -> key
+ * - 在 termIndex 里取出对应的 target_id 集合
+ * - 再从 lexemeById 里拿到真正的词条
+ */
 function exactSearchByCrossmap(query) {
   const { termIndex, lexemeById, examplesByLexemeId } = buildData();
 
