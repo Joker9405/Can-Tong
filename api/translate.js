@@ -1,26 +1,26 @@
 // api/translate.js
-// 精准匹配版：根据 data/crossmap.csv 里的关键词精确匹配，
-// 每个关键词用 “/” 分隔为一个独立关键词，输入完整匹配其中任意一个时，
-// 返回对应 target_id 的词条内容。
+// v20251201_case_insensitive
 //
-// 说明：
-// - 使用 crossmap.csv 里的 term/terms/keyword/en -> target_id 做检索（都参与索引）。
-// - lexeme.csv 只用来根据 target_id 取具体词条内容。
-// - examples.csv（如果存在）用来挂载例句。
-// - 返回结构为 { ok, from, query, count, items }，items 里每条是：
-//   { id, zhh, zhh_pron, alias_zhh, chs, en, note_chs, note_en, variants_chs, variants_en, examples }
+// 功能：
+// - 只根据 data/crossmap.csv 里的 term/terms/keyword 精确匹配
+// - 每个单元用 "/" 分隔为独立关键词
+// - 英文大小写完全忽略（how / HOW / How 视为同一个）
+// - 命中后通过 lexeme.csv 拿词条，通过 examples.csv 挂例句
 //
-// 大小写规则（重点）：
-// - crossmap.csv 里的 term / terms / keyword / en 在建索引时统一用 normaliseTerm()：trim + toLowerCase()
-// - 用户输入 query 也用 normaliseTerm() 处理
-// => 英文大小写自动忽略（how / HOW / How 都视为同一个 key），中文不受影响。
+// 返回：
+// { ok, from, query, normalized_query, count, items }
+// items: 每条为 lexeme.csv 的一行 + examples 数组
 
 const fs = require('fs');
 const path = require('path');
+const url = require('url');
 
 // 数据缓存，避免每次请求都重新读 CSV
 let CACHE = null;
 
+/**
+ * 简单 CSV 解析：按逗号分列（不处理引号复杂情况）
+ */
 function parseCsvSimple(csvText) {
   if (!csvText) return [];
   const lines = csvText.split(/\r?\n/).filter((l) => l.trim().length > 0);
@@ -41,9 +41,9 @@ function parseCsvSimple(csvText) {
 }
 
 /**
- * 规范化 term：
+ * 规范化 term / 查询：
  * - 去掉首尾空格
- * - 全部转小写（只影响英文 / 拉丁字母，中文不会变）
+ * - 全部转小写（只影响英文字母，中文不会变）
  * => 实现英文大小写不敏感搜索
  */
 function normaliseTerm(str) {
@@ -51,6 +51,12 @@ function normaliseTerm(str) {
   return str.trim().toLowerCase();
 }
 
+/**
+ * 构建内存索引：
+ * - termIndex: Map<lowercasedTerm, Set<target_id>>
+ * - lexemeById: Map<id, lexemeRow>
+ * - examplesByLexemeId: { [id]: exampleRow[] }
+ */
 function buildData() {
   if (CACHE) return CACHE;
 
@@ -85,12 +91,11 @@ function buildData() {
       (row.target_id || row.targetId || row.lexeme_id || '').trim();
     if (!targetId) continue;
 
-    // ✅ 所有可以作为“搜索关键词”的字段：
+    // ✅ 只把这些字段当成“搜索关键词”：term / terms / keyword
     const rawFields = [
       row.term,
       row.terms,
       row.keyword,
-      row.en, // 把 crossmap.csv 里的英文 en 也一起拿来索引
     ];
 
     const units = [];
@@ -98,7 +103,7 @@ function buildData() {
     for (const field of rawFields) {
       if (!field) continue;
       field
-        .split('/')               // 支持 "how/怎么样/点样" 这种写法
+        .split('/') // "how/点样/點樣" -> ["how","点样","點樣"]
         .map((t) => t.trim())
         .filter(Boolean)
         .forEach((t) => units.push(t));
@@ -107,7 +112,7 @@ function buildData() {
     if (!units.length) continue;
 
     for (const unit of units) {
-      const key = normaliseTerm(unit); // ✅ 大小写统一处理
+      const key = normaliseTerm(unit); // ✅ 建索引时统一小写
       if (!key) continue;
       if (!termIndex.has(key)) termIndex.set(key, new Set());
       termIndex.get(key).add(targetId);
@@ -136,6 +141,9 @@ function buildData() {
   return CACHE;
 }
 
+/**
+ * 读取 JSON body（POST 用）
+ */
 async function readJsonBody(req) {
   // 如果框架已经解析了 req.body（对象），直接用
   if (req.body && typeof req.body === 'object') return req.body;
@@ -167,11 +175,11 @@ async function readJsonBody(req) {
 function exactSearchByCrossmap(query) {
   const { termIndex, lexemeById, examplesByLexemeId } = buildData();
 
-  const key = normaliseTerm(query);
-  if (!key) return [];
+  const key = normaliseTerm(query); // ✅ 输入也统一小写
+  if (!key) return { normalized: '', items: [] };
 
   const idSet = termIndex.get(key);
-  if (!idSet || !idSet.size) return [];
+  if (!idSet || !idSet.size) return { normalized: key, items: [] };
 
   const result = [];
   for (const id of idSet) {
@@ -182,27 +190,39 @@ function exactSearchByCrossmap(query) {
     item.examples = examplesByLexemeId[id] || [];
     result.push(item);
   }
-  return result;
+  return { normalized: key, items: result };
 }
 
 // Vercel / Node 函数入口
 module.exports = async (req, res) => {
-  if (req.method !== 'POST') {
-    res.statusCode = 405;
-    res.setHeader('Content-Type', 'application/json; charset=utf-8');
-    res.end(JSON.stringify({ ok: false, error: 'Method Not Allowed' }));
-    return;
-  }
-
   try {
-    const body = await readJsonBody(req);
-    const rawQuery =
-      (body.q ||
-        body.query ||
-        body.term ||
-        body.keyword ||
-        body.input ||
-        '').toString();
+    let rawQuery = '';
+
+    if (req.method === 'GET') {
+      // ✅ 兼容 GET：/api/translate?term=xxx
+      const parsed = url.parse(req.url, true);
+      rawQuery =
+        (parsed.query.q ||
+          parsed.query.query ||
+          parsed.query.term ||
+          parsed.query.keyword ||
+          '').toString();
+    } else if (req.method === 'POST') {
+      const body = await readJsonBody(req);
+      rawQuery =
+        (body.q ||
+          body.query ||
+          body.term ||
+          body.keyword ||
+          body.input ||
+          '').toString();
+    } else {
+      res.statusCode = 405;
+      res.setHeader('Content-Type', 'application/json; charset=utf-8');
+      res.end(JSON.stringify({ ok: false, error: 'Method Not Allowed' }));
+      return;
+    }
+
     const query = rawQuery.trim();
 
     if (!query) {
@@ -213,6 +233,7 @@ module.exports = async (req, res) => {
           ok: true,
           from: 'crossmap-exact',
           query: '',
+          normalized_query: '',
           count: 0,
           items: [],
         }),
@@ -220,7 +241,7 @@ module.exports = async (req, res) => {
       return;
     }
 
-    const items = exactSearchByCrossmap(query);
+    const { normalized, items } = exactSearchByCrossmap(query);
 
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
@@ -229,6 +250,7 @@ module.exports = async (req, res) => {
         ok: true,
         from: 'crossmap-exact',
         query,
+        normalized_query: normalized, // ✅ 这里你可以在前端看到真正参与匹配的小写词
         count: items.length,
         items,
       }),
