@@ -177,8 +177,10 @@ L29,點錯相俾人打,误认为目标人物挨打,Mistakenly believing the targ
 L30,點去公園先最方便,去这个公园怎么样比较方便,What is the most convenient way to go to the park?
 L32,我覺得几好，你點睇？,我觉得挺好的，你感觉如何？,"I think it's great, what do you think?"
 L32,無論旁人點睇,无论旁人怎么看,Whatever how others think
-L33,點閪樣/點撚樣,怎么样；不耐烦,How about it; impatient
-L33,點咖,怎么样；不耐烦,How about it; impatient
+L33,點解你要噉,为什么你要这样,Why do you want to do this?
+L33,點解會噉嘅？,为什么会这样,Why is this happening?
+L33,呢隻字點解？,这个字怎么理解,What does this word mean?
+L33,呢個結點解？,这个结怎么解,How is this knot untied?
 L34,點話點好啦，我食乜都得,都可以，我吃什么都行,"As you like , I can eat whatever."
 L34,點撚樣都得,怎么样都可以,Anything is fine
 L34,你話乜就乜,你说什么就什么,Whatever you say.
@@ -188,7 +190,7 @@ L35,契弟,不是很熟可以利用的人,Not a very familiar person who can be 
 L35,普通fan,普通朋友,common friend
 L35,唔係好熟,不是很熟悉,common friend
 L35,食過幾次飯,吃过几次饭；没见几次,We've had a few meals together; we haven't met many times.
-L35,同佢熟個閪,和他才不熟呢,I'm not familiar with him at all.
+L35,同佢熟個閪,和他才不熟呢；地道接地气的说法,I'm not familiar with him at all.
 L35,識佢老鼠/識佢老母,和他才不熟呢，不认识他；不想让人知道和对方的关系,I'm not familiar with him at all; I don't know him. I don't want anyone to know about my relationship with him.
 L36,稳笨柒,形容你被人误导,Describing you as being misled
 L36,稳我笨,占我便宜,Take advantage of me
@@ -212,9 +214,11 @@ L40,将啲閪嘢擗一邊,把这些破事扔在一边；口语化,Put these triv
 L41,袋垃圾，你咪揼一二邊咯,这袋垃圾，你就随便扔吧,Just throw this bag of trash away wherever you like.
 L42,做乜揼啲垃圾過離,干嘛扔垃圾过来,Why are you throwing trash over here?
 L42,出門記得揼垃圾,出门前记得扔垃圾,Remember to throw away your trash before you leave home.
-L43,出去掉垃圾,出去倒垃圾,Go out to take out the trash
+L42,乱抛垃圾,乱扔垃圾：行为随意,Littering: Random Behavior
+L43,去邊度掟垃圾,去哪里扔垃圾,Where to throw away trash
 L44,啲嘢發晒毛，揼咗佢啦/掉咗佢啦/倒咗佢啦,东西发霉了扔了它,"If something gets moldy, throw it away."
 L44,揼撚咗佢啦/揼閪咗佢啦/揼撚柒佢啦/揼撚鸠佢啦,扔了它吧；粗俗说法,Throw it away; a vulgar way of saying it.
+L44,揼咗啲嘢佢；掉咗啲嘢佢；倒咗啲嘢佢,把东西倒掉/把东西扔掉,Throw things away
 L45,弹撚開/弹鸠開,滚开；最快的速度,Get out of here; at the fastest speed
 L45,行柒開/行撚開,走开；粗俗说法,Go away; vulgar expression
 L45,死開啲/死閪開/死撚開,死开；粗俗说法,Get out of here; vulgar expression
@@ -235,6 +239,9 @@ L49,飛對拖鞋過嚟,扔一样东西来，扔过来速度很快，（對拖鞋
 L49,啲消息飛离飛去,消息传来传去,Too many messages
 L50,俾人割韭菜，佢揼春咯,给人割韭菜了，她后悔莫及,She regretted betraying her friends and exploiting them.
 L50,隻股票今朝升到叭叭聲，早知尋日入定貨啦，真係揼春。,真后悔，那只股票今天涨了，早知道昨天加仓,I really regret it; that stock went up today. I should have bought more yesterday.
+L51,猜包剪𢱕,玩石头剪刀布,paper scissors rock
+L51,呈尋磨較叉燒包,包剪锤的另外一个地道说法，失传已久,Another authentic way of playing rock-paper-scissors has been lost for a long time.
+L51,呈尋磨較叉燒包，老鼠唔食香口膠，要食豆沙包,当中每分句配合一個出拳回合，合成「三盘两胜」。亦有讲成「呈尋磨較叉燒包，老鼠唔食豆沙包」的兩盘組合，因为连胜就没必要有第三局,"Each segment of the game is paired with a punch, forming a ""best-of-three"" match. There's also a saying that it's like ""a mouse won't eat a red bean bun,"" implying that a winning streak eliminates the need for a third round."
 L52,桑拿𢱕骨,桑拿按摩,Sauna and Massage
 L53,畀人𢱕兵,被抢劫,Robbed
 L54,俾啲颜色佢睇下,给她/他点颜色看看,Show him/her what's what.
