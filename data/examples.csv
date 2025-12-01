@@ -157,7 +157,7 @@ L23,你搏大雾？,浑水摸鱼,Fishing in troubled waters
 L23,你當我老襯吖？/你當我水鱼吖？/你當我LULU吖？,当你不是人那样看待来骗的,You deceive people by viewing them as inhuman.
 L23,你車大炮？/你講大話？/你裝我彈弓？,传统同说法：你敢骗我？,The traditional way to say it is: You dare to lie to me?
 L23,呃神骗鬼,言语欺骗的,Verbal deception
-L23,你摆我上檯/你氹我落沓/你过我一栋/你跣我一镬,陷害你的,framed
+L23,你摆我上檯/你氹我落沓/你过我一栋/你跣我一镬,陷害你的,
 L24,開會嘅人點止咁少人啊？,还会不止这么少人吧？,Not only these few people are attending this meeting.
 L24,點止咁簡單,没那么简单,it's not so simple 
 L25,隨你點講都好,随便你怎么说,You can say whatever you want.
@@ -245,13 +245,19 @@ L51,呈尋磨較叉燒包，老鼠唔食香口膠，要食豆沙包,当中每分
 L52,桑拿𢱕骨,桑拿按摩,Sauna and Massage
 L53,畀人𢱕兵,被抢劫,Robbed
 L54,俾啲颜色佢睇下,给她/他点颜色看看,Show him/her what's what.
-L54,整鍋杰噶佢嘆下/整鋪杰噶佢嘆下,给她/他点颜色看看,Show him/her what's what.
+L54,整镬杰噶佢嘆下/整鋪杰噶佢嘆下,给她/他点颜色看看,Show him/her what's what.
 L54,俾佢試下你有几打得,给她/他看看你有多能打,Show her/him how good you are at fighting
 L55,呢碟餸都几揼功夫,这道菜都挺多工序的,This dish involves quite a few steps.
 L55,俾多三日時間你，咪再揼功夫窝,再给你三天时间，别再延迟时间了,I'll give you three more days. Don't delay any longer.
 L56,揼低佢重新出发好過啦,抛弃他/她重新出发,Abandon him/her and start over
 L56,揼得低佢咩,你能放下，忘记他/她吗,Can you let go and forget him/her?
 L57,幾有吉屎,挺有本事,Quite capable
+L57,幾鸠屎,挺有本事,Quite capable
+L57,夠薑你就過嚟,有本事你就过来,Come on over if you dare!
+L57,夠姜岀嚟隻揪,有勇气的话就出来单挑,"If you have the guts, come out and fight one-on-one."
+L57,夠沙𦢊岀嚟隻揪,有勇气的话就出来单挑,"If you have the guts, come out and fight one-on-one."
+L57,你夠姜就放馬過嚟，我唔驚你咖,你有胆量就放马过来，我不怕你的,"Bring it on if you dare, I'm not afraid of you."
+L57,你未死過咪放馬過嚟咯，我唔卸你咖,你有胆量就放马过来，我不怕你的,"Bring it on if you dare, I'm not afraid of you."
 L58,唔點下佢唔識醒,不提醒一下他/她不聪明,He/She isn't smart if I don't remind him/her.
 L59,呃鬼食豆腐,用低级容易失传的谎言佢哄骗人, to deceive somebody using a poor excuse or lies that are easily seen through; lterally: to trick a ghost to eat bean curd
 L59,老點我你就叻,骗我你就厉害；形容当事人比较单纯经常被骗,"""You're amazing if you lie to me"" describes someone who is naive and easily deceived."
@@ -261,15 +267,18 @@ L59,呃鸠我,想骗我？,Trying to fool me?
 L59,稳笨柒,形容你被人误导,Describing you as being misled
 L60,水鸠人,骗人,Lies
 L60,呃鬼食道符,骗鬼吃最怕的道符；也就是说你说了一个鬼都不会信的谎言,"You tricked the ghost into eating the most feared talisman; in other words, you told a lie that even a ghost wouldn't believe."
+L60,呃鬼食豆腐咩，鬼信你,骗人的吧，鬼才信你,"You're kidding, no one would believe you."
 L61,侧侧膊唔多覺,一个人行动闪闪缩缩，浑水摸鱼,"One person acts furtively and stealthily, taking advantage of the chaos."
+L61,有功佢就去领，出咗事就侧侧膊,有功劳他就去认，出了问题他就推卸责任,"He takes credit for his achievements, but shirks responsibility when problems arise."
 L62,你睇佢成個壽頭,你看她/他多么傻，感觉很低能,"Look how silly she/he is, he/she seems so stupid."
 L62,正一柒頭,真是傻子,What an blockhead！
 L62,佢成嚿大番薯噉，解釋極都唔明,他真的很笨，说真详细都明白,He's like an idiot. He couldn't understand why I am saying no matter how many times I explained to him.
 L62,烚熟狗頭,容人龇牙咧嘴地笑的样子,The way he grinned with his teeth showing.
 L62,瞬间变柒頭,一下子变傻了,Suddenly became stupid
 L63,傻傻閪閪冇下低,傻傻的没鸡巴,"Dumb and stupid, no dick"
-L63,咪戇居居噉俾人呃,不要傻乎乎的给人骗,Don't be foolish and get scammed.
-L63,佢戇居居噉望住個蛋糕发吽窦,她/他傻乎乎地看着蛋糕在发呆,"She/He stared blankly at the cake, lost in thought."
+L63,咪傻傻閪閪噉俾人揾笨啦,别傻傻的给人骗啦,Don't be silly and get scammed!
+L63,佢咁大個人，仲系蒸生瓜咁樣,他都这么大年纪了，（待人接物）还傻呼呼的，像个不懂事的孩子一样,"He's so old, yet he's still so naive and clueless in his interactions with others, like an immature child."
+L63,蒸生瓜，侲侲地,歇后语：瓜还没完全熟透，还处于半生熟的状态，形容人不成熟，傻傻的,Chinese proverb: The melon isn't fully ripe yet; it's still in a semi-ripe state. This is used to describe a person as immature and foolish.
 L63,死傻閪,死沙雕,tosser
 L63,你係咪傻閪啊,你是不是傻,are you Stupid?
 L63,傻閪啊你,死沙雕,tosser
@@ -279,14 +288,81 @@ L64,做老襯,对亲家；原意两个男生同时和一个女生谈恋爱,To in
 L64,你揾咗个老襯,找了个男朋友；有一种找了个大冤种回来的意思,I found a boyfriend; It has the connotation of finding a great traitor.
 L64,俾人揾笨,被人占便宜了,I was taken advantage of
 L64,晚晚陪契爷,每晚要陪干爹；一般指年轻女生服侍年纪大的男生目的只想在他身上捞一笔,I have to spend every night with my godfather.；This generally refers to a young woman serving an older man with the sole purpose of profiting from him.
-L64,冇信佢，明显揾笨柒,不要相信他/她，明显在欺骗你,"Don't believe him/her, they are clearly deceiving you."
+L64,冇信佢，明显搵笨柒,不要相信他/她，明显在欺骗你,"Don't believe him/her, they are clearly deceiving you."
 L64,俾人揾笨噶人就系水鱼,给人占便宜的人就是水鱼了,People who let others take advantage of them are suckers.
 L65,傻閪有好多种，好似你咁真滴第一次见，傻到閪噉,傻子有很多种，像你一样还是第一次遇见，真的傻到一个极点,"There are many kinds of fools, but I've never met one like you before. You're truly foolish to the extreme."
+,到宜家都唔知錯系邊度，真系傻到冇朋友,到现在都不知道问题出在哪里，真的傻到一个点,I still don't know where the problem lies; I'm incredibly stupid.
 L66,咁戇鳩噶嘢你都做？,这么不应该的事情你都做？对你没好处,You actually did something so wrong? It's not good for you.
 L66,戇鳩的事認真做，認真的事戇鳩做，戇鳩人生,不应该的事情你花心机认真去做，应该要做的事情，你随便做，颠倒人生,"You put effort into doing things you shouldn't do, while you do the things you should do carelessly, turning your life upside down."
 L66,呢条戇鳩仔咁似你,这个自以为很帅的人怎么这么像你,This guy who thinks he's so handsome looks so much like you.
 L66,唔好柒下柒下噉啦,不要再浑浑噩噩了,Stop living in a daze.
-L67,,,
+L66,咪戇居居噉俾人呃,不要傻乎乎的给人骗,Don't be foolish and get scammed.
+L66,佢戇居居噉望住個蛋糕发吽窦,她/他傻乎乎地看着蛋糕在发呆,"She/He stared blankly at the cake, lost in thought."
+L66,戇鳩仔,傻乎乎的人,silly person
+L67,柒撚懵懵,又笨又蠢,Stupid and dumb
+L67,一碌葛/一碌柒/一碌木,比喻人像木头一样迟钝、呆板、反应慢，或形容人笨拙、不灵活。,"It is a metaphor for a person being as dull, rigid, and slow to react as a piece of wood, or it describes a person as clumsy and inflexible."
+L67,腦入水/腦装水,脑子进水,Brain water
+L67,成碌木噉,比喻像木头一样呆板的人,A metaphor for a person who is as rigid as a block of wood.
+L68,黐撚線/黐鸠線/黐柒線,加强语气表达不寻常,Emphasizing unusual expressions
+L68,黐孖筋/芝麻 gun,搭错线，电线短路（烧坏了）啊，通常讲人脑神经短路即烧坏脑。,"The wrong wire was connected, causing a short circuit (burning out). In general, a short circuit in the human brain is equivalent to burning out the brain."
+L68,腎腎地,指人的脑子有问题，二百五。,It means that the person has a problem with their brain.
+L68,你黐筋，我嚟搵人着咩校服,你神经病，我来找人穿什么校服,Are you crazy? I'm here to find out what school uniform someone is wearing.
+L69,人蠢冇藥醫，醫咗變白痴,人太笨了治不好了，就算有药也吃到傻,"The person is too stupid to be cured; even if there were medicine, it would only make them stupid."
+L69,大番薯推一下动一下,踢一踢动一动的蠢货,A fool who only moves when kicked.
+L69,你條茂利,用于骂人，形容人像木桩那样站在那里不动。当时英国的木条叫mullion，指着叫华人拿起来装上，不会英语的我们听成茂利，在取笑同僚“在说你呢，一根木头那样站在这愣着”,"It was used as an insult to describe someone standing there motionless like a wooden stake. At the time, the British called a ""mullion,"" and when they pointed at it, they were telling the Chinese to pick it up and install it. We, who didn't understand English, misheard it as ""Maoli"" and were mocking our colleague, saying, ""We're talking about you, standing here like a log, completely dazed."""
+L70,扑街仔！你扑街囖，明知会扑街，都仲要扑過去，家下扑晒街囖，正扑街嚟噶，扑街啦你,傻子!你完蛋了，明知会跌，还要往那方向去，现在真失败了。真是犯贱啊!活该啊你!,"You idiot! You're doomed. You knew it would fall, yet you still went in that direction. Now you've truly failed. What a fool you were! You deserve it!"
+L70,你條死柒頭皮,你这个死傻逼,You stupid idiot
+L71,今次扑街囖,这次出大事了,This is a big deal.
+L71,你呢個扑街,你是个混蛋,You're an idiot.
+L71,你個扑街唔等我,你小子竟然不等我,"You brat, you didn't even wait for me!"
+L71,唔小心扑街咗,不小心摔倒了,I accidentally fell down
+L71,扑街冚家铲,一个极度恶毒的粤语粗话，意思是诅咒对方“全家死光”或“全家倒霉,"This is an extremely vicious Cantonese swear word that means to curse the other person's ""entire family to die"" or ""entire family to suffer bad luck."""
+L71,扑你個街,我去你的,Go to hell
+L71,食你個屎,吃屎去吧,Go eat shit
+L71,食屎啦去,吃屎去吧,Go eat shit
+L71,仆街啦你,去死吧,Go to hell
+L72,笨撚柒,该硬的时候不硬，浪费机会；形容应该出风头时不出来,Failing to stand up when you should has wasted an opportunity; describes someone who doesn't step up when they should be in the limelight.
+L72,笨柒咗,意识到蠢了，做了傻事,"Realizing he was being foolish, he did something stupid."
+L72,你唔係咁笨柒，咁都信啊嗎？,你不会这么蠢，这样都相信吧,"You can't be that stupid to believe something like that, right?"
+L73,非洲和尚，乞人憎,歇后语；非洲和尚是黑人“僧” “僧”是讨厌的意思，乞人憎=令人讨厌,"A Chinese proverb: African monks are black ""monks"" (僧). ""Monk"" (僧) means annoying or disliked; therefore, ""a hateful person"" (乞人憎) is the same as ""annoying"" (令人讨厌)."
+L73,你好乞人憎,你好讨厌,You're so annoying
+L73,犯众憎,众人都讨厌你,Everyone hates you
+L74,樣衰都唔系罪过啫,丑也不是罪过,Being ugly is not a mistake
+L74,衰咩入嚟？衰樣衰,因为什么原因进来？因为倒霉,Why did you come in? Because of bad luck.
+L75,成舊垃圾噉,活成就像垃圾一样,Live like trash
+L75,冇鸠用/冇撚用/冇叱用,没用的东西,Useless things
+L75,有鸠用咩/有撚用咩/有叱用咩,是有用的东西吗？,Is it something useful?
+L76,收爹啦你,闭嘴吧你,Shut up!
+L77,屌鳩撚柒你個冚家仱,“去你妈的混蛋”，骂人的脏话[口语],"'fuck you you bastard', foul language when cursing someone [colloquial]"
+L77,我屌,“我去”或者是“不是吧”,Oh my god
+L77,屌唔屌,做不做或者好不好或者我爱你,"Do it or not, or good or bad, or I love you."
+L77,我屌！,棒极了,Fantastic
+L77,我屌,你好呀,hello
+L77,屌,糟糕透了,It's terrible
+L77,屌,没门,No way
+L77,屌,准备要说对不起了或者不好意思,I'm about to say sorry or embarrassed.
+L77,屌,那当然,Of course
+L77,屌鸠你咩，噉都做唔晒,去你的这么久都做不完,"Screw you, it's been so long and you still can't finish."
+L78,屌你老母我忍你就食得屎啦,我操你妈，我忍你我就是孙子,"I'll fuck your mum. If I put up with you, I'd be a coward."
+L79,屌那妈！顶硬上,去他妈的，硬着头皮上,FUCK HIS MOM! HIT THE HARD!
+L79,屌佢鹵味唔放人,去他妈的，不放人,"Screw it, they won't release him."
+L80,屌到你反艇就問你驚唔驚,操到你爽，就问你怕不怕,"I'll fuck you until you're satisfied, then I'll ask you if you're scared."
+L81,你真系笑撚死我，咁噶嘢都做得出,真的笑死我了，这样的事你都能做出来,This is absolutely hilarious! How could you do something like this?
+L82,老老閪閪,嘚嘚瑟瑟,smug and smug
+L82,招招积积,嚣张,Arrogant
+L82,鸠鸠屎,嘚嘚瑟瑟,smug and smug
+L83,驚你俾人劏,怕你被人骗,I'm afraid you'll be scammed.
+L83,劏死牛,可以是被骗被宰，也可以是抢劫,"It could be being scammed or ripped off, or it could be robbery."
+L84,老笠,也可以上升为绑架的意思,It can also be interpreted as kidnapping.
+L85,契弟,原指男同性恋，后来演变成骂人的话,"Originally referring to male homosexuality, it later evolved into an insult."
+L86,今次閪晒,这次出大事了,This is a big deal.
+L86,今次叼閪啦,这次出大事了,what the hell
+L86,今次碌柒,这次出大事了,what the hell
+L86,今次含撚囖,这次出大事了,what the hell
+L87,乱鳩咁噏,胡说八道,Nonsense
+L88,点解可以咁醜樣,怎么可以做到这么丑,How could it be so ugly?
+L89,核突报警,丑哭了，恶心到要报警,"It's so ugly it makes me want to cry, it's so disgusting I want to call the police."
+L89,核撚突突,特别恶心,Extremely disgusting
 ,,,
 ,,,
 ,,,
@@ -294,19 +370,10 @@ L67,,,
 ,,,
 ,,,
 ,,,
-,,,
-,,,
-,,,
-,,,
-,,,
-,,,
-,,,
-,,,
-,,,
-,,,
-,,,
-,,,
-,,,
-,,,
-,,,
-,,,
+L114,柒知,不知道,
+L114,知閪,知道你妹,
+L114,知碌柒,知道哥锤子,
+L114,知鸠,不知道,
+L114,唔撚知,不知道,
+L114,知柒,不知道,
+L114,鬼撚知,不知道,
