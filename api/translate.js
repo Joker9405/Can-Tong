@@ -6,12 +6,12 @@
 // 说明：
 // - 仅使用 crossmap.csv 里的 term/terms/keyword/en -> target_id 做检索，不再做模糊搜索。
 // - lexeme.csv 只用来根据 target_id 取具体词条内容。
-// - examples.csv（如果存在）用来挂载例句，保留你现在的例句结构能力。
+// - examples.csv（如果存在）用来挂载例句。
 // - 返回结构为 { ok, from, query, count, items }，items 里每条是：
 //   { id, zhh, zhh_pron, alias_zhh, chs, en, note_chs, note_en, variants_chs, variants_en, examples }
 //
 // 大小写规则：
-// - crossmap.csv 里的 term / en 在建索引时统一用 normaliseTerm() 处理：trim + toLowerCase()
+// - crossmap.csv 里的 term / terms / keyword / en 在建索引时统一用 normaliseTerm() 处理：trim + toLowerCase()
 // - 用户输入 query 也用 normaliseTerm() 处理
 // => 英文大小写自动忽略（how / HOW / How 都视为同一个 key），中文不受影响。
 
@@ -90,7 +90,7 @@ function buildData() {
       row.term,
       row.terms,
       row.keyword,
-      row.en, // ✅ 新增：en 字段也参与搜索
+      row.en, // ✅ en 也参与搜索
     ];
 
     const units = [];
