@@ -23,21 +23,23 @@ L4,咪柒𢫨/咪撚𢫨,别他妈推,Don'tf*cking push me
 L4,𢫨你条撚,推你妈/推你个锤子,Stop f*cking pushing me.
 L4,𢫨你个屄啊𢫨,推你妈/推你个锤子,Stop f*cking pushing me.
 L4,𢫨乜撚啊,推什么推,Why are you pushing me?
-L4,𢫨我托啊/𢫨我托柒啊,我干嘛,Why are you pushin g me?
-L4,𢫨乜柒啊/𢫨乜撚啊,推什么推,Why are you pushing me ?
+L4,𢫨我托啊,我干嘛,Why are you pushin g me?
+L4,𢫨我托柒啊,我干嘛,Why are you pushin g me?
+L4,𢫨乜柒啊,推什么推,Why are you pushing me ?
+L4,𢫨乜撚啊,推什么推,Why are you pushing me ?
 L4,再𢫨我你就屄,再推我你就死定了,Push me again and you're
 L4,𢫨開,推开,to push aside
 L4,神推鬼𢫨,有一种难以解释的冲动去做某事。,to have an inexplicable drive to do something
 L4,𢫨你老母,推你妈,f*ck your mother
 L4,𢫨佢落山,拖他/她下山,drag him/her down the mountain
-L5,手推车,手推车,a trolley
-L5,推車仔/走鬼,小贩,cart
-L5,擺檔/擺檔口,摆摊,setting up a stall to do business
+L5,差佬嚟啦，走鬼啊,警察来啦快跑啊；这里的“走鬼”可以说成快跑，逃走的意思,"The police are coming! Run! Here, ""走鬼"" can be interpreted as ""run away"" or ""escape."""
+L5,擺檔/擺檔口,摆摊,set up 
 L5,走鬼檔,摆地摊,set up a stall
+L6,明明錯咗，仲要死雞撑飯蓋,明明做错了，还有不认错,"Even though they made a mistake, they still refuse to admit it."
 L6,死撑,錯了或沒能力情況下，仍然強硬地堅持不認輸或不承認錯，帶固執、不願罷休,Even when lacking the ability they stubbornly refused to admit defeat.
 L6,死要面,爱面子,Save face save 
 L6,唔输得,不服输,not to be outdone
-L7,咁撚奇撚怪？,怎么这么奇怪,Why is this so strange?
+L7,你噶愛好又几𠮩𠹌個窩,你的爱好还蛮刁钻的,Your hobbies are quite peculiar.
 L7,呢個打扮夠晒旖旎,这个穿搭足够奇怪,This outfit is strange enough.
 L7,乜你咁撈絞咖,怎么你这么乱糟糟,Why are you so messy?
 L7,你有少少旖旎,你有一点奇怪的癖好,You have a few strange quirks
@@ -116,12 +118,12 @@ L14,咁錯蕩嘅,怎么这么巧；形容这么有空过来我这里坐坐,What 
 L15,咁多人跳楼唔見你跳楼,这么多人死不见你死；跳楼可以换任何死法,"So many people have died, but you haven't; jumping off a building can lead to any kind of death."
 L16,有得走后門你仲咁搏命？,有捷径不走偏要辛苦自己,"Instead of taking the shortcut, you choose to work hard."
 L16,咁柒近城隍廟都唔求支好籤,有大神在旁边都不会把握机会,to fail to take advantage of an opportunity
-L16,咁鸠近城隍廟都唔求支好籤,有大神在旁边都不会把握机会,to fail to take advantage of an opportunity
-L16,咁鸠近城隍廟都唔撚求支好嘢,有大神在旁边都不会把握机会,to fail to take advantage of an opportunity
+L16,咁鳩近城隍廟都唔求支好籤,有大神在旁边都不会把握机会,to fail to take advantage of an opportunity
+L16,咁鳩近城隍廟都唔撚求支好嘢,有大神在旁边都不会把握机会,to fail to take advantage of an opportunity
 L17,咁柒大個都唔化,这么大一个人别他妈的不开通；歇后语,Stubborn to the end
 L17,咁撚大個都唔化,这么大一个人别他妈的不开通；歇后语,Stubborn to the end
-L17,咁鸠大個都唔化,这么大一个人别他妈的不开通；歇后语,Stubborn to the end
-L17,咁鸠大個都唔鸠撚叱化,这么大一个人别他妈的不开通；歇后语,Stubborn to the end
+L17,咁鳩大個都唔化,这么大一个人别他妈的不开通；歇后语,Stubborn to the end
+L17,咁鳩大個都唔鳩撚叱化,这么大一个人别他妈的不开通；歇后语,Stubborn to the end
 L17,咪咁㒼塞啦,别这么古板啊，说又不听,"Don't be so old-fashioned, you never listen to me."
 L17,硬鳩頸,别这么古板啊，说又不听,"Don't be so old-fashioned, you never listen to me."
 L17,古老石山,行事想法落后，不接受新事物的人,"old-fashioned person; literally, ""ancient potted rocky mountain"""
@@ -129,7 +131,7 @@ L17,大個仔啦，唔好甘閪封建,这么大一个人了，不要那么封建
 L17,咁閪大個都唔化,这么大一个人别他妈的不开通,Stubborn to the end
 L18,對唔閪住,对不起,I`m so sorry
 L18,對閪唔住,对不起,I`m so sorry
-L18,so鸠rry,对不起,I`m so sorry
+L18,so鳩rry,对不起,I`m so sorry
 L19,唔係猛龍唔過江唔系豬扒唔化妝,"广东话俗语：象征有实力或魄力的人跨地域闯荡,对相貌不佳者的戏称暗含对外貌与自信的讽刺 ""没有真本事的人不敢出来闯荡，只有不够漂亮的人才需要浓妆艳抹""","A Cantonese proverb: Symbolizing someone with ability or courage venturing out into new regions, it's also a sarcastic term for someone with an unattractive appearance, subtly mocking their looks and self-confidence. ""Those without real talent dare not venture out; only those who aren't pretty enough need heavy makeup."""
 L20,幾錢/幾多錢,多少钱,how much
 L20,條數點計先,这账怎么算？,How do I pay the bill?
@@ -171,8 +173,8 @@ L26,點咗咩嘢/點咗咩,点了什么,What did you order?
 L26,唔该，點菜,麻烦服务员，过来点菜,"Excuse me, waiter, could you come and take our order?"
 L27,噉點係啊,那怎么行；那怎么好意思呢,That won't do.
 L27,唔閪喺啊嘛,那怎么行；不是吧；那怎么好意思呢,OMG
-L28,a:你出来我预埋你。 b:噉點係啊,a:你一起出来玩吧，我算了你一份。 b:怎么好意思啊，十分感激,"A: Come along and hang out with me, I'll charge you for your meal. B: Oh, no, thank you so much!"
-L28,點閪係啊,不是吧，太他妈客气了,Seriously? That's way too polite!
+L27,a:你出来我预埋你。 b:噉點係啊,a:你一起出来玩吧，我算了你一份。 b:怎么好意思啊，十分感激,"A: Come along and hang out with me, I'll charge you for your meal. B: Oh, no, thank you so much!"
+L27,點閪係啊,不是吧，太他妈客气了,Seriously? That's way too polite!
 L29,點錯相俾人打,误认为目标人物挨打,Mistakenly believing the target was beaten
 L30,點去公園先最方便,去这个公园怎么样比较方便,What is the most convenient way to go to the park?
 L32,我覺得几好，你點睇？,我觉得挺好的，你感觉如何？,"I think it's great, what do you think?"
@@ -197,12 +199,12 @@ L36,稳我笨,占我便宜,Take advantage of me
 L36,個風水佬點紅點綠冇句真,那个风水师忽悠你 没一句真话,The fortune teller says nothing true but nonsense.
 L36,老點你就真,忽悠你才对；绝对肯定语气,You're just kidding; it's an absolute statement.
 L36,撚化,忽悠,Deceive
-L36,昆鸠人,忽悠人,Deceive
-L36,水鸠人,忽悠人,Deceive
+L36,昆鳩人,忽悠人,Deceive
+L36,水鳩人,忽悠人,Deceive
 L36,滚紅滚綠,形容你被人误导,Describing you as being misled
 L37,你想點啊又/又想點啊你/你又想點啊/點啊你又想,你又想怎么样,What do you want now?
 L37,想點就點,想怎样就怎样,Do whatever you want
-L37,想點閪樣/想點撚樣//想點柒樣/想點鸠樣,想怎么样；不耐烦,What do you want; impatience
+L37,想點閪樣/想點撚樣//想點柒樣/想點鳩樣,想怎么样；不耐烦,What do you want; impatience
 L37,諗住點收科,想好了怎么办没,Have you figured out what to do?
 L37,佢唔去窝，你諗住點啊,他不去窝，你有什么决定,"He won't go to the nest, what's your decision?"
 L37,哇！搞啲咁噶嘢，想點撚樣/哇！搞啲咁噶嘢，想點柒樣,哇！弄成这样，到底怎么想的,"Wow! What were they thinking, making it like this?"
@@ -217,9 +219,9 @@ L42,出門記得揼垃圾,出门前记得扔垃圾,Remember to throw away your t
 L42,乱抛垃圾,乱扔垃圾：行为随意,Littering: Random Behavior
 L43,去邊度掟垃圾,去哪里扔垃圾,Where to throw away trash
 L44,啲嘢發晒毛，揼咗佢啦/掉咗佢啦/倒咗佢啦,东西发霉了扔了它,"If something gets moldy, throw it away."
-L44,揼撚咗佢啦/揼閪咗佢啦/揼撚柒佢啦/揼撚鸠佢啦,扔了它吧；粗俗说法,Throw it away; a vulgar way of saying it.
+L44,揼撚咗佢啦/揼閪咗佢啦/揼撚柒佢啦/揼撚鳩佢啦,扔了它吧；粗俗说法,Throw it away; a vulgar way of saying it.
 L44,揼咗啲嘢佢；掉咗啲嘢佢；倒咗啲嘢佢,把东西倒掉/把东西扔掉,Throw things away
-L45,弹撚開/弹鸠開,滚开；最快的速度,Get out of here; at the fastest speed
+L45,弹撚開/弹鳩開,滚开；最快的速度,Get out of here; at the fastest speed
 L45,行柒開/行撚開,走开；粗俗说法,Go away; vulgar expression
 L45,死開啲/死閪開/死撚開,死开；粗俗说法,Get out of here; vulgar expression
 L45,走開啊，咪埋離/走開啊，咪過離,走开啊，你不要过来；讨厌，害怕,"Go away, don't come any closer; I hate it, I'm scared."
@@ -252,12 +254,12 @@ L55,俾多三日時間你，咪再揼功夫窝,再给你三天时间，别再延
 L56,揼低佢重新出发好過啦,抛弃他/她重新出发,Abandon him/her and start over
 L56,揼得低佢咩,你能放下，忘记他/她吗,Can you let go and forget him/her?
 L57,幾有吉屎,挺有本事,Quite capable
-L57,幾鸠屎,挺有本事,Quite capable
+L57,幾鳩屎,挺有本事,Quite capable
 L57,夠薑你就過嚟,有本事你就过来,Come on over if you dare!
 L57,夠姜岀嚟隻揪,有勇气的话就出来单挑,"If you have the guts, come out and fight one-on-one."
 L57,夠沙𦢊岀嚟隻揪,有勇气的话就出来单挑,"If you have the guts, come out and fight one-on-one."
 L57,你夠姜就放馬過嚟，我唔驚你咖,你有胆量就放马过来，我不怕你的,"Bring it on if you dare, I'm not afraid of you."
-L57,你未死過咪放馬過嚟咯，我唔卸你咖,你有胆量就放马过来，我不怕你的,"Bring it on if you dare, I'm not afraid of you."
+L57,你未死過咪放馬過嚟囖，我唔卸你咖,你有胆量就放马过来，我不怕你的,"Bring it on if you dare, I'm not afraid of you."
 L58,唔點下佢唔識醒,不提醒一下他/她不聪明,He/She isn't smart if I don't remind him/her.
 L59,呃鬼食豆腐,用低级容易失传的谎言佢哄骗人, to deceive somebody using a poor excuse or lies that are easily seen through; lterally: to trick a ghost to eat bean curd
 L59,老點我你就叻,骗我你就厉害；形容当事人比较单纯经常被骗,"""You're amazing if you lie to me"" describes someone who is naive and easily deceived."
@@ -265,7 +267,7 @@ L59,坤人噶,割韭菜的,milking me dry;fleecing us
 L59,老坤,经常骗人的,Often lying
 L59,呃鸠我,想骗我？,Trying to fool me?
 L59,稳笨柒,形容你被人误导,Describing you as being misled
-L60,水鸠人,骗人,Lies
+L60,水鳩人,骗人,Lies
 L60,呃鬼食道符,骗鬼吃最怕的道符；也就是说你说了一个鬼都不会信的谎言,"You tricked the ghost into eating the most feared talisman; in other words, you told a lie that even a ghost wouldn't believe."
 L60,呃鬼食豆腐咩，鬼信你,骗人的吧，鬼才信你,"You're kidding, no one would believe you."
 L61,侧侧膊唔多覺,一个人行动闪闪缩缩，浑水摸鱼,"One person acts furtively and stealthily, taking advantage of the chaos."
@@ -290,7 +292,7 @@ L64,俾人揾笨,被人占便宜了,I was taken advantage of
 L64,晚晚陪契爷,每晚要陪干爹；一般指年轻女生服侍年纪大的男生目的只想在他身上捞一笔,I have to spend every night with my godfather.；This generally refers to a young woman serving an older man with the sole purpose of profiting from him.
 L64,冇信佢，明显搵笨柒,不要相信他/她，明显在欺骗你,"Don't believe him/her, they are clearly deceiving you."
 L64,俾人揾笨噶人就系水鱼,给人占便宜的人就是水鱼了,People who let others take advantage of them are suckers.
-L65,傻閪有好多种，好似你咁真滴第一次见，傻到閪噉,傻子有很多种，像你一样还是第一次遇见，真的傻到一个极点,"There are many kinds of fools, but I've never met one like you before. You're truly foolish to the extreme."
+L65,傻閪有好多种，好似你咁真喺第一次见，傻到閪噉,傻子有很多种，像你一样还是第一次遇见，真的傻到一个极点,"There are many kinds of fools, but I've never met one like you before. You're truly foolish to the extreme."
 ,到宜家都唔知錯系邊度，真系傻到冇朋友,到现在都不知道问题出在哪里，真的傻到一个点,I still don't know where the problem lies; I'm incredibly stupid.
 L66,咁戇鳩噶嘢你都做？,这么不应该的事情你都做？对你没好处,You actually did something so wrong? It's not good for you.
 L66,戇鳩的事認真做，認真的事戇鳩做，戇鳩人生,不应该的事情你花心机认真去做，应该要做的事情，你随便做，颠倒人生,"You put effort into doing things you shouldn't do, while you do the things you should do carelessly, turning your life upside down."
@@ -303,7 +305,7 @@ L67,柒撚懵懵,又笨又蠢,Stupid and dumb
 L67,一碌葛/一碌柒/一碌木,比喻人像木头一样迟钝、呆板、反应慢，或形容人笨拙、不灵活。,"It is a metaphor for a person being as dull, rigid, and slow to react as a piece of wood, or it describes a person as clumsy and inflexible."
 L67,腦入水/腦装水,脑子进水,Brain water
 L67,成碌木噉,比喻像木头一样呆板的人,A metaphor for a person who is as rigid as a block of wood.
-L68,黐撚線/黐鸠線/黐柒線,加强语气表达不寻常,Emphasizing unusual expressions
+L68,黐撚線/黐鳩線/黐柒線,加强语气表达不寻常,Emphasizing unusual expressions
 L68,黐孖筋/芝麻 gun,搭错线，电线短路（烧坏了）啊，通常讲人脑神经短路即烧坏脑。,"The wrong wire was connected, causing a short circuit (burning out). In general, a short circuit in the human brain is equivalent to burning out the brain."
 L68,腎腎地,指人的脑子有问题，二百五。,It means that the person has a problem with their brain.
 L68,你黐筋，我嚟搵人着咩校服,你神经病，我来找人穿什么校服,Are you crazy? I'm here to find out what school uniform someone is wearing.
@@ -330,8 +332,8 @@ L73,犯众憎,众人都讨厌你,Everyone hates you
 L74,樣衰都唔系罪过啫,丑也不是罪过,Being ugly is not a mistake
 L74,衰咩入嚟？衰樣衰,因为什么原因进来？因为倒霉,Why did you come in? Because of bad luck.
 L75,成舊垃圾噉,活成就像垃圾一样,Live like trash
-L75,冇鸠用/冇撚用/冇叱用,没用的东西,Useless things
-L75,有鸠用咩/有撚用咩/有叱用咩,是有用的东西吗？,Is it something useful?
+L75,冇鳩用/冇撚用/冇叱用,没用的东西,Useless things
+L75,有鳩用咩/有撚用咩/有叱用咩,是有用的东西吗？,Is it something useful?
 L76,收爹啦你,闭嘴吧你,Shut up!
 L77,屌鳩撚柒你個冚家仱,“去你妈的混蛋”，骂人的脏话[口语],"'fuck you you bastard', foul language when cursing someone [colloquial]"
 L77,我屌,“我去”或者是“不是吧”,Oh my god
@@ -350,13 +352,13 @@ L80,屌到你反艇就問你驚唔驚,操到你爽，就问你怕不怕,"I'll fu
 L81,你真系笑撚死我，咁噶嘢都做得出,真的笑死我了，这样的事你都能做出来,This is absolutely hilarious! How could you do something like this?
 L82,老老閪閪,嘚嘚瑟瑟,smug and smug
 L82,招招积积,嚣张,Arrogant
-L82,鸠鸠屎,嘚嘚瑟瑟,smug and smug
+L82,鳩鳩屎,嘚嘚瑟瑟,smug and smug
 L83,驚你俾人劏,怕你被人骗,I'm afraid you'll be scammed.
 L83,劏死牛,可以是被骗被宰，也可以是抢劫,"It could be being scammed or ripped off, or it could be robbery."
 L84,老笠,也可以上升为绑架的意思,It can also be interpreted as kidnapping.
 L85,契弟,原指男同性恋，后来演变成骂人的话,"Originally referring to male homosexuality, it later evolved into an insult."
 L86,今次閪晒,这次出大事了,This is a big deal.
-L86,今次叼閪啦,这次出大事了,what the hell
+L86,今次屌閪啦,这次出大事了,what the hell
 L86,今次碌柒,这次出大事了,what the hell
 L86,今次含撚囖,这次出大事了,what the hell
 L87,乱鳩咁噏,胡说八道,Nonsense
