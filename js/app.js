@@ -88,27 +88,29 @@ async function boot() {
   }, {});
 }
 
-// ⭐⭐ 核心修改：只按 crossmap.term 精确匹配 ⭐⭐
+// ⭐⭐ 核心：只按 crossmap.term 精确匹配（忽略大小写），不做模糊搜索 ⭐⭐
 function findLexemeIds(q) {
-  // 用户输入，去掉前后空格；不转小写、不改标点
+  // 用户输入，去掉前后空格
   const query = (q || '').trim();
   if (!query) return [];
 
+  // 用于大小写不敏感比较（只对英文有影响；中文不变）
+  const queryLower = query.toLowerCase();
   const set = new Set();
 
   CROSS.forEach(r => {
     const rawTerm = (r.term || '').trim();
     if (!rawTerm) return;
 
-    // 按 "/" 分成多个单元
+    // term 字段里可能是 "xxx/yyy/zzz" 这种，拆开逐个匹配
     const parts = rawTerm
       .split('/')
       .map(s => s.trim())
       .filter(Boolean);
 
     for (const p of parts) {
-      // 必须完全一样（包含中文、英文、空格、标点、大小写）
-      if (p === query) {
+      // 精确匹配，但忽略大小写
+      if (p.toLowerCase() === queryLower) {
         const id = (r.target_id || '').trim();
         if (id) set.add(id);
         break; // 同一行命中一次就够了
@@ -119,7 +121,7 @@ function findLexemeIds(q) {
   return Array.from(set);
 }
 
-// ===== 下面全是原来的 UI / 渲染代码，不做改动 =====
+// ===== 下面全是 UI / 渲染代码 =====
 
 const grid = document.getElementById('grid');
 const examples = document.getElementById('examples');
@@ -145,6 +147,8 @@ function pairedVariants(chs, en) {
 }
 
 function renderPhased(lex) {
+  if (!lex) { resetUI(); return; }
+
   resetUI();
   const aliases = (lex.alias_zhh || '').split(/[;；]/).map(s => s.trim()).filter(Boolean);
   const variants = pairedVariants(lex.variants_chs, lex.variants_en);
@@ -153,7 +157,7 @@ function renderPhased(lex) {
   const left = document.createElement('div');
   left.className = 'card yellow left';
   left.innerHTML = `
-    <div class="badge">粤语zhh：</div>
+    <div class="badge">粤语 zhh：</div>
     <div class="h-head">
       <div class="h-title">${lex.zhh || '—'}</div>
       <button class="tts t-head" title="发音">${ICON}</button>
@@ -235,7 +239,8 @@ document.getElementById('q').addEventListener('input', e => {
   if (!q) { renderEmpty(); return; }
   const ids = findLexemeIds(q);
   if (!ids.length) { renderEmpty(); return; }
-  renderPhased(LEX[ids[0]]);
+  const lex = LEX[ids[0]];
+  renderPhased(lex);
 });
 
 boot();
