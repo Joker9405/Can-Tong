@@ -1,242 +1,210 @@
-const PATH = '/data/';
-let CROSS = [], LEX = {}, EXMAP = {};
+/**
+ * Can-Tong MVP — app.js (Drop-in Fix Pack for "L61 不显示释义/英文解释")
+ *
+ * 你要改的就是：把你项目里的 app.js 替换/合并这份的关键逻辑：
+ * 1) 右侧面板渲染：不再按 proverb/adj 等类型分支（slang 会漏掉），而是“有啥显示啥”
+ * 2) 字段取值更安全：trim + undefined 兜底，避免某列为空导致整段渲染中断
+ * 3) （可选但强烈建议）用 PapaParse 解析 CSV，避免未来遇到逗号/引号/换行列错位
+ *
+ * 你需要在页面里准备以下 4 个 DOM 节点（可以改成你自己的选择器）：
+ *  - #rhsZhDef   右侧中文释义（或解释）
+ *  - #rhsEnDef   右侧英文释义（或解释）
+ *  - #rhsZhNote  右侧中文补充/用法（可空）
+ *  - #rhsEnNote  右侧英文补充/用法（可空）
+ *
+ * 如果你页面不是这些 ID：
+ *  - 直接改 CONFIG.selectors 里的选择器即可（不用改其他逻辑）
+ *
+ * CSV 列下标（非常重要）：
+ *  - 你需要把 SCHEMA 的列下标对齐到你当前 CSV 的真实列位置
+ *  - 只要对齐一次，L61 这种“slang:”行就不会再丢右侧内容
+ */
 
-// 读取 CSV（保留你原来的解析逻辑）
-function parseCSV(t) {
-  const lines = t.split(/\r?\n/).filter(Boolean);
-  const head = lines.shift().split(',').map(s => s.trim());
-  return lines.map(line => {
-    const cells = [];
-    let cur = '', inQ = false;
-    for (let i = 0; i < line.length; i++) {
-      const ch = line[i];
-      if (ch == '"') { inQ = !inQ; continue; }
-      if (ch == ',' && !inQ) {
-        cells.push(cur);
-        cur = '';
-      } else {
-        cur += ch;
-      }
-    }
-    cells.push(cur);
-    const obj = {};
-    head.forEach((k, i) => obj[k] = (cells[i] || '').trim());
-    return obj;
-  });
+/** =========================
+ *  0) 配置区（只改这里）
+ *  ========================= */
+const CONFIG = {
+  csvUrl: "/data/lexicon.csv", // 改成你的实际路径
+  selectors: {
+    rhsZhDef: "#rhsZhDef",
+    rhsEnDef: "#rhsEnDef",
+    rhsZhNote: "#rhsZhNote",
+    rhsEnNote: "#rhsEnNote"
+  },
+  debug: false
+};
+
+/**
+ * CSV 列映射（按你截图推测的默认值）
+ * ⚠️ 你必须核对：每一列到底对应什么，否则会“有数据但显示空”
+ *
+ * 常见一行结构（示例）：
+ * [0] rowId/lineNo
+ * [1] 粤语词
+ * [2] jyutping
+ * [3] 近义/相关（可带 ;）
+ * [4] 中文短释义
+ * [5] 英文短释义
+ * [6] 中文解释（可能以“俚语：/俗语：/形容词：”开头）
+ * [7] 英文解释（可能以“slang:/proverb:/adj:”开头）
+ * [8] 中文用法/补充
+ * [9] 英文用法/补充
+ */
+const SCHEMA = {
+  termYue: 1,
+  jyutping: 2,
+  synonyms: 3,
+  zhShort: 4,
+  enShort: 5,
+  zhDef: 6,
+  enDef: 7,
+  zhNote: 8,
+  enNote: 9
+};
+
+/** =========================
+ *  1) 工具函数
+ *  ========================= */
+function $(sel) {
+  return document.querySelector(sel);
 }
 
-async function loadCSV(name) {
-  const r = await fetch(PATH + name, { cache: 'no-store' });
-  if (!r.ok) throw new Error('load ' + name + ' failed');
-  return parseCSV(await r.text());
+function asText(v) {
+  if (v === null || v === undefined) return "";
+  return String(v).replace(/\uFEFF/g, "").trim(); // 去 BOM + trim
 }
 
-// 这两个函数保留（以后你要用模糊搜索还可以用），现在 findLexemeIds 不再使用它们
-function norm(s) {
-  return (s || '').toLowerCase().replace(/\s+/g, '');
+function pick(row, idx) {
+  return asText(Array.isArray(row) ? row[idx] : row?.[idx]);
 }
 
-function fuzzy(text, q) {
-  text = norm(text);
-  q = norm(q);
-  if (!q) return false;
-  let i = 0;
-  for (const c of text) {
-    if (c === q[i]) i++;
-  }
-  return i === q.length || text.includes(q);
+function setText(sel, text) {
+  const el = $(sel);
+  if (!el) return;
+  el.textContent = asText(text);
 }
 
-// 语音部分保留
-let VOICE = null;
-function pickVoice() {
-  const L = speechSynthesis.getVoices();
-  VOICE =
-    L.find(v => /yue|Cantonese|zh[-_]HK/i.test(v.lang + v.name)) ||
-    L.find(v => /zh[-_]HK/i.test(v.lang)) ||
-    L.find(v => /zh/i.test(v.lang)) ||
-    null;
-}
-if ('speechSynthesis' in window) {
-  speechSynthesis.onvoiceschanged = pickVoice;
-  pickVoice();
+function normalizePrefix(s) {
+  // 显示时可去掉“俚语：/俗语：/形容词：”等前缀，保留也行
+  return asText(s)
+    .replace(/^(俚语|俗语|形容词|名词|动词|口语|书面语)\s*[:：]\s*/i, "")
+    .replace(/^(slang|proverb|adj|noun|verb)\s*:\s*/i, "");
 }
 
-function speak(t) {
-  if (!('speechSynthesis' in window) || !t) return;
-  const u = new SpeechSynthesisUtterance(t);
-  if (VOICE) u.voice = VOICE;
-  u.lang = VOICE?.lang || 'zh-HK';
-  speechSynthesis.cancel();
-  speechSynthesis.speak(u);
+function safeLog(...args) {
+  if (CONFIG.debug) console.log("[CanTong]", ...args);
 }
 
-const ICON = `<svg viewBox="0 0 24 24"><path d="M3 10v4h4l5 4V6L7 10H3zm13.5 2a3.5 3.5 0 0 0-2.5-3.34v6.68A3.5 3.5 0 0 0 16.5 12zm0-7a9.5 9.5 0 0 1 0 14l1.5 1.5A11.5 11.5 0 0 0 18 3.5L16.5 5z"/></svg>`;
+/** =========================
+ *  2) CSV 读取与解析
+ *  ========================= */
 
-// 载入 crossmap / lexeme / examples
-async function boot() {
-  const [cm, lx, ex] = await Promise.all([
-    loadCSV('crossmap.csv'),
-    loadCSV('lexeme.csv'),
-    loadCSV('examples.csv'),
-  ]);
-  CROSS = cm;
-  lx.forEach(r => LEX[r.id] = r);
-  EXMAP = ex.reduce((m, r) => {
-    (m[r.lexeme_id] || (m[r.lexeme_id] = [])).push(r);
-    return m;
-  }, {});
-}
-
-// ⭐⭐ 核心修改：只按 crossmap.term 精确匹配 + 忽略英文大小写 ⭐⭐
-function findLexemeIds(q) {
-  const queryRaw = (q || '').trim();
-  if (!queryRaw) return [];
-
-  // 用于比较的版本：只做 toLowerCase，不删空格、不改标点
-  const query = queryRaw.toLowerCase();
-
-  const set = new Set();
-
-  CROSS.forEach(r => {
-    const rawTerm = (r.term || '').trim();
-    if (!rawTerm) return;
-
-    const parts = rawTerm
-      .split('/')
-      .map(s => s.trim())
-      .filter(Boolean);
-
-    for (const p of parts) {
-      // 这里改成大小写不敏感比较
-      if (p.toLowerCase() === query) {
-        const id = (r.target_id || '').trim();
-        if (id) set.add(id);
-        break; // 同一行命中一次就够
-      }
-    }
-  });
-
-  return Array.from(set);
-}
-
-// ===== 下面全是原来的 UI / 渲染代码，不做改动 =====
-
-const grid = document.getElementById('grid');
-const examples = document.getElementById('examples');
-const examplesList = document.getElementById('examples-list');
-
-function resetUI() {
-  grid.innerHTML = '';
-  examples.hidden = true;
-  examplesList.innerHTML = '';
-}
-
-function renderEmpty() { resetUI(); }
-
-function pairedVariants(chs, en) {
-  const A = (chs || '').split(/[;；]/).map(s => s.trim()).filter(Boolean);
-  const B = (en || '').split(/[;；]/).map(s => s.trim()).filter(Boolean);
-  const n = Math.max(A.length, B.length);
-  const out = [];
-  for (let i = 0; i < n; i++) {
-    out.push({ zh: A[i] || '', en: B[i] || '' });
-  }
-  return out;
-}
-
-function renderPhased(lex) {
-  resetUI();
-  const aliases = (lex.alias_zhh || '').split(/[;；]/).map(s => s.trim()).filter(Boolean);
-  const variants = pairedVariants(lex.variants_chs, lex.variants_en);
-  const note = (lex.note_en || '') + (lex.note_chs ? ('<br>' + lex.note_chs) : '');
-
-  const left = document.createElement('div');
-  left.className = 'card yellow left';
-  left.innerHTML = `
-    <div class="badge">粤语zhh：</div>
-    <div class="h-head">
-      <div class="h-title">${lex.zhh || '—'}</div>
-      <button class="tts t-head" title="发音">${ICON}</button>
-    </div>
-    ${aliases.map(a => `
-      <div class="row">
-        <div class="alias">${a}</div>
-        <button class="tts">${ICON}</button>
-      </div>
-    `).join('')}
-  `;
-  grid.appendChild(left);
-  requestAnimationFrame(() => left.classList.add('show'));
-
-  left.querySelector('.t-head').onclick = () => speak(lex.zhh || '');
-  left.querySelectorAll('.row .tts').forEach((b, i) => b.onclick = () => speak(aliases[i]));
-
-  setTimeout(() => {
-    const rt = document.createElement('div');
-    rt.className = 'card pink right-top';
-    rt.innerHTML = `
-      <div class="vars">
-        ${variants.map(v => `
-          <div class="var-row">
-            <div class="var-zh">${v.zh}</div>
-            ${v.en ? `<div class="var-en">${v.en}</div>` : ''}
-          </div>
-        `).join('')}
-      </div>
-    `;
-    grid.appendChild(rt);
-    requestAnimationFrame(() => rt.classList.add('show'));
-
-    const rb = document.createElement('div');
-    rb.className = 'card gray right-bottom';
-    rb.innerHTML = `
-      <div class="note">${note || ''}</div>
-      <button id="example-btn">example 扩展</button>
-    `;
-    grid.appendChild(rb);
-    requestAnimationFrame(() => rb.classList.add('show'));
-
-    rb.querySelector('#example-btn').onclick =
-      () => toggleExamples(lex, rb.querySelector('#example-btn'));
-  }, 120);
-}
-
-function toggleExamples(lex, btn) {
-  const exs = EXMAP[lex.id] || [];
-  if (!exs.length) return;
-
-  if (examples.hidden) {
-    examplesList.innerHTML = '';
-    exs.forEach(e => {
-      const row = document.createElement('div');
-      row.className = 'example';
-      row.innerHTML = `
-        <div class="yue">${e.ex_zhh || ''}</div>
-        <div class="right">
-          <div class="en">${e.ex_en || ''}</div>
-          <div class="chs">${e.ex_chs || ''}</div>
-        </div>
-        <div class="btns">
-          <button class="tts" title="粤语">${ICON}</button>
-        </div>
-      `;
-      row.querySelector('.tts').onclick = () => speak(e.ex_zhh || '');
-      examplesList.appendChild(row);
+// 方案A（推荐）：PapaParse（需要 index.html 引入）
+// <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+function parseCsvText(csvText) {
+  const text = asText(csvText);
+  if (window.Papa) {
+    const parsed = Papa.parse(text, {
+      header: false,
+      skipEmptyLines: true
     });
-    examples.hidden = false;
-    btn.remove();
-  } else {
-    examples.hidden = true;
+    return parsed.data || [];
   }
+
+  // 方案B（兜底）：非常简陋的解析，仅用于无逗号/引号场景
+  // ⚠️ 建议你一定上 PapaParse，否则未来会再次出现“某行坏掉”
+  return text
+    .split(/\r?\n/)
+    .filter(Boolean)
+    .map((line) => line.split(","));
 }
 
-document.getElementById('q').addEventListener('input', e => {
-  const q = e.target.value;
-  if (!q) { renderEmpty(); return; }
-  const ids = findLexemeIds(q);
-  if (!ids.length) { renderEmpty(); return; }
-  renderPhased(LEX[ids[0]]);
-});
+async function loadRows() {
+  const res = await fetch(CONFIG.csvUrl, { cache: "no-store" });
+  if (!res.ok) throw new Error(`CSV fetch failed: ${res.status}`);
+  const csvText = await res.text();
+  const rows = parseCsvText(csvText);
 
-boot();
+  safeLog("Loaded rows:", rows.length);
+  return rows;
+}
+
+/** =========================
+ *  3) 行 -> entry（结构化）
+ *  ========================= */
+function rowToEntry(row) {
+  const entry = {
+    termYue: pick(row, SCHEMA.termYue),
+    jyutping: pick(row, SCHEMA.jyutping),
+    synonyms: pick(row, SCHEMA.synonyms),
+    zhShort: pick(row, SCHEMA.zhShort),
+    enShort: pick(row, SCHEMA.enShort),
+    zhDef: pick(row, SCHEMA.zhDef),
+    enDef: pick(row, SCHEMA.enDef),
+    zhNote: pick(row, SCHEMA.zhNote),
+    enNote: pick(row, SCHEMA.enNote),
+    __raw: row
+  };
+
+  // 统一清洗文本（避免“有内容但都是空格/不可见字符”）
+  entry.zhDef = normalizePrefix(entry.zhDef);
+  entry.enDef = normalizePrefix(entry.enDef);
+  entry.zhNote = asText(entry.zhNote);
+  entry.enNote = asText(entry.enNote);
+
+  return entry;
+}
+
+/** =========================
+ *  4) 右侧面板渲染（关键修复点）
+ *  ========================= */
+function renderRightPanels(entry) {
+  // ✅ 关键：不按类型分支！slang/proverb/adj 都直接显示
+  setText(CONFIG.selectors.rhsZhDef, entry.zhDef || entry.zhShort);
+  setText(CONFIG.selectors.rhsEnDef, entry.enDef || entry.enShort);
+
+  // note/用法：没有就清空，避免残留
+  setText(CONFIG.selectors.rhsZhNote, entry.zhNote);
+  setText(CONFIG.selectors.rhsEnNote, entry.enNote);
+
+  safeLog("Rendered:", entry.termYue, {
+    zhDef: entry.zhDef,
+    enDef: entry.enDef,
+    zhNote: entry.zhNote,
+    enNote: entry.enNote,
+    rawLen: Array.isArray(entry.__raw) ? entry.__raw.length : null
+  });
+}
+
+/** =========================
+ *  5) 绑定到你现有的“选词”逻辑
+ *  =========================
+ *
+ * 你项目里一定已经有：用户搜索/点击某个词条 -> 拿到 row -> 更新 UI
+ * 你只要在那个地方调用：
+ *   renderRightPanels(rowToEntry(row))
+ *
+ * 下面提供一个最小可运行的 demo 绑定（按需删掉）
+ */
+let __rows = [];
+
+async function initLexicon() {
+  __rows = await loadRows();
+  // 默认渲染第一条（你可以删掉）
+  if (__rows[0]) renderRightPanels(rowToEntry(__rows[0]));
+}
+
+// 你可以在 console 手动测试：
+//   debugRenderByTerm("侧侧膊")
+window.debugRenderByTerm = function (term) {
+  const t = asText(term);
+  const hit = __rows.find((r) => pick(r, SCHEMA.termYue) === t);
+  if (!hit) {
+    console.warn("Not found:", t);
+    return;
+  }
+  renderRightPanels(rowToEntry(hit));
+};
+
+// 自动初始化（如你项目已有 init，请把 initLexicon() 合并进去）
+initLexicon().catch((err) => console.error(err));
