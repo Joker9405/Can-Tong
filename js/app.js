@@ -2,7 +2,6 @@ const PATH = '/data/';
 let CROSS = [], LEX = {}, EXMAP = {};
 
 // =================== CSV 解析（支持换行 & 引号） ===================
-// 注意：这里是重新实现的解析器，可以正确处理含换行的 note / variants
 function parseCSV(text) {
   const rows = [];
   let curField = '';
@@ -13,7 +12,7 @@ function parseCSV(text) {
     const ch = text[i];
 
     if (ch === '"') {
-      // 处理转义的引号 ""
+      // 处理转义引号 ""
       if (inQuotes && text[i + 1] === '"') {
         curField += '"';
         i++;
@@ -32,11 +31,9 @@ function parseCSV(text) {
 
     // 换行分隔行（不在引号内）
     if ((ch === '\n' || ch === '\r') && !inQuotes) {
-      // 兼容 \r\n
-      if (ch === '\r' && text[i + 1] === '\n') i++;
+      if (ch === '\r' && text[i + 1] === '\n') i++; // 兼容 \r\n
       curRow.push(curField);
       curField = '';
-      // 行非全空才 push
       if (curRow.some(c => c.trim() !== '')) {
         rows.push(curRow);
       }
@@ -47,7 +44,7 @@ function parseCSV(text) {
     curField += ch;
   }
 
-  // 末尾最后一行
+  // 收尾最后一行
   if (curField.length || curRow.length) {
     curRow.push(curField);
     if (curRow.some(c => c.trim() !== '')) {
@@ -75,7 +72,7 @@ async function loadCSV(name) {
   return parseCSV(await r.text());
 }
 
-// （保留的工具函数，当前版本没用 fuzzy，只做精确匹配）
+// 保留工具函数（当前不再用 fuzzy，只是预留）
 function norm(s) {
   return (s || '').toLowerCase().replace(/\s+/g, '');
 }
@@ -91,7 +88,7 @@ function fuzzy(text, q) {
   return i === q.length || text.includes(q);
 }
 
-// 语音部分保留
+// =================== 语音 ===================
 let VOICE = null;
 function pickVoice() {
   const L = speechSynthesis.getVoices();
@@ -117,7 +114,7 @@ function speak(t) {
 
 const ICON = `<svg viewBox="0 0 24 24"><path d="M3 10v4h4l5 4V6L7 10H3zm13.5 2a3.5 3.5 0 0 0-2.5-3.34v6.68A3.5 3.5 0 0 0 16.5 12zm0-7a9.5 9.5 0 0 1 0 14l1.5 1.5A11.5 11.5 0 0 0 18 3.5L16.5 5z"/></svg>`;
 
-// 载入 crossmap / lexeme / examples
+// =================== 载入数据 ===================
 async function boot() {
   const [cm, lx, ex] = await Promise.all([
     loadCSV('crossmap.csv'),
@@ -125,12 +122,13 @@ async function boot() {
     loadCSV('examples.csv'),
   ]);
   CROSS = cm;
+
   lx.forEach(r => {
-    // 确保 id 作为字符串 key
     if (r.id != null && r.id !== '') {
       LEX[String(r.id).trim()] = r;
     }
   });
+
   EXMAP = ex.reduce((m, r) => {
     const lid = (r.lexeme_id || '').trim();
     if (!lid) return m;
@@ -139,19 +137,16 @@ async function boot() {
   }, {});
 }
 
-// ===== 搜索只看 crossmap.term，大小写不敏感，完全匹配 =====
-
-// 统一 term / query 的对比键：去掉首尾空格 + 全部小写
+// =================== 搜索逻辑（只看 crossmap.term） ===================
 function termKey(s) {
   return (s || '').trim().toLowerCase();
 }
 
 /**
  * 只在 crossmap.csv 的 term 字段里做精确匹配：
- * - 用 "/" 或 ";"、"；" 分隔多个写法
- * - 中英文都可以
- * - 英文忽略大小写（termKey 统一小写）
- * - 不做任何模糊匹配，不做包含匹配
+ * - 用 / ; ； 分隔多写法
+ * - 忽略大小写
+ * - 不做模糊匹配
  */
 function findLexemeIds(q) {
   const rawQuery = (q || '').trim();
@@ -164,7 +159,6 @@ function findLexemeIds(q) {
     const rawTerm = (r.term || '').trim();
     if (!rawTerm) return;
 
-    // 支持多种分隔符：/ ; ；
     const parts = rawTerm
       .split(/[\/;；]/)
       .map(s => s.trim())
@@ -174,7 +168,7 @@ function findLexemeIds(q) {
       if (termKey(p) === key) {
         const id = (r.target_id || '').trim();
         if (id) set.add(id);
-        break; // 同一行命中一次就够了
+        break;
       }
     }
   });
@@ -182,8 +176,7 @@ function findLexemeIds(q) {
   return Array.from(set);
 }
 
-// ===== UI / 渲染代码（保持原有交互） =====
-
+// =================== UI ===================
 const grid = document.getElementById('grid');
 const examples = document.getElementById('examples');
 const examplesList = document.getElementById('examples-list');
@@ -196,6 +189,7 @@ function resetUI() {
 
 function renderEmpty() { resetUI(); }
 
+// 这个 pairedVariants 保留，以后要恢复旧样式可以用，现在不再调用
 function pairedVariants(chs, en) {
   const A = (chs || '').split(/[;；]/).map(s => s.trim()).filter(Boolean);
   const B = (en || '').split(/[;；]/).map(s => s.trim()).filter(Boolean);
@@ -214,10 +208,21 @@ function renderPhased(lex) {
   }
 
   resetUI();
-  const aliases = (lex.alias_zhh || '').split(/[;；]/).map(s => s.trim()).filter(Boolean);
-  const variants = pairedVariants(lex.variants_chs, lex.variants_en);
-  const note = (lex.note_en || '') + (lex.note_chs ? ('<br>' + lex.note_chs) : '');
 
+  // alias_zhh：保留「；」拆行逻辑
+  const aliases = (lex.alias_zhh || '').split(/[;；]/).map(s => s.trim()).filter(Boolean);
+
+  // note：保持原有逻辑（英文在上，中文在下）
+  const noteHtml =
+    (lex.note_en || '') +
+    (lex.note_chs ? ('<br>' + lex.note_chs) : '');
+
+  // variants：不再按「；」拆分，只当成两段文本和 note 一样展示
+  const variantsHtml =
+    (lex.variants_en || '') +
+    (lex.variants_chs ? ('<br>' + lex.variants_chs) : '');
+
+  // ---------- 左侧：粤语 + alias ----------
   const left = document.createElement('div');
   left.className = 'card yellow left';
   left.innerHTML = `
@@ -239,26 +244,21 @@ function renderPhased(lex) {
   left.querySelector('.t-head').onclick = () => speak(lex.zhh || '');
   left.querySelectorAll('.row .tts').forEach((b, i) => b.onclick = () => speak(aliases[i]));
 
+  // ---------- 右上：variants（样式跟 note 一样的块文本） ----------
   setTimeout(() => {
     const rt = document.createElement('div');
     rt.className = 'card pink right-top';
     rt.innerHTML = `
-      <div class="vars">
-        ${variants.map(v => `
-          <div class="var-row">
-            <div class="var-zh">${v.zh}</div>
-            ${v.en ? `<div class="var-en">${v.en}</div>` : ''}
-          </div>
-        `).join('')}
-      </div>
+      <div class="note">${variantsHtml || ''}</div>
     `;
     grid.appendChild(rt);
     requestAnimationFrame(() => rt.classList.add('show'));
 
+    // ---------- 右下：note + example 按钮 ----------
     const rb = document.createElement('div');
     rb.className = 'card gray right-bottom';
     rb.innerHTML = `
-      <div class="note">${note || ''}</div>
+      <div class="note">${noteHtml || ''}</div>
       <button id="example-btn">example 扩展</button>
     `;
     grid.appendChild(rb);
@@ -298,15 +298,16 @@ function toggleExamples(lex, btn) {
   }
 }
 
+// =================== 输入监听 ===================
 document.getElementById('q').addEventListener('input', e => {
   const q = e.target.value;
   if (!q) { renderEmpty(); return; }
 
-  // 每输入一个字符，都用当前完整输入去 crossmap 精确匹配
+  // 每次输入用当前完整 query 去 crossmap 精确匹配
   const ids = findLexemeIds(q);
 
   if (!ids.length) {
-    // 没有精确命中：不展示任何解释（避免模糊搜索效果）
+    // 没精确命中就不显示任何解释
     renderEmpty();
     return;
   }
