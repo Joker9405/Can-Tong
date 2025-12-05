@@ -2,6 +2,7 @@ lexeme_id,ex_zhh,ex_chs,ex_en
 L1,抌人波鐘,浪费别人时间,Wasting other people's time
 L1,咪柒揼波鐘啦,不要浪费时间了,Don't waste your time.
 L1,你做嘢爽手啲啦，唔好成日抌波钟,你干活要麻利一些，不要老是浪费时间,You need to be more efficient at your work and stop wasting time.
+L1,揼住唔做,耗着不做,dragging it out without doing anything
 L2,揼咗啲嘢佢,把它扔了,Throw it away
 L2,咪揼過嚟,不要扔过来，带力度,Don't throw it at me.sense of power
 L2,咪掟我,不要用力扔我,Don't throw me hard.
@@ -171,6 +172,8 @@ L23,你當我老襯啊？/你當我水鱼啊？/你當我LULU啊？,当你不是
 L23,你車大炮？/你講大話？/你裝我彈弓？,传统同说法：你敢骗我？,The traditional way to say it is: You dare to lie to me?
 L23,呃神骗鬼,言语欺骗的,Verbal deception
 L23,你摆我上檯/你氹我落沓/你过我一栋/你跣我一镬,你陷害我？,You framed me?
+L23,仲想呃我呃到几時啊,还想隐瞒我隐瞒到什么时候,How long are you going to keep this from me?
+L23,呃蝦條/呃閪屌,意思是骗女生上床,It means to trick girls into sleeping with you.
 L24,開會嘅人點止咁少人啊？,还会不止这么少人吧？,Not only these few people are attending this meeting.
 L24,點止咁簡單,没那么简单,it's not so simple 
 L25,隨你點講都好,随便你怎么说,You can say whatever you want.
@@ -241,7 +244,7 @@ L43,掟煲费,分手费用,Breakup fee
 L43,掟煲唔掟蓋，打翻場友誼賽,虽然分手了，还能约炮,"Even though we broke up, I can still hook up with other people."
 L44,啲嘢發晒毛，揼咗佢啦/掉咗佢啦/倒咗佢啦,东西发霉了扔了它,"If something gets moldy, throw it away."
 L44,抌撚咗佢啦/抌閪咗佢啦/抌撚柒佢啦/抌撚鳩佢啦,扔了它吧；粗俗说法,Throw it away; a vulgar way of saying it.
-L44,抌咗啲嘢佢；掉咗啲嘢佢；倒咗啲嘢佢,把东西倒掉/把东西扔掉,Throw things away
+L44,抌咗啲嘢佢/掉咗啲嘢佢/倒咗啲嘢佢,把东西倒掉/把东西扔掉,Throw things away
 L45,弹撚開/弹鳩開,滚开；最快的速度,Get out of here; at the fastest speed
 L45,行柒開/行撚開,走开；粗俗说法,Go away; vulgar expression
 L45,死開啲/死閪開/死撚開,死开；粗俗说法,Get out of here; vulgar expression
@@ -341,7 +344,7 @@ L69,你條茂利,用于骂人，形容人像木桩那样站在那里不动。当
 L70,撲街仔！你撲街囖，明知会撲街，都仲要撲過去，家下撲晒街囖，正撲街嚟噶，撲街啦你,傻子!你完蛋了，明知会跌，还要往那方向去，现在真失败了。真是犯贱啊!活该啊你!,"You idiot! You're doomed. You knew it would fall, yet you still went in that direction. Now you've truly failed. What a fool you were! You deserve it!"
 L70,你條死柒頭皮,你这个死傻逼,You stupid idiot
 L70,正一茂利,真的是王八蛋,He's a real bastard.
-L70,正一反骨仔；正一二五仔；正一撲街仔,真的是反骨；真的是反骨；真的是混蛋,He's truly treacherous; He's truly treacherous; he's truly a bastard.
+L70,正一反骨仔/正一二五仔/正一撲街仔,真的是反骨；真的是反骨；真的是混蛋,He's truly treacherous; He's truly treacherous; he's truly a bastard.
 L70,正撲街；正一撲街,真的是混蛋,He's such a bastard
 L71,今次撲街囖,这次出大事了,This is a big deal.
 L71,你呢個撲街,你是个混蛋,You're an idiot.

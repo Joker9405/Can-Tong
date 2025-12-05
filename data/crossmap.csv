@@ -1,75 +1,72 @@
 term,lang,target_id,kind
 拖延时间/耽误时间/磨洋工/拖拖拉拉/磨磨蹭蹭/故意浪费时间/故意耗时,chs,L1,head
-Delay/waste time/drag it out/drag things out/play for time/run down the clock/stonewall/slow walk/string someone along,en,L1,head
-扔东西/丢东西,chs,L2,head
+Delay/waste time/drag it out/drag things out/play for time/run down the clock/slow walk/stall for time/draw it out/drag your feet/dawdle,en,L1,head
+扔东西/丢东西/丢/扔,chs,L2,head
 Throwing things/throw/toss/chuck,en,L2,head
 扔东西过来/丢东西过来,chs,L3,head
 "toss it over here/throw it over here",en,L3,head
-推,chs,L4,head
+推/Ong,chs,L4,head
 push,en,L4,head
-stand/set up,en,L5,head
 摆摊/路边摊/流动贩卖/走鬼摊,chs,L5,head
-die chicken pushing the rice cooker cover/the dead chicken forcing thelid of the rice pot open,en,L6,head
+stand/set up,en,L5,head
 不服输/明知错不认/不认错,chs,L6,head
-冷门/刁钻/怪异/不常见,chs,L7,head
-uncommon/rare and strange,en,L7,head
+die chicken pushing the rice cooker cover/the dead chicken forcing thelid of the rice pot open,en,L6,head
+冷门/刁钻/怪异/不常见/另类,chs,L7,head
+uncommon/rare and strange/niche/raretricky/complicated/difficult/similar to,en,L7,head
 这样/那样/那,chs,L8,head
-In this way/in that way/such/this/that,en,L8,head
+like this/such/in this way/like/in the manner of/to to certain level,en,L8,head
 这么/那么,chs,L9,head
-like this/so,en,L9,head
-how,en,L10,head
+like this/so/to such an extent/this/in this manner/like/seems/well/then/that,en,L9,head
 怎么/怎么样/如何,chs,L10,head
-要紧/重要,chs,L11,head
-important,en,L11,head
+how/what way/what's with it/what's up/how's it like/what is it like,en,L10,head
+要紧/重要/夸张,chs,L11,head
+crucial/important/vital/exaggerate/critical,en,L11,head
 达到一定水平/差不多/大致上/普普通通/大差不差/接近了,chs,L12,head
-that's about it/pretty much/same difference/not faroff/a little bit,en,L12,head
+that's about it/pretty much/same difference/not faroff/a little bit/approximate/insignificant/unassuming/ordinary and mediocre/approximately,en,L12,head
 沒有免費的午餐/天上不会掉馅饼,chs,L13,head
-too good to be true/It's not that simple.,en,L13,head
-there's no such thing as a free lunch,en,L13,head
-真巧合/这么巧呀/不谋而合/湊巧/说多巧有多巧,chs,L14,head
-coincide,en,L14,head
+too good to be true/It's not that simple/something too good to be true/There is no free lunch,en,L13,head
+真巧合/这么巧呀/不谋而合/湊巧/说多巧有多巧/巧合/这么巧,chs,L14,head
+coincide/coincidentally/fortuitously/by chance,en,L14,head
 应该死的不去死/该死不死/这么多人死为什么你不去死,chs,L15,head
-"damn it, yet still alive/So many people are dying, why don't you die?",en,L15,head
+"damn it, yet still alive/So many people are dying, why don't you die/why don't you die when there's so much death",en,L15,head
 大神在旁边不会把握机会/身边有大神不会把握机会/不会把握机会,chs,L16,head
 to fail to take advantage of an opportunity,en,L16,head
-narrow minded/conservatives/fuddy duddy,en,L17,head
 思想不开通/吃古不化,chs,L17,head
+narrow minded/conservatives/fuddy duddy/dogged/stubborn/obstinate,en,L17,head
 不好意思/失礼了,chs,L18,
-so sorry,en,L18,
+so sorry/Excuse me,en,L18,
+有能力到外/有本身到外/异地发展/在外地拼搏/在外地谋生/有本事的到外发展/比喻有才专华有才能的人才敢想敢拼,chs,L19,
 ability to go to other places,en,L19,
-有能力到外/有本身到外/异地发展/在外地拼搏/在外地谋生,chs,L19,
-有本事的到外发展/比喻有才专华有才能的人才敢想敢拼,chs,L19,
 怎么卖/多少钱/怎么算,chs,L20,
-how much/unexpectedly/how was one to know/little did one know/who would have thought,en,L20,
-谁料到/不料/如何得知/怎么知道/没想到/谁想到/哪知道/谁知道/竟然,chs,L21,
+how much,en,L20,
+谁知道/哪知道/谁想到/没想到/怎麼知道/如何得知/不料/谁知/谁料到/没想到/谁想到/竟然,chs,L21,
 unexpectedly/who knows,chs,L21,
 怎么收场/怎么样才好/怎么救场/如何力挽狂澜,chs,L22,
 how to save the day/how to end it,en,L22,
-骗,chs,L23,
-cheat,en,L23,
+骗/欺骗/隐瞒/诈骗,chs,L23,
+cheat/to cheat/to trick/trick/deceive/lie/cheat/to swindle,en,L23,
 不止/何止/哪儿止/哪止,chs,L24,
 not only/incessantly/without end,en,L24,
-无论怎么说/不管怎么说/不管怎么样/无论如何,chs,L25,
+无论怎么说/不管怎么说/不管怎么样/无论如何/总之,chs,L25,
 No matter what/whatever/in any case/For better or for worse,en,L25,
 点菜/点餐,chs,L26,
-to order,en,L26,
-太客气了/怎么好意思呢,chs,L27,
+to order/order,en,L26,
+太客气了/怎么好意思呢/太客气,chs,L27,
 too kind,en,L27,
 点心车/小食车,chs,L28,
 dim sum cart,en,L28,
 找错人/认错人,chs,L29,
 mistaken identity/wrong target,en,L29,
-怎么去,chs,L30,
+怎么去/怎样去/怎么走,chs,L30,
 how to get there,en,L30,
-点到为止,chs,L31,
-stop here,en,L31,
-有何看法/怎么样/怎么看,chs,L32,
-有什么想法/有什么看法,chs,L32,
-how do you see this?,en,L32,
-怎样/询问/如何/怎么样,chs,L33,
-how/ask/what way,en,L33,
-怎么都可以/怎样说都可以/怎么说就怎么办/你说什么就什么/说什么就什么,chs,L34,
-up to you/as you wish/whatever you say,en,L34,
+点到为止；适可而止,chs,L31,
+Stop here/know when to stop/leave it at that/let’s leave it there/that’s enough / that’ll do,en,L31,
+有何看法/有什么看法/有什么想法/怎么样/怎么看,chs,L32,
+how do you see this/What do you think/What’s your opinion/How do you feel/What are your thoughts/Any thoughts/What do you reckon/How do you see it/How is it/How does it look/How does that soun/Is that okay with you,en,L32,
+什么原因/原因是什么/为什么,chs,L33,
+how to explain/how come/why,en,L33,
+怎么都可以/怎样说都可以/怎么说就怎么办/你说什么就什么/说什么就什么/听你的,chs,L34,
+up to you/as you wish/whatever you say/it`s your call/you`re the boss,en,L34,
 没什么交集/泛泛之交/普通朋友,chs,L35,
 common friend/people with little interaction/casual acquaintances/nodding acquaintances/barely know,en,L35,
 存心误导人/忽悠/欺骗,chs,L36,
@@ -80,42 +77,40 @@ what do you want/how do you want,en,L37,
 set it aside/throw it aside/chuck it to one side/put it aside/toss it aside/shelve it aside,en,L38,
 甩在一边,chs,L39,
 cast it aside/brush it aside,en,L39,
-toss it /throw it/set it ,en,L40,
 放一边/丢一边/扔一边,chs,L40,
+toss it /throw it/set it ,en,L40,
 甩一边,chs,L41,
 cast it ,en,L41,
 丢垃圾/倒垃圾/扔垃圾,chs,L42,
 throw out thegarbage/throw out trash/take out the thegarbage/take out the trash/put out the thegarbage/put out the trash/litter/dump,en,L42,
-separate,en,L43,
 分手,chs,L43,
+separate,en,L43,
 倒掉它/扔掉它/丢掉它/扔掉/倒掉,chs,L44,
-throw it away/discard it/Pour it out/throw away/toss out/,en,L44,
+throw it away/discard it/Pour it out/throw away/toss out/deep six,en,L44,
 走开/起开/滚,chs,L45,
-get out of here/fuck off/get lost/get out of here,en,L45,
+get out of here/fuck off/get lost/get out of here/beat it,en,L45,
 把它们都倒掉/把它们都扔掉/把它们都丢掉,chs,L46,
-pour them all out /throw them all away /discard them all,en,L46,
+Pour them all out / Throw them all away / Discard them all/deep six,en,L46,
 逛街/出门/逛街去,chs,L47,
 go shopping/going out/shopping,en,L47,
 重重甩/摔在地下/甩在地下/摔在地下/用力猛扔,chs,L48,
 thrown heavily to the ground/slammed to the ground/hurl/fling/slam down,en,L48,
 快速扔东西过来,chs,L49,
 throw something over very quickly,en,L49,
-throw something over very quickly/too late to regret/Heartbreaking,en,L50,
 后悔莫及/极度失望/扎心,chs,L50,
+throw something over very quickly/too late to regret/Heartbreaking,en,L50,
 剪刀石头布,chs,L51,
 rock Paper Scissors,en,L51,
 捶背/按摩,chs,L52,
 back massage/massage,en,L52,
 给人打/给人揍/挨揍,chs,L53,
 beat up,en,L53,
-狠狠地教训他一顿/狠狠地教训她一顿,chs,L54,
-给她点颜色看看/给他点颜色看看,chs,L54,
-给点颜色她看看/给点颜色他看看,chs,L54,
+狠狠地教训他一顿/狠狠地教训她一顿/给她点颜色看看/给他点颜色看看/给点颜色她看看/给点颜色他看看,chs,L54,
 give her a good beating/give him a good beating,en,L54,
 所需时间较长,chs,L55,
 It takes a long time,en,L55,
 抛弃他/抛弃她/放下他/放下她,chs,L56,
-abandon him/abandon her/get rid of/,en,L56,
+abandon him/abandon her/get rid of,en,L56,
 大胆/胆子大/不怕死,chs,L57,
 bold/daring/fearless,en,L57,
 指点一下/提点一下,chs,L58,
@@ -146,8 +141,8 @@ dumb/imbecile,en,L69,
 bastard/asshole/shithead,en,L70,
 去死吧/吃屎去,chs,L71,
 go to hell,en,L71,
-浪费机会/蠢货,chs,L72,
-dickhead,en,L72,
+浪费机会/蠢货/错失良机,chs,L72,
+dickhead/miss the boat,en,L72,
 讨人厌/讨厌鬼/神憎鬼厌,chs,L73,
 jerk,en,L73,
 小丑/出洋相/难为情/丑/丑八怪/讨厌/愚蠢,chs,L74,
