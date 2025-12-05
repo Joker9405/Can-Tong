@@ -1,6 +1,6 @@
 term,lang,target_id,kind
 Delay/waste time,en,L1,head
-窃窃细语/拖延时间/耽误时间/磨洋工,chs,L1,head
+拖延时间/耽误时间/磨洋工,chs,L1,head
 扔东西/丢东西,chs,L2,head
 Throwing things,en,L2,head
 扔东西过来/丢东西过来,chs,L3,head
@@ -246,3 +246,4 @@ drop the ball /dropped the chain,en,L118,
 ,chs,L120,
 
 ,en,L120,
+
