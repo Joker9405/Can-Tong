@@ -147,6 +147,7 @@ function termKey(s) {
  * - 用 / ; ； 分隔多写法
  * - 忽略大小写
  * - 不做模糊匹配
+ * 返回匹配到的 target_id 列表（去重）
  */
 function findLexemeIds(q) {
   const rawQuery = (q || '').trim();
@@ -180,6 +181,7 @@ function findLexemeIds(q) {
 const grid = document.getElementById('grid');
 const examples = document.getElementById('examples');
 const examplesList = document.getElementById('examples-list');
+const candidateBar = document.getElementById('candidate-bar'); // 新增：候选 zhh 按钮区域
 
 function resetUI() {
   grid.innerHTML = '';
@@ -187,7 +189,44 @@ function resetUI() {
   examplesList.innerHTML = '';
 }
 
-function renderEmpty() { resetUI(); }
+// 清空候选区
+function clearCandidateBar() {
+  if (!candidateBar) return;
+  candidateBar.innerHTML = '';
+  candidateBar.style.display = 'none';
+}
+
+// 显示 term 重叠时的候选 zhh 按钮（图一）
+function renderCandidateBar(ids) {
+  if (!candidateBar) return;
+
+  candidateBar.innerHTML = '';
+  candidateBar.style.display = 'flex';
+
+  ids.forEach(id => {
+    const lex = LEX[id];
+    if (!lex) return;
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'candidate-btn'; // 在 CSS 里按图一样式去设计
+    btn.textContent = lex.zhh || lex.alias_zhh || id;
+
+    btn.addEventListener('click', () => {
+      // 用户选择具体 zhh 后，进入图二界面
+      resetUI();
+      clearCandidateBar();
+      renderPhased(lex);
+    });
+
+    candidateBar.appendChild(btn);
+  });
+}
+
+function renderEmpty() {
+  resetUI();
+  clearCandidateBar();
+}
 
 // 这个 pairedVariants 保留，以后要恢复旧样式可以用，现在不再调用
 function pairedVariants(chs, en) {
@@ -301,19 +340,31 @@ function toggleExamples(lex, btn) {
 // =================== 输入监听 ===================
 document.getElementById('q').addEventListener('input', e => {
   const q = e.target.value;
-  if (!q) { renderEmpty(); return; }
-
-  // 每次输入用当前完整 query 去 crossmap 精确匹配
-  const ids = findLexemeIds(q);
-
-  if (!ids.length) {
-    // 没精确命中就不显示任何解释
+  if (!q) {
     renderEmpty();
     return;
   }
 
-  const lex = LEX[ids[0]];
-  renderPhased(lex);
+  // 每次输入用当前完整 query 去 crossmap 精确匹配
+  const ids = findLexemeIds(q);
+
+  // 先清空详情 & 候选，后面根据情况再渲染
+  resetUI();
+  clearCandidateBar();
+
+  if (!ids.length) {
+    // 没精确命中就不显示任何解释/候选
+    return;
+  }
+
+  if (ids.length === 1) {
+    const lex = LEX[ids[0]];
+    renderPhased(lex);
+    return;
+  }
+
+  // 多个 target_id：显示图一候选界面
+  renderCandidateBar(ids);
 });
 
 boot();
