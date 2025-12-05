@@ -46,6 +46,32 @@ body{
   font-size:42px;
   outline:none;
 }
+
+/* ⭐ 新增：图一候选 zhh 按钮区 */
+#candidate-bar{
+  margin-top:var(--gap);
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+}
+
+/* ⭐ 新增：每一个候选 zhh 的大按钮（图一里的砖块） */
+.candidate-btn{
+  border:none;
+  cursor:pointer;
+  padding:12px 24px;
+  border-radius:var(--radius);
+  font-size:24px;
+  font-weight:800;
+  background:var(--y);
+  color:#111;
+  box-shadow:0 3px 0 rgba(0,0,0,.35);
+}
+.candidate-btn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 4px 0 rgba(0,0,0,.4);
+}
+
 .grid{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -209,4 +235,6 @@ main:has(#examples:not([hidden])) .grid{padding-bottom:0}
   .h-title{font-size:56px}
   .row{font-size:30px}
   .search input{font-size:32px}
+  /* 移动端候选按钮小一点 */
+  .candidate-btn{font-size:20px;padding:10px 18px}
 }
